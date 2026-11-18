@@ -1,223 +1,895 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Tır Panel">
-<title>Tır Panel</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<style>
-:root{--t:#fff;--d:rgba(255,255,255,.74);--gold:#f6cf8a}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#070918;color:var(--t);font:300 13px/1.3 'Outfit',-apple-system,"SF Pro Text",system-ui,sans-serif;text-shadow:0 1px 10px rgba(0,0,0,.22)}
-body{padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
-.bg{overflow:hidden}.bg .l{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity 1.4s ease}
-#bgG{position:fixed;inset:0;z-index:0;filter:blur(16px) brightness(.66) saturate(1.3);transform:scale(1.08)}
-#fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-.app{position:relative;z-index:2;height:calc(100% - 16px);margin:8px;display:flex;gap:12px;padding:12px;border-radius:32px;border:1px solid rgba(255,255,255,.22);border-top-color:rgba(255,255,255,.4);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3)}
-nav{align-self:center;display:flex;flex-direction:column;gap:8px;padding:9px 7px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.25);box-shadow:0 10px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.35);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-nav button{all:unset;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--d);cursor:pointer;transition:.25s}
-nav button.on{color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.42),rgba(255,255,255,.12));box-shadow:0 0 20px rgba(255,255,255,.3),inset 0 1px 0 rgba(255,255,255,.6)}
-nav button.off{opacity:.3;pointer-events:none}
-nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-main{flex:1;min-width:0;min-height:0}
-.page{display:none;height:100%;gap:12px}.page.on{display:grid}
-#pgW{grid-template-columns:1.75fr 1fr;grid-template-rows:1.2fr 1fr}
-#pgR{grid-template-columns:1.6fr 1fr;grid-template-rows:1fr 1fr}
-.c{position:relative;border-radius:24px;border:1px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.4);background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.06));backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);box-shadow:0 14px 40px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.28);padding:14px 16px;overflow:hidden;min-width:0;min-height:0}
-.c h2{font-size:11px;font-weight:400;letter-spacing:.06em;color:var(--d);margin-bottom:6px}
-.hero{padding:0}.hero .bg{position:absolute;inset:0}
-.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.18) 45%,rgba(0,0,0,.62))}
-.hero .in{position:relative;height:100%;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between}
-.hero .in>div:first-child{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}
-.loc{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:400}.loc svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chips span,.chip2,.cbtn{padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:11px;font-weight:400}
-.lab{font-size:12px;color:var(--d)}
-.cond{font-size:clamp(32px,10vh,66px);font-weight:200;letter-spacing:-.02em;line-height:1.02}
-.hero svg.ic{position:absolute;right:18px;bottom:18px;width:clamp(52px,16vh,86px);height:clamp(52px,16vh,86px);filter:drop-shadow(0 4px 14px rgba(0,0,0,.4))}
-.crv{height:calc(100% - 22px);display:flex;flex-direction:column}.crv svg{flex:1;min-height:0;width:100%}
-#curve{filter:drop-shadow(0 0 6px rgba(246,207,138,.7))}
-.hr{display:flex}.hr div{flex:1;text-align:center;font-size:11px;color:var(--d)}.hr b{display:block;font-size:clamp(16px,4.2vh,24px);font-weight:200;color:var(--t)}.hr div:first-child b{color:var(--gold)}
-.side{grid-row:1/3;grid-column:2;overflow:auto}
-.date{font-size:12px;color:var(--d);text-transform:capitalize}
-.bigt{font-size:clamp(60px,19vh,116px);font-weight:200;line-height:1;margin:2px 0 6px;letter-spacing:-.03em}
-.rows div{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid rgba(255,255,255,.14);font-size:12px;color:var(--d)}.rows b{font-weight:400;color:var(--t)}
-.days div{display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid rgba(255,255,255,.14);font-size:12px}
-.days svg{width:28px;height:28px;flex:none}.days span{flex:1;color:var(--d);text-transform:capitalize}.days b{font-weight:400}
-.cmp svg{width:100%;height:calc(100% - 20px)}
-.cbtn{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);color:#fff;cursor:pointer;white-space:nowrap}.cbtn.hid{display:none}
-.alt{font-size:clamp(32px,10vh,52px);font-weight:200;line-height:1}.sub{font-size:11px;color:var(--d)}
-.sp{width:100%;height:28%;margin:6px 0}.co{font-size:11px;color:var(--d)}.co b{display:block;font-size:15px;font-weight:400;color:var(--t)}
-.mp{padding:0;grid-row:1/3}#map{position:absolute;inset:0;background:#0b0d1f;filter:saturate(.9)}
-.chip2{position:absolute;z-index:500;left:12px;top:12px;pointer-events:none}
-.leaflet-control-attribution,.leaflet-control-zoom{display:none}
-.blob{position:absolute;border-radius:50%;filter:blur(46px);animation:dr 30s ease-in-out infinite alternate}
-@keyframes dr{from{transform:translateX(-8vw)}to{transform:translateX(14vw)}}
-#hi{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;text-align:center;background:rgba(7,9,24,.8);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);transition:opacity 1s,visibility 1s}
-#hi.out{opacity:0;visibility:hidden}
-#hi .orb{position:absolute;width:min(60vw,60vh);aspect-ratio:1;border-radius:50%;background:conic-gradient(#ff5fa2,#6aa8ff,#ffb347,#ff5fa2);filter:blur(60px);opacity:.38;animation:sp 9s linear infinite}
-#hi h2{position:relative;font-size:clamp(30px,8vw,64px);font-weight:200;animation:rs 1.6s both}#hi p{position:relative;margin-top:10px;color:var(--d);animation:rs 1.6s .5s both}
-@keyframes sp{to{transform:rotate(360deg)}}@keyframes rs{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){#hi .orb,#hi h2,#hi p,.blob{animation:none}}
-@media (max-aspect-ratio:1/1){
- html,body{overflow:auto}.app{flex-direction:column-reverse;height:auto;min-height:calc(100% - 16px)}
- nav{flex-direction:row;align-self:center}main{overflow:visible}
- .page.on{display:flex;flex-direction:column;height:auto}.hero{height:250px}.crv{height:170px}.side{overflow:visible}.mp{height:300px}.cmp,.pos{height:200px}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Forecast Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.12);
+      --glass-bg-strong: rgba(255, 255, 255, 0.16);
+      --glass-border: rgba(255, 255, 255, 0.22);
+      --text-main: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.72);
+      --text-soft: rgba(255, 255, 255, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #10191c;
+      color: var(--text-main);
+    }
+
+    /* Arka Plan Katmanları */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+      transition: opacity 0.8s ease-in-out, transform 12s ease-out;
+      z-index: 0;
+    }
+
+    /* Okunabilirliği koruyan hafif atmosferik gölge katmanı */
+    .bg-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(12, 22, 26, 0.42) 0%, rgba(12, 22, 26, 0.10) 48%, rgba(10, 20, 16, 0.52) 100%),
+        radial-gradient(circle at 22% 38%, rgba(0, 0, 0, 0.24), transparent 60%);
+    }
+
+    /* Ana Konteyner */
+    .app-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      padding: 24px 32px;
+      display: flex;
+      gap: 28px;
+    }
+
+    /* Sol Dikey Cam Menü Çubuğu */
+    .sidebar {
+      width: 54px;
+      height: 100%;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.68);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .nav-btn.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Sağ Ana İçerik Alanı */
+    .main-area {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    /* Üst Bar */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 40px;
+    }
+
+    .welcome-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .welcome-label {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1px;
+      color: var(--text-main);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .circle-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .circle-btn:hover {
+      background: rgba(255, 255, 255, 0.26);
+      transform: translateY(-1px);
+    }
+
+    .avatar-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      overflow: hidden;
+      cursor: pointer;
+      background: linear-gradient(135deg, #3a5a68, #1d2e35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Orta ve Alt İçerik Düzeni */
+    .dashboard-body {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 40px;
+      padding-top: 22px;
+      min-height: 0;
+    }
+
+    /* Sol Bölüm: Ana Hava Durumu + Eğri + Günler */
+    .left-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+      padding-bottom: 4px;
+    }
+
+    .hero-section {
+      margin-top: 6px;
+    }
+
+    .forecast-badge {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 10px;
+      letter-spacing: 0.2px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 4.1vw, 54px);
+      font-weight: 300;
+      line-height: 1.12;
+      letter-spacing: -0.6px;
+      color: #ffffff;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    .hero-title strong {
+      font-weight: 400;
+    }
+
+    .hero-description {
+      max-width: 350px;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 400;
+    }
+
+    /* Saatlik Eğri ve Günler */
+    .timeline-wrapper {
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .hourly-temps {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      align-items: center;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .hour-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.88);
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .hour-item.active {
+      color: #ffffff;
+      font-weight: 600;
+      transform: scale(1.06);
+    }
+
+    .curve-box {
+      position: relative;
+      width: 100%;
+      height: 76px;
+      margin-bottom: 10px;
+    }
+
+    .curve-box svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .active-node {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.24), 0 0 14px rgba(255, 255, 255, 0.95);
+      transform: translate(-50%, -50%);
+      transition: left 0.45s cubic-bezier(0.22, 1, 0.36, 1), top 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+
+    .active-node::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), transparent);
+    }
+
+    .days-bar {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      padding-top: 14px;
+    }
+
+    .day-btn {
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+    }
+
+    .day-btn:hover {
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .day-btn.active {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .day-btn.active::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 22%;
+      right: 22%;
+      height: 2px;
+      background: #ffffff;
+      border-radius: 2px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    }
+
+    /* Sağ Sütun: Ana Derece + 3 Şehir Kartı */
+    .right-panel {
+      width: clamp(250px, 23vw, 295px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .current-weather-header {
+      padding: 2px 4px 6px 4px;
+    }
+
+    .location-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 4px;
+    }
+
+    .main-temp {
+      font-size: clamp(54px, 5vw, 74px);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -2px;
+      color: #ffffff;
+      margin: 4px 0 12px 0;
+    }
+
+    .metrics-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .metric-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Şehir Kartları */
+    .city-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .city-card {
+      background: rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(22px) saturate(145%);
+      -webkit-backdrop-filter: blur(22px) saturate(145%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 18px;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+      cursor: pointer;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .city-card:hover {
+      background: rgba(255, 255, 255, 0.20);
+      border-color: rgba(255, 255, 255, 0.36);
+      transform: translateY(-2px);
+    }
+
+    .city-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .country-label {
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .city-name {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .city-condition {
+      font-size: 11px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.78);
+      margin-top: 2px;
+    }
+
+    .city-temp-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .city-temp {
+      font-size: 28px;
+      font-weight: 300;
+      line-height: 1;
+      color: #ffffff;
+    }
+
+    #fileInput {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-<div class="bg" id="bgG"></div><canvas id="fx"></canvas>
-<div id="hi"><div class="orb"></div><div><h2 id="hiT"></h2><p>İyi yolculuklar</p></div></div>
 
-<div class="app">
-<nav>
- <button class="on" data-p="pgW" aria-label="Hava"><svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 010-8 5 5 0 019.6-1A4.5 4.5 0 0117 18z"/></svg></button>
- <button data-p="pgR" aria-label="Yol"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg></button>
- <button class="off"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M7 8l10-5"/></svg></button>
-</nav>
-<main>
-<section class="page on" id="pgW">
- <div class="c hero"><div class="bg" id="bgH"></div><div class="shade"></div>
-  <div class="in"><div><div class="loc"><svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span id="where">Konum bekleniyor</span></div><div class="chips" id="chips"></div></div>
-   <div><div class="lab" id="greet">Hava durumu</div><div class="cond" id="cond">Hava alınıyor</div><div class="lab" id="note" style="margin-top:4px"></div></div></div>
-  <svg class="ic" id="ic" viewBox="0 0 64 64"></svg></div>
- <div class="c"><h2>Saatlik sıcaklık</h2><div class="crv"><svg viewBox="0 0 600 60" preserveAspectRatio="none"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6cf8a" stop-opacity=".45"/><stop offset="1" stop-color="#f6cf8a" stop-opacity="0"/></linearGradient></defs><path id="area" fill="url(#ag)" d=""/><path id="curve" fill="none" stroke="#f3c77a" stroke-width="2.2" vector-effect="non-scaling-stroke" d=""/></svg><div class="hr" id="hrs"></div></div></div>
- <div class="c side"><div class="date" id="date">--</div><div class="bigt" id="tmp">--°</div>
-  <div class="rows"><div>Hissedilen<b id="feel">--</b></div><div>Nem<b id="hum">--</b></div><div>Rüzgar<b id="wnd">--</b></div><div>Basınç<b id="prs">--</b></div><div>Gün doğumu / batımı<b id="sun">--</b></div></div>
-  <h2 style="margin-top:12px">Sonraki günler</h2><div class="days" id="days"></div></div>
-</section>
+  <!-- Arka Plan Fotoğraf Katmanları -->
+  <div id="bgLayerA" class="bg-layer" style="opacity: 1;"></div>
+  <div id="bgLayerB" class="bg-layer" style="opacity: 0;"></div>
+  <div class="bg-overlay"></div>
 
-<section class="page" id="pgR">
- <div class="c mp"><div id="map"></div><div id="mstat" class="chip2">Harita yükleniyor…</div></div>
- <div class="c cmp" id="cmpC"><h2>Pusula <span id="hdg" style="float:right;color:var(--t)">---°</span></h2>
-  <svg viewBox="-50 -50 100 100"><circle r="46" fill="none" stroke="rgba(255,255,255,.2)"/><g id="dial"></g><path d="M0-51l4 7h-8z" fill="#ff8a8a"/><path d="M0-30l5 30h-10z" fill="#fff"/><path d="M0 30l5-30h-10z" fill="rgba(255,255,255,.3)"/><circle r="2.2" fill="#fff"/></svg><button class="cbtn" id="cb">Pusulayı başlat</button></div>
- <div class="c pos"><h2>Rakım</h2><div class="alt"><span id="alt">---</span><span class="sub"> m</span></div>
-  <svg class="sp" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline id="spark" fill="none" stroke="#f3c77a" stroke-width="1.6" vector-effect="non-scaling-stroke" points=""/></svg>
-  <div style="display:flex;gap:18px"><div class="co">Enlem<b id="lat">--</b></div><div class="co">Boylam<b id="lon">--</b></div></div></div>
-</section>
-</main>
-</div>
+  <!-- Gizli Dosya Seçici (+ Butonu İle Kendi Fotoğraflarını Seçmek İçin) -->
+  <input type="file" id="fileInput" accept="image/*" multiple />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>
-const $=id=>document.getElementById(id),dirs=['K','KD','D','GD','G','GB','B','KB'];
-const hello=()=>{const h=new Date().getHours();return(h<6?'İyi geceler':h<12?'Günaydın':h<18?'İyi günler':'İyi akşamlar')+' Halil'};
-$('hiT').textContent=hello();$('greet').textContent=hello();
-const hide=()=>$('hi').classList.add('out');setTimeout(hide,3800);$('hi').onclick=hide;
-$('date').textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
-const wl=async()=>{try{await navigator.wakeLock.request('screen')}catch(e){}};wl();
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)wl()});
+  <div class="app-container">
+    <!-- Sol Dikey Menü -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <button class="nav-btn active" title="Dashboard" onclick="toggleFullScreen()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+          </svg>
+        </button>
+        <button class="nav-btn" title="Takvim">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="3"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+        </button>
+        <button class="nav-btn" title="Pusula">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+          </svg>
+        </button>
+        <button class="nav-btn" title="Konumlar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </button>
+        <button class="nav-btn" title="Ayarlar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+      </div>
 
-/* sayfalar */
-document.querySelectorAll('nav button[data-p]').forEach(b=>b.onclick=()=>{
- document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
- document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id===b.dataset.p));
- setTimeout(()=>map.invalidateSize(),80)});
+      <button class="nav-btn" title="Sonraki Arka Plan" onclick="nextBackground()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </aside>
 
-/* arka plan: fotoğraf yoksa gradyan */
-const G={acik:'#1e6fd9,#7fc4ff 60%,#cfe9ff',parcali:'#3a78c4,#9fbddc,#dfe7ef',bulutlu:'#3f4856,#7d8794,#aab2bc',sis:'#8a95a0,#b7c0c8,#d6dbe0',yagmur:'#232b37,#46515e,#6b7684',kar:'#6a7c93,#a9b8c9,#e6edf5',firtina:'#12141d,#2b2f40,#4a4f66',gece:'#04061a,#101a44,#2b2a5e'};
-const B={acik:'rgba(255,255,255,.5)',parcali:'rgba(255,255,255,.42)',bulutlu:'rgba(28,34,46,.7)',sis:'rgba(238,242,246,.78)',yagmur:'rgba(14,19,29,.72)',kar:'rgba(255,255,255,.6)',firtina:'rgba(8,8,16,.82)',gece:'rgba(95,85,175,.38)'};
-const blobs=k=>[0,1,2,3,4].map(i=>`<i class="blob" style="left:${i*22-12}%;top:${(i*37)%65}%;width:${42+i*6}vmax;height:${22+i*4}vmax;background:${B[k]};animation-delay:-${i*6}s"></i>`).join('');
-let curKey=null;
-function setBg(k){
- if(k===curKey)return;curKey=k;
- const apply=(css,fb)=>['bgG','bgH'].forEach(id=>{const o=$(id),n=document.createElement('div');n.className='l';n.style.cssText=css+';opacity:0';if(fb)n.innerHTML=blobs(k);o.appendChild(n);
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{n.style.opacity=1;[...o.children].forEach(c=>{if(c!==n)setTimeout(()=>c.remove(),1500)})}))});
- const im=new Image();im.onload=()=>apply(`background-image:url(${k}.jpg)`);im.onerror=()=>apply(`background:linear-gradient(180deg,${G[k]})`,1);im.src=k+'.jpg';
- fx=k=='yagmur'||k=='firtina'?'rain':k=='kar'?'snow':'';storm=k=='firtina'}
-const key=(c,day)=>{let k=c==0?'acik':c<=2?'parcali':c==3?'bulutlu':c<=48?'sis':(c<=67||(c>=80&&c<=82))?'yagmur':c<=86?'kar':'firtina';
- return(!day&&['acik','parcali','bulutlu','sis'].includes(k))?'gece':k};
+    <!-- Ana İçerik -->
+    <main class="main-area">
+      <!-- Üst Bilgi Barı -->
+      <header class="top-bar">
+        <div class="welcome-box">
+          <span class="welcome-label">Welcome</span>
+          <span class="user-name">Calfin Danang</span>
+        </div>
 
-/* yağmur, kar, şimşek */
-const cv=$('fx'),cx=cv.getContext('2d');let fx='',storm=false,P=[],flash=0;
-function size(){cv.width=innerWidth;cv.height=innerHeight}size();addEventListener('resize',size);
-(function loop(){cx.clearRect(0,0,cv.width,cv.height);
- if(fx){while(P.length<(fx=='rain'?150:90))P.push({x:Math.random()*cv.width,y:Math.random()*cv.height,s:.6+Math.random()});
-  cx.strokeStyle='rgba(200,220,255,.45)';cx.fillStyle='rgba(255,255,255,.8)';cx.lineWidth=1;
-  P.forEach(p=>{if(fx=='rain'){cx.beginPath();cx.moveTo(p.x,p.y);cx.lineTo(p.x-3,p.y+14*p.s);cx.stroke();p.y+=14*p.s;p.x-=3*p.s*.3}
-   else{cx.beginPath();cx.arc(p.x,p.y,1.2*p.s,0,7);cx.fill();p.y+=1.4*p.s;p.x+=Math.sin(p.y/40)*.5}
-   if(p.y>cv.height){p.y=-10;p.x=Math.random()*cv.width}})
-  if(storm&&!flash&&Math.random()<.004)flash=1}else P=[];
- if(flash>0){cx.fillStyle=`rgba(255,255,255,${flash*.35})`;cx.fillRect(0,0,cv.width,cv.height);flash-=.06;if(flash<0)flash=0}
- requestAnimationFrame(loop)})();
+        <div class="top-actions">
+          <button class="circle-btn" title="Arka Plan Fotoğrafı Seç" onclick="document.getElementById('fileInput').click()">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+          <button class="circle-btn" title="Arka Plan Değiştir" onclick="nextBackground()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="20" y1="20" x2="16.35" y2="16.35"/>
+            </svg>
+          </button>
+          <button class="circle-btn" title="Bildirimler">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </button>
+          <div class="avatar-btn" title="Profil">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </div>
+        </div>
+      </header>
 
-/* harita */
-const map=L.map('map',{zoomControl:false,attributionControl:false}).setView([39,35],6);
-const tl=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);tl.on('load',()=>$('mstat').style.display='none');tl.on('tileerror',()=>{$('mstat').textContent='Harita yüklenemedi, bağlantıyı kontrol et';$('mstat').style.display='block'});
-const halo=L.circleMarker([0,0],{radius:16,stroke:false,fillColor:'#f3c77a',fillOpacity:.25}).addTo(map);
-const me=L.circleMarker([0,0],{radius:6,color:'#fff',weight:2,fillColor:'#f3c77a',fillOpacity:1}).addTo(map);
-let follow=true;map.on('dragstart',()=>{follow=false;setTimeout(()=>follow=true,15000)});
-new ResizeObserver(()=>map.invalidateSize()).observe($('map'));
+      <!-- Gövde -->
+      <div class="dashboard-body">
+        <!-- Sol Bölüm -->
+        <section class="left-panel">
+          <div class="hero-section">
+            <div class="forecast-badge">Weather Forecast</div>
+            <h1 class="hero-title" id="heroTitle">
+              Storm<br><strong>with Heavy Rain</strong>
+            </h1>
+            <p class="hero-description" id="heroDesc">
+              Partly cloudy with occasional snow showers. High around 50°F. Wind from the east 11 to 21 mph. Snow chance is 40%, with rainfall expected to be less than an inch.
+            </p>
+          </div>
 
-/* konum */
-let pos=null,lastW=0,lastC=null,alts=[],compassOn=false;
-const dist=(a,b)=>{const r=Math.PI/180;return 6371*Math.hypot((b.lon-a.lon)*r*Math.cos((a.lat+b.lat)/2*r),(b.lat-a.lat)*r)};
-navigator.geolocation.watchPosition(p=>{
- const c=p.coords;pos={lat:c.latitude,lon:c.longitude};
- $('lat').textContent=Math.abs(c.latitude).toFixed(5)+'° '+(c.latitude>=0?'K':'G');
- $('lon').textContent=Math.abs(c.longitude).toFixed(5)+'° '+(c.longitude>=0?'D':'B');
- if(c.altitude!=null){$('alt').textContent=Math.round(c.altitude);alts.push(c.altitude);if(alts.length>80)alts.shift();spark()}
- if(!compassOn&&c.heading!=null&&c.speed>1)setHeading(c.heading);
- me.setLatLng([c.latitude,c.longitude]);halo.setLatLng([c.latitude,c.longitude]);
- if(follow)map.setView([c.latitude,c.longitude],Math.max(map.getZoom(),13));
- if(Date.now()-lastW>600000)weather();
- if(!lastC||dist(lastC,pos)>3){lastC={...pos};city()}
-},()=>{$('where').textContent='Konum izni ver'},{enableHighAccuracy:true,maximumAge:1000});
-function spark(){if(alts.length<2)return;const mn=Math.min(...alts),mx=Math.max(...alts),s=Math.max(mx-mn,10);
- $('spark').setAttribute('points',alts.map((a,i)=>`${i/(alts.length-1)*100},${28-(a-mn)/s*26}`).join(' '))}
-async function city(){try{const d=await(await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.lat}&longitude=${pos.lon}&localityLanguage=tr`)).json();
- $('where').textContent=[d.city||d.locality,d.principalSubdivision].filter(Boolean).join(', ')||'Konum bulundu'}catch(e){$('where').textContent='Konum bulundu'}}
+          <!-- Alt Sıcaklık Eğrisi ve Günler -->
+          <div class="timeline-wrapper">
+            <div class="hourly-temps" id="hourlyRow"></div>
 
-/* hava */
-const wc=c=>c==0?'Açık':c<=2?'Parçalı bulutlu':c==3?'Kapalı bulutlu':c<=48?'Sisli':c<=57?'Çiseleme':c<=67?'Yağmurlu':c<=77?'Karlı':c<=82?'Sağanak':c<=86?'Kar sağanağı':'Fırtına';
-const cl='<path d="M18 46a9 9 0 010-18 13 13 0 0125-3 10 10 0 013 21z" fill="#e3e8ff"/>';
-const sun=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#ffd166"/>`+[0,45,90,135,180,225,270,315].map(a=>`<line x1="${x}" y1="${y-r-3}" x2="${x}" y2="${y-r-7}" stroke="#ffd166" stroke-width="2.4" stroke-linecap="round" transform="rotate(${a} ${x} ${y})"/>`).join('');
-const moon='<path d="M38 12a19 19 0 1018 25 15 15 0 01-18-25z" fill="#f4eecf"/>';
-const ico=(c,day=true)=>c==0?(day?sun(32,32,10):moon):c<=2?(day?sun(24,22,8):moon.replace('M38 12','M30 8'))+cl:c==3?cl:c<=48?cl+'<path d="M16 52h32M22 57h20" stroke="#b6bdf0" stroke-width="2.4" stroke-linecap="round"/>'
- :(c<=67||(c>=80&&c<=82))?cl+'<path d="M24 50l-3 8M33 50l-3 8M42 50l-3 8" stroke="#6aa8ff" stroke-width="2.6" stroke-linecap="round"/>'
- :c<=86?cl+'<g fill="#fff"><circle cx="24" cy="54" r="2.2"/><circle cx="33" cy="57" r="2.2"/><circle cx="42" cy="54" r="2.2"/></g>'
- :cl+'<path d="M34 46l-6 9h6l-4 8" fill="none" stroke="#ffd166" stroke-width="2.8" stroke-linejoin="round"/>';
-async function weather(){
- if(!pos)return;lastW=Date.now();
- try{const d=await(await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.lat}&longitude=${pos.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,wind_direction_10m,weather_code,surface_pressure,is_day&hourly=temperature_2m,weather_code&daily=sunrise,sunset,temperature_2m_max,temperature_2m_min,weather_code&timezone=auto&forecast_days=4&wind_speed_unit=kmh`)).json(),c=d.current,day=!!c.is_day;
-  setBg(key(c.weather_code,day));
-  $('cond').textContent=wc(c.weather_code);$('ic').innerHTML=ico(c.weather_code,day);
-  $('note').textContent='Bugün en düşük sıcaklık '+Math.round(d.daily.temperature_2m_min[0])+'°, en yüksek '+Math.round(d.daily.temperature_2m_max[0])+'° olacak.';
-  $('tmp').textContent=Math.round(c.temperature_2m)+'°';
-  $('feel').textContent=Math.round(c.apparent_temperature)+'°';$('hum').textContent='%'+c.relative_humidity_2m;
-  $('wnd').textContent=dirs[Math.round(c.wind_direction_10m/45)%8]+' '+Math.round(c.wind_speed_10m)+' km/s';
-  $('prs').textContent=Math.round(c.surface_pressure)+' hPa';
-  $('chips').innerHTML=['Hissedilen '+Math.round(c.apparent_temperature)+'°','Nem %'+c.relative_humidity_2m,'Rüzgar '+dirs[Math.round(c.wind_direction_10m/45)%8]+' '+Math.round(c.wind_speed_10m)+' km/s'].map(x=>`<span>${x}</span>`).join('');$('sun').textContent=d.daily.sunrise[0].slice(11,16)+' / '+d.daily.sunset[0].slice(11,16);
-  const i=Math.max(0,d.hourly.time.findIndex(t=>t>=c.time.slice(0,13))),H=[0,1,2,3,4,5].map(k=>i+k*1);
-  const v=H.map(k=>d.hourly.temperature_2m[k]),mn=Math.min(...v),mx=Math.max(...v),xy=v.map((t,k)=>[(k+.5)/6*600,50-(t-mn)/((mx-mn)||1)*40]);
-  $('curve').setAttribute('d','M'+xy[0].join(',')+xy.slice(1).map((p,k)=>{const q=xy[k],m=(q[0]+p[0])/2;return` C${m},${q[1]} ${m},${p[1]} ${p[0]},${p[1]}`}).join(''));
-  $('area').setAttribute('d',$('curve').getAttribute('d')+` L${xy[5][0]},60 L${xy[0][0]},60Z`);$('hrs').innerHTML=H.map(k=>`<div><b>${Math.round(d.hourly.temperature_2m[k])}°</b>${d.hourly.time[k].slice(11,16)}<br>${wc(d.hourly.weather_code[k])}</div>`).join('');
-  $('days').innerHTML=[1,2,3].map(k=>`<div><svg viewBox="0 0 64 64">${ico(d.daily.weather_code[k])}</svg><span>${new Date(d.daily.time[k]).toLocaleDateString('tr-TR',{weekday:'long'})}<br>${wc(d.daily.weather_code[k])}</span><b>${Math.round(d.daily.temperature_2m_max[k])}° / ${Math.round(d.daily.temperature_2m_min[k])}°</b></div>`).join('');
- }catch(e){$('cond').textContent='Hava alınamadı'}}
-setBg('bulutlu');
+            <div class="curve-box">
+              <svg id="curveSvg" viewBox="0 0 600 76" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+                    <stop offset="58%" stop-color="rgba(255,255,255,0.95)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0.35)"/>
+                  </linearGradient>
+                  <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="rgba(255,255,255,0.14)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0.0)"/>
+                  </linearGradient>
+                </defs>
+                <path id="areaPath" fill="url(#areaGrad)" d=""/>
+                <path id="linePath" fill="none" stroke="url(#curveGrad)" stroke-width="1.8" stroke-linecap="round" d=""/>
+              </svg>
+              <div id="activeNode" class="active-node"></div>
+            </div>
 
-/* pusula */
-let t='';for(let a=0;a<360;a+=15){const m=a%90==0,r=a*Math.PI/180,s=Math.sin(r),c=-Math.cos(r);
- t+=`<line x1="${s*(m?36:41)}" y1="${c*(m?36:41)}" x2="${s*45}" y2="${c*45}" stroke="rgba(255,255,255,${m?.7:.28})"/>`;
- if(m)t+=`<text x="${s*29}" y="${c*29+3}" text-anchor="middle" font-size="8" fill="#f6f4ff">${['K','D','G','B'][a/90]}</text>`}
-$('dial').innerHTML=t;
-function setHeading(h){$('dial').setAttribute('transform',`rotate(${-h})`);$('hdg').textContent=Math.round(h)+'° '+dirs[Math.round(h/45)%8]}
-const onOri=e=>{const h=e.webkitCompassHeading!=null?e.webkitCompassHeading:(e.absolute&&e.alpha!=null?360-e.alpha:null);if(h!=null){compassOn=true;setHeading(h)}};
-let askedC=false;
-function listen(){if(askedC)return;askedC=true;addEventListener('deviceorientationabsolute',onOri,true);addEventListener('deviceorientation',onOri,true);$('cb').classList.add('hid')}
-async function askCompass(){
- try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
-   const r=await DeviceOrientationEvent.requestPermission();if(r!=='granted'){$('cb').textContent='İzin verilmedi. Safari\'yi kapatıp tekrar aç';return}}
-  listen();setTimeout(()=>{if(!compassOn)$('cb').classList.remove('hid')},3000)}catch(e){$('cb').textContent='Pusula açılamadı'}}
-$('cb').addEventListener('click',askCompass);
-document.addEventListener('click',()=>{if(!askedC&&!compassOn)askCompass()},{once:true});
-if(typeof DeviceOrientationEvent==='undefined'||typeof DeviceOrientationEvent.requestPermission!=='function')listen();
-</script>
+            <div class="days-bar" id="daysBar">
+              <button class="day-btn" data-day="0">Sunday</button>
+              <button class="day-btn" data-day="1">Monday</button>
+              <button class="day-btn" data-day="2">Tuesday</button>
+              <button class="day-btn active" data-day="3">Wednesday</button>
+              <button class="day-btn" data-day="4">Thursday</button>
+              <button class="day-btn" data-day="5">Friday</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sağ Bölüm -->
+        <aside class="right-panel">
+          <div class="current-weather-header">
+            <div class="location-row">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+              </svg>
+              <span id="mainCity">Central Jakarta</span>
+            </div>
+
+            <div class="main-temp" id="mainTemp">10°C</div>
+
+            <div class="metrics-row">
+              <span class="metric-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+                </svg>
+                <span id="windVal">16 mph</span>
+              </span>
+              <span class="metric-item">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                </svg>
+                <span id="humVal">40%</span>
+              </span>
+              <span class="metric-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                </svg>
+                <span id="gustVal">13 km/h</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="city-list">
+            <div class="city-card" onclick="selectCity('North Jakarta', '12°C', 'Mostly Sunny', '14 mph', '35%', '11 km/h')">
+              <div class="city-info">
+                <span class="country-label">Indonesia</span>
+                <span class="city-name">North Jakarta</span>
+                <span class="city-condition">Mostly Sunny</span>
+              </div>
+              <div class="city-temp-wrap">
+                <span class="city-temp">12°</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8">
+                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="city-card" onclick="selectCity('Bandung', '10°C', 'Cloudy', '18 mph', '62%', '15 km/h')">
+              <div class="city-info">
+                <span class="country-label">Indonesia</span>
+                <span class="city-name">Bandung</span>
+                <span class="city-condition">Cloudy</span>
+              </div>
+              <div class="city-temp-wrap">
+                <span class="city-temp">10°</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8">
+                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="city-card" onclick="selectCity('South Jakarta', '14°C', 'Sunny', '10 mph', '30%', '9 km/h')">
+              <div class="city-info">
+                <span class="country-label">Indonesia</span>
+                <span class="city-name">South Jakarta</span>
+                <span class="city-condition">Sunny</span>
+              </div>
+              <div class="city-temp-wrap">
+                <span class="city-temp">14°</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    /* =====================================================================
+       1. KENDİ ARKA PLAN FOTOĞRAFLARINI BURAYA EKLEYEBİLİRSİN
+       (index.html ile aynı klasördeki dosya adlarını listeye yazman yeterli)
+       ===================================================================== */
+    const ARKA_PLANLAR = [
+      "arka-plan-1.jpg",
+      "arka-plan-2.jpg",
+      "arka-plan-3.jpg"
+    ];
+
+    // Varsayılan fırtına & şimşek atmosferi (fotoğraf dosyası henüz yoksa devreye girer)
+    const VARSAYILAN_FIRTINA_BG = `url("data:image/svg+xml;utf8,${encodeURIComponent(`
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'>
+        <defs>
+          <linearGradient id='sky' x1='0' y1='0' x2='0' y2='1'>
+            <stop offset='0%' stop-color='#273c42'/>
+            <stop offset='45%' stop-color='#4a6366'/>
+            <stop offset='66%' stop-color='#b7b58e'/>
+            <stop offset='72%' stop-color='#4d6338'/>
+            <stop offset='100%' stop-color='#1b2b18'/>
+          </linearGradient>
+          <radialGradient id='flash' cx='43%' cy='64%' r='35%'>
+            <stop offset='0%' stop-color='rgba(255,252,230,0.85)'/>
+            <stop offset='45%' stop-color='rgba(210,225,195,0.22)'/>
+            <stop offset='100%' stop-color='rgba(0,0,0,0)'/>
+          </radialGradient>
+        </defs>
+        <rect width='1600' height='900' fill='url(#sky)'/>
+        <ellipse cx='420' cy='210' rx='460' ry='170' fill='#1c2b30' opacity='0.65'/>
+        <ellipse cx='1080' cy='240' rx='520' ry='190' fill='#213338' opacity='0.55'/>
+        <rect width='1600' height='900' fill='url(#flash)'/>
+        <polyline points='665,370 648,435 675,455 658,525 692,588' fill='none' stroke='#ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.95'/>
+        <polyline points='675,455 705,495 698,530' fill='none' stroke='#ffffff' stroke-width='1.8' opacity='0.75'/>
+        <path d='M0,620 Q420,595 820,618 T1600,605 L1600,900 L0,900 Z' fill='#2d4222' opacity='0.88'/>
+        <path d='M0,675 Q520,645 980,680 T1600,660 L1600,900 L0,900 Z' fill='#1d2d16' opacity='0.92'/>
+      </svg>
+    `)}")`;
+
+    let gecerliBgListesi = [];
+    let aktifBgIndex = 0;
+    let aktifKatmanA = true;
+
+    const bgLayerA = document.getElementById('bgLayerA');
+    const bgLayerB = document.getElementById('bgLayerB');
+
+    function setBackgroundImage(cssUrl) {
+      const hedef = aktifKatmanA ? bgLayerB : bgLayerA;
+      const eski = aktifKatmanA ? bgLayerA : bgLayerB;
+      hedef.style.backgroundImage = cssUrl;
+      hedef.style.opacity = '1';
+      eski.style.opacity = '0';
+      aktifKatmanA = !aktifKatmanA;
+    }
+
+    // Klasördeki fotoğrafları kontrol et ve yükle
+    function initBackgrounds() {
+      bgLayerA.style.backgroundImage = VARSAYILAN_FIRTINA_BG;
+      ARKA_PLANLAR.forEach((dosya) => {
+        const img = new Image();
+        img.onload = () => {
+          gecerliBgListesi.push(`url("${dosya}")`);
+          if (gecerliBgListesi.length === 1) {
+            setBackgroundImage(gecerliBgListesi[0]);
+          }
+        };
+        img.src = dosya;
+      });
+    }
+
+    function nextBackground() {
+      if (gecerliBgListesi.length === 0) return;
+      aktifBgIndex = (aktifBgIndex + 1) % gecerliBgListesi.length;
+      setBackgroundImage(gecerliBgListesi[aktifBgIndex]);
+    }
+
+    // + Butonu ile cihazdan fotoğraf yükleme
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+      gecerliBgListesi = files.map(f => `url("${URL.createObjectURL(f)}")`);
+      aktifBgIndex = 0;
+      setBackgroundImage(gecerliBgListesi[0]);
+    });
+
+    /* =====================================================================
+       2. SAATLİK SICAKLIK EĞRİSİ VE GÜNLER
+       ===================================================================== */
+    const gunlukVeriler = [
+      { temps: [12, 14, 15, 13, 17, 14], activeIdx: 3, title: "Cloudy<br><strong>with Light Breeze</strong>" },
+      { temps: [10, 12, 13, 11, 16, 12], activeIdx: 3, title: "Overcast<br><strong>with Scattered Rain</strong>" },
+      { temps: [13, 15, 16, 12, 18, 13], activeIdx: 3, title: "Thunder<br><strong>and Evening Showers</strong>" },
+      { temps: [11, 13, 14, 10, 19, 12], activeIdx: 3, title: "Storm<br><strong>with Heavy Rain</strong>" },
+      { temps: [14, 16, 18, 15, 20, 15], activeIdx: 3, title: "Partly Cloudy<br><strong>with Warm Sun</strong>" },
+      { temps: [15, 17, 19, 16, 21, 16], activeIdx: 3, title: "Clear Sky<br><strong>and Mild Wind</strong>" }
+    ];
+
+    let seciliGun = 3; // Wednesday
+    let seciliNokta = 3; // 10°
+
+    const kucukIkonlar = [
+      `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`,
+      `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`,
+      `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`,
+      `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`,
+      `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>`,
+      `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`
+    ];
+
+    function renderCurve() {
+      const veri = gunlukVeriler[seciliGun];
+      const temps = veri.temps;
+      const hourlyRow = document.getElementById('hourlyRow');
+      hourlyRow.innerHTML = '';
+
+      temps.forEach((t, i) => {
+        const div = document.createElement('div');
+        div.className = 'hour-item' + (i === seciliNokta ? ' active' : '');
+        div.innerHTML = `<span>${t}°</span>${kucukIkonlar[i]}`;
+        div.onclick = () => {
+          seciliNokta = i;
+          renderCurve();
+        };
+        hourlyRow.appendChild(div);
+      });
+
+      // 6 nokta için X ve Y koordinatları (SVG viewBox: 600 x 76)
+      const minT = Math.min(...temps);
+      const maxT = Math.max(...temps);
+      const pts = temps.map((t, i) => {
+        const x = (i + 0.5) * (600 / 6);
+        const norm = maxT === minT ? 0.5 : (t - minT) / (maxT - minT);
+        const y = 58 - norm * 38;
+        return { x, y };
+      });
+
+      // Yumuşak kübik bezier eğrisi oluştur
+      let d = `M ${pts[0].x} ${pts[0].y}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const cpX = (pts[i].x + pts[i + 1].x) / 2;
+        d += ` C ${cpX} ${pts[i].y}, ${cpX} ${pts[i + 1].y}, ${pts[i + 1].x} ${pts[i + 1].y}`;
+      }
+
+      document.getElementById('linePath').setAttribute('d', d);
+      document.getElementById('areaPath').setAttribute('d', `${d} L ${pts[pts.length - 1].x} 76 L ${pts[0].x} 76 Z`);
+
+      // Aktif nokta ışığını yerleştir
+      const aktifPt = pts[seciliNokta];
+      const node = document.getElementById('activeNode');
+      node.style.left = `${(aktifPt.x / 600) * 100}%`;
+      node.style.top = `${(aktifPt.y / 76) * 100}%`;
+    }
+
+    document.querySelectorAll('.day-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        seciliGun = Number(btn.dataset.day);
+        seciliNokta = gunlukVeriler[seciliGun].activeIdx;
+        document.getElementById('heroTitle').innerHTML = gunlukVeriler[seciliGun].title;
+        renderCurve();
+      });
+    });
+
+    function selectCity(name, temp, cond, wind, hum, gust) {
+      document.getElementById('mainCity').textContent = name;
+      document.getElementById('mainTemp').textContent = temp;
+      document.getElementById('windVal').textContent = wind;
+      document.getElementById('humVal').textContent = hum;
+      document.getElementById('gustVal').textContent = gust;
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    document.body.addEventListener('dblclick', (e) => {
+      if (e.target.closest('button, .city-card, .hour-item')) return;
+      toggleFullScreen();
+    });
+
+    initBackgrounds();
+    renderCurve();
+  </script>
 </body>
 </html>
