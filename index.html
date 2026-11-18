@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Kabin Hava Durumu & Medya Ekranı</title>
+  <title>Kabin Hava Durumu & Radyo Ekranı</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -444,7 +444,7 @@
       color: var(--text-main);
     }
 
-    /* 4. EN ALT MÜZİK BARI (2. Görsel Birebir Mimarisi + 1. Görsel Renkleri) */
+    /* 4. EN ALT RADYO & MÜZİK BARI */
     .dock-zone {
       display: flex;
       align-items: center;
@@ -467,7 +467,7 @@
       gap: 14px;
     }
 
-    /* Sol Dikey İkon Sütunu (Kalp, +, Yükle/Arka Plan) */
+    /* Sol Dikey 3 İkon (Kalp, +, Yükle/Arka Plan) */
     .player-side-icons {
       display: flex;
       flex-direction: column;
@@ -501,7 +501,7 @@
       color: var(--amber);
     }
 
-    /* Üstten ve Alttan Taşan Kare Albüm Kapağı */
+    /* Üstten ve Alttan Taşan Kare İstasyon / Albüm Kapağı */
     .overhang-cover {
       width: clamp(98px, 17.6vh, 128px);
       height: clamp(98px, 17.6vh, 128px);
@@ -525,7 +525,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at 28% 24%, rgba(245, 166, 35, 0.22), transparent 60%);
+      background: radial-gradient(circle at 28% 24%, rgba(245, 166, 35, 0.24), transparent 62%);
       pointer-events: none;
     }
 
@@ -533,13 +533,13 @@
       font-size: 9.5px;
       font-weight: 700;
       letter-spacing: 1.6px;
-      color: rgba(255, 255, 255, 0.28);
+      color: rgba(255, 255, 255, 0.34);
       text-transform: uppercase;
       line-height: 1.3;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
-    /* Sağ Dikey Yığın: Başlık -> Alt Başlık -> İlerleme Çubuğu -> Süreler -> Ortalanmış Tuşlar */
+    /* Sağ Dikey Yığın */
     .player-body-stack {
       flex: 1;
       min-width: 0;
@@ -553,7 +553,7 @@
     .song-artist-upper {
       font-size: clamp(11px, 1.65vh, 13px);
       font-weight: 700;
-      letter-spacing: 2.2px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-main);
       white-space: nowrap;
@@ -570,7 +570,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 1.15;
-      margin-top: 1px;
+      margin-top: 2px;
     }
 
     .bar-track {
@@ -581,15 +581,25 @@
       cursor: pointer;
       position: relative;
       margin-top: 4px;
+      overflow: hidden;
     }
 
     .bar-fill {
       height: 100%;
-      width: 36%;
+      width: 100%;
       background: var(--amber);
       border-radius: 999px;
       box-shadow: 0 0 8px var(--amber-glow);
-      transition: width 0.15s linear;
+      transition: width 0.2s linear;
+    }
+
+    .bar-fill.live-active {
+      animation: livePulseBar 2.4s ease-in-out infinite;
+    }
+
+    @keyframes livePulseBar {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
     }
 
     .bar-times {
@@ -601,7 +611,7 @@
       margin-top: 2px;
     }
 
-    /* En Altta Ortalanmış Oynatma Kontrolleri (2. Görseldeki Gibi) */
+    /* En Altta Ortalanmış Oynatma Kontrolleri */
     .centered-transport {
       display: flex;
       align-items: center;
@@ -624,7 +634,7 @@
 
     .t-skip-btn:hover {
       opacity: 1;
-      transform: scale(1.1);
+      transform: scale(1.12);
     }
 
     .t-play-circle {
@@ -721,7 +731,7 @@
   <!-- Gizli Dosya Seçiciler -->
   <input type="file" id="mp3Input" accept="audio/*" multiple />
   <input type="file" id="photoInput" accept="image/*" multiple />
-  <audio id="audioTag"></audio>
+  <audio id="audioTag" preload="none"></audio>
 
   <div class="screen">
     <!-- 1. ÜST BAR -->
@@ -802,17 +812,17 @@
       </div>
     </section>
 
-    <!-- 4. EN ALT MÜZİK BARI (2. Görsel Mimarisi + Koyu/Kehribar Renkler) -->
+    <!-- 4. EN ALT RADYO & MÜZİK BARI -->
     <footer class="dock-zone">
       <div class="player-card">
-        <!-- Sol Dikey 3 İkon (Kalp, +, Paylaş/Arka Plan) -->
+        <!-- Sol Dikey 3 İkon (Kalp, +, Arka Plan) -->
         <div class="player-side-icons">
-          <button class="side-icon-btn" id="heartBtn" title="Favori" onclick="toggleHeart()">
+          <button class="side-icon-btn" id="heartBtn" title="Favori Kanal" onclick="toggleHeart()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
           </button>
-          <button class="side-icon-btn" title="MP3 / Müzik Dosyası Ekle" onclick="document.getElementById('mp3Input').click()">
+          <button class="side-icon-btn" title="Cihazdan MP3 Ekle" onclick="document.getElementById('mp3Input').click()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
@@ -827,20 +837,20 @@
           </button>
         </div>
 
-        <!-- Barın Üstüne ve Altına Taşan Kare Albüm Kapağı -->
-        <div class="overhang-cover" onclick="togglePlayPause()" title="Oynat / Duraklat">
+        <!-- Barın Üstüne ve Altına Taşan Kare İstasyon Kapağı -->
+        <div class="overhang-cover" onclick="togglePlayPause()" title="Radyoyu Başlat / Durdur">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.6">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="12" r="3"/>
+            <circle cx="12" cy="12" r="2"/>
+            <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
           </svg>
-          <div class="cover-typo" id="coverLabel">UZUN<br>YOL</div>
+          <div class="cover-typo" id="coverLabel">NIGHTRIDE<br>FM</div>
         </div>
 
-        <!-- Sağ Dikey Yığın: Başlık -> Alt Başlık -> Çubuk -> Süreler -> Ortalanmış Tuşlar -->
+        <!-- Sağ Dikey Yığın -->
         <div class="player-body-stack">
           <div>
-            <div class="song-artist-upper" id="artistLabel">UZUN YOL RADYO</div>
-            <div class="song-title-sub" id="songLabel">Gece Sürüşü</div>
+            <div class="song-artist-upper" id="artistLabel">NIGHTRIDE FM</div>
+            <div class="song-title-sub" id="songLabel">Synthwave • Canlı Radyo</div>
           </div>
 
           <div>
@@ -849,12 +859,12 @@
             </div>
             <div class="bar-times">
               <span id="elapsedLabel">0:00</span>
-              <span id="remainLabel">3:48</span>
+              <span id="remainLabel">CANLI</span>
             </div>
           </div>
 
           <div class="centered-transport">
-            <button class="t-skip-btn" title="Önceki" onclick="prevSong()">
+            <button class="t-skip-btn" title="Önceki Kanal" onclick="prevSong()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="11 19 2 12 11 5 11 19"/>
                 <polygon points="22 19 13 12 22 5 22 19"/>
@@ -865,7 +875,7 @@
                 <polygon points="6 4 20 12 6 20 6 4"/>
               </svg>
             </button>
-            <button class="t-skip-btn" title="Sonraki" onclick="nextSong()">
+            <button class="t-skip-btn" title="Sonraki Kanal" onclick="nextSong()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <polygon points="13 19 22 12 13 5 13 19"/>
                 <polygon points="2 19 11 12 2 5 2 19"/>
@@ -1047,8 +1057,8 @@
     /* =======================================================================
        3. AKILLI TIR GPS TAKİBİ (Her 3 km veya Her 3 Dakikada Otomatik Güncelleme)
        ======================================================================= */
-    const KM_THRESHOLD = 3.0;              // 3 km mesafe değişiminde güncelle
-    const TIME_THRESHOLD_MS = 3 * 60 * 1000; // 3 dakikada bir güncelle
+    const KM_THRESHOLD = 3.0;
+    const TIME_THRESHOLD_MS = 3 * 60 * 1000;
     let lastLat = null;
     let lastLon = null;
     let lastFetchTime = 0;
@@ -1281,17 +1291,42 @@
     }
 
     /* =======================================================================
-       5. MÜZİK BARI MANTIĞI (MP3 Yükleme + Yerleşik Sayaç)
+       5. CANLI RADYO İSTASYONLARI & MÜZİK BARI (İleri / Geri Tuşlarıyla Geçiş)
        ======================================================================= */
     const audio = document.getElementById('audioTag');
+
     let tracks = [
-      { artist: "UZUN YOL RADYO", title: "Gece Sürüşü", url: null, len: 228 },
-      { artist: "ANADOLU HATTIM", title: "Bolu Geçidi", url: null, len: 204 }
+      // NIGHTRIDE FM KANALLARI
+      { artist: "NIGHTRIDE FM", title: "Synthwave • Gece Sürüşü", badge: "NIGHTRIDE\nFM", url: "https://stream.nightride.fm/nightride.mp3", isRadio: true },
+      { artist: "CHILLSYNTH FM", title: "Nightride • Chill & Outrun", badge: "CHILL\nSYNTH", url: "https://stream.nightride.fm/chillsynth.mp3", isRadio: true },
+      { artist: "DARKSYNTH FM", title: "Nightride • Darksynth", badge: "DARK\nSYNTH", url: "https://stream.nightride.fm/darksynth.mp3", isRadio: true },
+      { artist: "DATAWAVE FM", title: "Nightride • Datawave", badge: "DATA\nWAVE", url: "https://stream.nightride.fm/datawave.mp3", isRadio: true },
+      { artist: "SPACESYNTH FM", title: "Nightride • Spacesynth", badge: "SPACE\nSYNTH", url: "https://stream.nightride.fm/spacesynth.mp3", isRadio: true },
+
+      // SOMAFM KANALLARI
+      { artist: "SOMAFM • GROOVE SALAD", title: "Ambient & Downtempo", badge: "GROOVE\nSALAD", url: "https://ice1.somafm.com/groovesalad-128-mp3", isRadio: true },
+      { artist: "SOMAFM • DRONE ZONE", title: "Derin Uzay & Atmosfer", badge: "DRONE\nZONE", url: "https://ice1.somafm.com/dronezone-128-mp3", isRadio: true },
+      { artist: "SOMAFM • SPACE STATION", title: "Mid-Tempo Electronica", badge: "SPACE\nSOMA", url: "https://ice1.somafm.com/spacestation-128-mp3", isRadio: true },
+      { artist: "SOMAFM • VAPORWAVES", title: "Vaporwave & Retro", badge: "VAPOR\nWAVES", url: "https://ice1.somafm.com/vaporwaves-128-mp3", isRadio: true },
+      { artist: "SOMAFM • SECRET AGENT", title: "Lounge & Jazz Groove", badge: "SECRET\nAGENT", url: "https://ice1.somafm.com/secretagent-128-mp3", isRadio: true },
+      { artist: "SOMAFM • LUSH", title: "Mellow Vocals & Chill", badge: "SOMA\nLUSH", url: "https://ice1.somafm.com/lush-128-mp3", isRadio: true },
+
+      // AÇIK PAYLAŞILAN YERLİ & YABANCI RADYOLAR
+      { artist: "POWER FM", title: "Türkiye • Yabancı Hit", badge: "POWER\nFM", url: "https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio", isRadio: true },
+      { artist: "POWER TÜRK", title: "Türkiye • Türkçe Pop", badge: "POWER\nTÜRK", url: "https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio", isRadio: true },
+      { artist: "POWER LOVE", title: "Türkiye • Slow & Romantik", badge: "POWER\nLOVE", url: "https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio", isRadio: true },
+      { artist: "VIRGIN RADIO TR", title: "Türkiye • Yabancı Pop", badge: "VIRGIN\nRADIO", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/VIRGIN_RADIO_TR.mp3", isRadio: true },
+      { artist: "METRO FM", title: "Türkiye • Hit Müzik", badge: "METRO\nFM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/METRO_FM.mp3", isRadio: true },
+      { artist: "SÜPER FM", title: "Türkiye • Türkçe Hit", badge: "SÜPER\nFM", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/SUPER_FM.mp3", isRadio: true },
+      { artist: "JOY TÜRK", title: "Türkiye • Türkçe Slow", badge: "JOY\nTÜRK", url: "https://playerservices.streamtheworld.com/api/livestream-redirect/JOY_TURK.mp3", isRadio: true },
+      { artist: "RADIO PARADISE", title: "Global • Eklektik Mix", badge: "RADIO\nPARADISE", url: "https://stream.radioparadise.com/mp3-128", isRadio: true }
     ];
+
     let trackIdx = 0;
     let playing = false;
-    let timerId = null;
-    let elapsedSec = 82;
+    let liveSeconds = 0;
+    let liveCounterTimer = null;
+    let autoSkipTimeout = null;
 
     function fmtSec(s) {
       if (!isFinite(s) || s < 0) return "0:00";
@@ -1300,65 +1335,108 @@
       return `${m}:${r < 10 ? '0' : ''}${r}`;
     }
 
-    function refreshPlayerUi() {
+    function refreshPlayerUi(customSubText = null) {
       const tr = tracks[trackIdx];
       document.getElementById('artistLabel').textContent = tr.artist;
-      document.getElementById('songLabel').textContent = tr.title;
-      document.getElementById('coverLabel').innerHTML = tr.artist.slice(0, 10).replace(' ', '<br>');
+      document.getElementById('songLabel').textContent = customSubText || tr.title;
+      document.getElementById('coverLabel').innerHTML = tr.badge.replace('\n', '<br>');
+
+      const barFill = document.getElementById('barFill');
+      if (tr.isRadio) {
+        barFill.style.width = '100%';
+        barFill.classList.toggle('live-active', playing);
+        document.getElementById('elapsedLabel').textContent = fmtSec(liveSeconds);
+        document.getElementById('remainLabel').textContent = `CANLI (${trackIdx + 1}/${tracks.length})`;
+      } else {
+        barFill.classList.remove('live-active');
+      }
+
       document.getElementById('playPauseSvg').innerHTML = playing
         ? `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`
         : `<polygon points="6 4 20 12 6 20 6 4"/>`;
     }
 
-    function togglePlayPause() {
-      const tr = tracks[trackIdx];
-      if (tr.url) {
-        if (audio.paused) {
-          audio.play();
-          playing = true;
-        } else {
-          audio.pause();
-          playing = false;
+    function startLiveTimer() {
+      clearInterval(liveCounterTimer);
+      liveCounterTimer = setInterval(() => {
+        if (playing && tracks[trackIdx].isRadio) {
+          liveSeconds++;
+          document.getElementById('elapsedLabel').textContent = fmtSec(liveSeconds);
         }
-      } else {
-        playing = !playing;
-        clearInterval(timerId);
-        if (playing) {
-          timerId = setInterval(() => {
-            elapsedSec = (elapsedSec + 1) % tr.len;
-            const rem = Math.max(0, tr.len - elapsedSec);
-            document.getElementById('elapsedLabel').textContent = fmtSec(elapsedSec);
-            document.getElementById('remainLabel').textContent = fmtSec(rem);
-            document.getElementById('barFill').style.width = `${(elapsedSec / tr.len) * 100}%`;
-          }, 1000);
-        }
-      }
-      refreshPlayerUi();
+      }, 1000);
     }
 
-    function selectSong(idx) {
+    function selectSong(idx, autoPlay = true) {
+      clearTimeout(autoSkipTimeout);
+      clearInterval(liveCounterTimer);
+      liveSeconds = 0;
+
       trackIdx = (idx + tracks.length) % tracks.length;
       const tr = tracks[trackIdx];
-      clearInterval(timerId);
-      if (tr.url) {
-        audio.src = tr.url;
-        audio.play();
+
+      audio.pause();
+      audio.removeAttribute('src');
+      audio.load();
+
+      if (autoPlay) {
         playing = true;
+        refreshPlayerUi(tr.isRadio ? "Yayına bağlanıyor..." : tr.title);
+        audio.src = tr.url;
+        audio.play().catch(() => {
+          playing = false;
+          refreshPlayerUi("Başlatmak için oynat tuşuna basın");
+        });
       } else {
-        audio.pause();
-        elapsedSec = 0;
         playing = false;
-        togglePlayPause();
-        return;
+        refreshPlayerUi();
       }
-      refreshPlayerUi();
     }
 
-    function nextSong() { selectSong(trackIdx + 1); }
-    function prevSong() { selectSong(trackIdx - 1); }
+    function togglePlayPause() {
+      const tr = tracks[trackIdx];
+      if (!playing) {
+        if (!audio.src || audio.src === window.location.href) {
+          selectSong(trackIdx, true);
+          return;
+        }
+        playing = true;
+        refreshPlayerUi(tr.isRadio ? "Yayına bağlanıyor..." : tr.title);
+        audio.play().catch(() => {
+          playing = false;
+          refreshPlayerUi();
+        });
+      } else {
+        audio.pause();
+        playing = false;
+        clearInterval(liveCounterTimer);
+        refreshPlayerUi();
+      }
+    }
+
+    function nextSong() { selectSong(trackIdx + 1, true); }
+    function prevSong() { selectSong(trackIdx - 1, true); }
+
+    audio.addEventListener('playing', () => {
+      playing = true;
+      refreshPlayerUi();
+      if (tracks[trackIdx].isRadio) startLiveTimer();
+    });
+
+    audio.addEventListener('waiting', () => {
+      if (playing) refreshPlayerUi("Tamponlanıyor...");
+    });
+
+    audio.addEventListener('error', () => {
+      if (!playing) return;
+      refreshPlayerUi("Kanal yanıt vermiyor, sonraki kanala geçiliyor...");
+      autoSkipTimeout = setTimeout(() => {
+        nextSong();
+      }, 1500);
+    });
 
     audio.addEventListener('timeupdate', () => {
-      if (!audio.duration) return;
+      const tr = tracks[trackIdx];
+      if (tr.isRadio || !audio.duration || !isFinite(audio.duration)) return;
       const pct = (audio.currentTime / audio.duration) * 100;
       const rem = Math.max(0, audio.duration - audio.currentTime);
       document.getElementById('barFill').style.width = `${pct}%`;
@@ -1366,36 +1444,35 @@
       document.getElementById('remainLabel').textContent = fmtSec(rem);
     });
 
-    audio.addEventListener('ended', nextSong);
+    audio.addEventListener('ended', () => {
+      if (!tracks[trackIdx].isRadio) nextSong();
+    });
 
     function scrubTrack(e) {
+      const tr = tracks[trackIdx];
+      if (tr.isRadio || !audio.duration || !isFinite(audio.duration)) return;
       const rect = document.getElementById('barTrack').getBoundingClientRect();
       const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      const tr = tracks[trackIdx];
-      if (tr.url && audio.duration) {
-        audio.currentTime = ratio * audio.duration;
-      } else {
-        elapsedSec = Math.floor(ratio * tr.len);
-        document.getElementById('barFill').style.width = `${ratio * 100}%`;
-        document.getElementById('elapsedLabel').textContent = fmtSec(elapsedSec);
-        document.getElementById('remainLabel').textContent = fmtSec(tr.len - elapsedSec);
-      }
+      audio.currentTime = ratio * audio.duration;
     }
 
     function toggleHeart() {
       document.getElementById('heartBtn').classList.toggle('liked');
     }
 
+    // Cihazdan MP3 Eklendiğinde Radyo Listesinin Başına Ekler (İleri/Geri ile Radyolara Geçiş Devam Eder)
     document.getElementById('mp3Input').addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
       if (!files.length) return;
-      tracks = files.map(f => ({
+      const localTracks = files.map(f => ({
         artist: f.name.replace(/\.[^/.]+$/, "").toUpperCase(),
-        title: "Yerel Medya",
+        title: "Yerel MP3",
+        badge: "YEREL\nMP3",
         url: URL.createObjectURL(f),
-        len: 0
+        isRadio: false
       }));
-      selectSong(0);
+      tracks = [...localTracks, ...tracks];
+      selectSong(0, true);
     });
 
     /* =======================================================================
