@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
+  --vh:1vh;--vw:1vw;
   --bg:#000;
   --card:#1c1c1e;
   --line:rgba(255,255,255,.09);
@@ -32,86 +33,86 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,.25) 0%,rgba(0,0,0,.9) 70%,#000 100%)}
 
 .screen{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
-  padding:max(env(safe-area-inset-top),clamp(8px,1.6vh,16px)) max(env(safe-area-inset-right),clamp(18px,3vw,40px))
-          max(env(safe-area-inset-bottom),clamp(8px,1.6vh,16px)) max(env(safe-area-inset-left),clamp(18px,3vw,40px))}
+  padding:max(env(safe-area-inset-top),clamp(8px,calc(1.6*var(--vh)),16px)) max(env(safe-area-inset-right),clamp(18px,calc(3*var(--vw)),40px))
+          max(env(safe-area-inset-bottom),clamp(8px,calc(1.6*var(--vh)),16px)) max(env(safe-area-inset-left),clamp(18px,calc(3*var(--vw)),40px))}
 
 /* ÜST BAR */
-.top-bar{display:flex;align-items:center;justify-content:center;position:relative;height:clamp(40px,9vh,62px);flex-shrink:0}
-.loc{display:inline-flex;align-items:center;gap:clamp(7px,1.2vh,10px);padding:4px 8px;cursor:pointer}
-.pin{width:clamp(18px,3.2vh,24px);height:clamp(18px,3.2vh,24px);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.loc-text{font-size:clamp(13px,2.5vh,19px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tx);
-  max-width:26vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.date-wrap{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:clamp(8px,1.6vh,14px)}
-.date-wrap b{font-size:clamp(34px,8.4vh,62px);font-weight:800;letter-spacing:-.05em;line-height:.8}
-.date-r{display:flex;flex-direction:column;gap:clamp(3px,.7vh,6px)}
-.date-r span{font-size:clamp(7.5px,1.4vh,10.5px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
+.top-bar{display:flex;align-items:center;justify-content:center;position:relative;height:clamp(40px,calc(9*var(--vh)),62px);flex-shrink:0}
+.loc{display:inline-flex;align-items:center;gap:clamp(7px,calc(1.2*var(--vh)),10px);padding:4px 8px;cursor:pointer}
+.pin{width:clamp(18px,calc(3.2*var(--vh)),24px);height:clamp(18px,calc(3.2*var(--vh)),24px);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.loc-text{font-size:clamp(13px,calc(2.5*var(--vh)),19px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tx);
+  max-width:calc(26*var(--vw));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.date-wrap{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:clamp(8px,calc(1.6*var(--vh)),14px)}
+.date-wrap b{font-size:clamp(34px,calc(8.4*var(--vh)),62px);font-weight:800;letter-spacing:-.05em;line-height:.8}
+.date-r{display:flex;flex-direction:column;gap:clamp(3px,calc(.7*var(--vh)),6px)}
+.date-r span{font-size:clamp(7.5px,calc(1.4*var(--vh)),10.5px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
 .date-r u{display:block;height:1px;background:rgba(245,245,247,.75)}
-.date-r em{font-style:normal;align-self:flex-end;font-size:clamp(9px,1.7vh,13px);font-weight:500;letter-spacing:.24em;padding-right:.2em}
+.clock{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:clamp(30px,calc(7.6*var(--vh)),56px);font-weight:800;letter-spacing:-.04em;line-height:.8;font-variant-numeric:tabular-nums}
 @keyframes pulse{50%{opacity:.35;transform:scale(.8)}}
 
 /* ORTA */
-.middle{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:clamp(14px,2.4vw,34px);flex:1;min-height:0;padding:clamp(4px,1vh,10px) 0}
-.left{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,10px)}
+.middle{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:clamp(14px,calc(2.4*var(--vw)),34px);flex:1;min-height:0;padding:clamp(4px,calc(1*var(--vh)),10px) 0}
+.left{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,calc(1*var(--vh)),10px)}
 .temp{display:flex;line-height:.9}
-.temp b{font-size:clamp(46px,10.6vh,84px);font-weight:700;letter-spacing:-.05em}
-.temp sup{font-size:clamp(14px,2.6vh,22px);font-weight:500;color:var(--tx2);margin:clamp(6px,1.2vh,12px) 0 0 3px}
-.cond{font-size:clamp(10px,1.8vh,14px);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,245,247,.9)}
-.metrics{display:grid;grid-template-columns:auto auto;gap:clamp(4px,1vh,9px) clamp(16px,2.2vw,28px);margin-top:clamp(2px,.8vh,8px);justify-content:start}
+.temp b{font-size:clamp(46px,calc(10.6*var(--vh)),84px);font-weight:700;letter-spacing:-.05em}
+.temp sup{font-size:clamp(14px,calc(2.6*var(--vh)),22px);font-weight:500;color:var(--tx2);margin:clamp(6px,calc(1.2*var(--vh)),12px) 0 0 3px}
+.cond{font-size:clamp(10px,calc(1.8*var(--vh)),14px);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,245,247,.9)}
+.metrics{display:grid;grid-template-columns:auto auto;gap:clamp(4px,calc(1*var(--vh)),9px) clamp(16px,calc(2.2*var(--vw)),28px);margin-top:clamp(2px,calc(.8*var(--vh)),8px);justify-content:start}
 .metric{display:flex;flex-direction:column;gap:2px}
-.metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(7px,1.15vh,9px);color:var(--tx3);font-weight:600;letter-spacing:.16em;text-transform:uppercase}
-.metric b{font-size:clamp(12px,1.9vh,15px);font-weight:600;letter-spacing:.02em}
+.metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(7px,calc(1.15*var(--vh)),9px);color:var(--tx3);font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.metric b{font-size:clamp(12px,calc(1.9*var(--vh)),15px);font-weight:600;letter-spacing:.02em}
 
 /* HAVA DURUMU SAHNESİ — ortaya dokun = sonraki kanal */
-.art{display:flex;align-items:center;justify-content:center;height:100%;max-height:clamp(125px,31vh,230px);position:relative;cursor:pointer;--glow:rgba(255,185,56,.16)}
+.art{display:flex;align-items:center;justify-content:center;height:100%;max-height:clamp(125px,calc(31*var(--vh)),230px);position:relative;cursor:pointer;--glow:rgba(255,185,56,.16)}
 .art::before{content:'';position:absolute;inset:-14%;background:radial-gradient(closest-side,var(--glow),transparent);transition:background .8s}
 .art svg{position:relative;height:100%;width:auto;max-width:100%;overflow:visible;filter:drop-shadow(0 14px 24px rgba(0,0,0,.65));transition:transform .18s}
 .art:active svg{transform:scale(.94)}
 
 /* PUSULA — sağ üst, OLED siyah */
-.right{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start;align-self:start;gap:clamp(6px,1.2vh,10px)}
-.compass{height:clamp(110px,33vh,200px);aspect-ratio:1.2;border-radius:2px;background:#000;display:grid;grid-template-columns:1fr auto;
-  padding:clamp(10px,2.2vh,18px) clamp(10px,2vh,16px) clamp(10px,2.2vh,18px) clamp(8px,1.6vh,14px);cursor:pointer;flex-shrink:0}
+.right{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start;align-self:start;gap:clamp(6px,calc(1.2*var(--vh)),10px)}
+.compass{height:clamp(110px,calc(33*var(--vh)),200px);aspect-ratio:1.2;border-radius:2px;background:#000;display:grid;grid-template-columns:1fr auto;
+  padding:clamp(10px,calc(2.2*var(--vh)),18px) clamp(10px,calc(2*var(--vh)),16px) clamp(10px,calc(2.2*var(--vh)),18px) clamp(8px,calc(1.6*var(--vh)),14px);cursor:pointer;flex-shrink:0}
 .c-left{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;gap:2px}
-.alt{font-size:clamp(24px,6.8vh,54px);font-weight:700;letter-spacing:-.05em;line-height:1}
-.alt-l{font-size:clamp(6.5px,1.25vh,9.5px);font-weight:600;letter-spacing:.16em;text-transform:uppercase;line-height:1.4;color:var(--tx2)}
-.tape{position:relative;width:clamp(54px,13vh,96px)}
+.alt{font-size:clamp(24px,calc(6.8*var(--vh)),54px);font-weight:700;letter-spacing:-.05em;line-height:1}
+.alt-l{font-size:clamp(6.5px,calc(1.25*var(--vh)),9.5px);font-weight:600;letter-spacing:.16em;text-transform:uppercase;line-height:1.4;color:var(--tx2)}
+.tape{position:relative;width:clamp(54px,calc(13*var(--vh)),96px)}
 .t-in{position:absolute;inset:3px 0}
-.ticks{position:absolute;left:0;top:0;bottom:0;width:clamp(22px,5.4vh,42px)}
+.ticks{position:absolute;left:0;top:0;bottom:0;width:clamp(22px,calc(5.4*var(--vh)),42px)}
 .ticks i{position:absolute;left:0;right:0;height:1px;background:rgba(245,245,247,.9)}
-.letter{position:absolute;right:0;font-size:clamp(14px,3.6vh,28px);font-weight:700;line-height:1;transform:translateY(-50%)}
+.letter{position:absolute;right:0;font-size:clamp(14px,calc(3.6*var(--vh)),28px);font-weight:700;line-height:1;transform:translateY(-50%)}
 .letter.top{top:0}.letter.bot{top:100%}
-.mk{position:absolute;left:-6px;width:clamp(32px,7.6vh,56px);height:clamp(2.5px,.55vh,4.5px);border-radius:3px;background:var(--red);box-shadow:0 0 8px var(--red-glow);transform:translateY(-50%)}
-.mk-l{position:absolute;right:0;font-size:clamp(10px,2.3vh,16px);font-weight:600;transform:translateY(-50%)}
-.live-coords{display:flex;align-items:center;gap:clamp(7px,1.2vh,11px);font-size:clamp(8px,1.5vh,11px);font-weight:600;letter-spacing:.1em;white-space:nowrap;color:var(--tx)}
+.mk{position:absolute;left:-6px;width:clamp(32px,calc(7.6*var(--vh)),56px);height:clamp(2.5px,calc(.55*var(--vh)),4.5px);border-radius:3px;background:var(--red);box-shadow:0 0 8px var(--red-glow);transform:translateY(-50%)}
+.mk-l{position:absolute;right:0;font-size:clamp(10px,calc(2.3*var(--vh)),16px);font-weight:600;transform:translateY(-50%)}
+.live-coords{display:flex;align-items:center;gap:clamp(7px,calc(1.2*var(--vh)),11px);font-size:clamp(8px,calc(1.5*var(--vh)),11px);font-weight:600;letter-spacing:.1em;white-space:nowrap;color:var(--tx)}
 .live-coords i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
 
 /* SAATLİK — kendiliğinden kayar */
-.hourly{display:flex;align-items:center;min-height:clamp(74px,14.5vh,102px);margin-bottom:clamp(10px,1.8vh,16px);flex-shrink:0}
+.hourly{display:flex;align-items:center;min-height:clamp(74px,calc(14.5*var(--vh)),102px);margin-bottom:clamp(10px,calc(1.8*var(--vh)),16px);flex-shrink:0}
 .wave{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:2px}
 .w-row{display:grid;grid-template-columns:repeat(8,1fr);text-align:center}
-.h-t{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:clamp(11.5px,1.8vh,14px);font-weight:500;color:var(--tx2)}
+.h-t{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:clamp(11.5px,calc(1.8*var(--vh)),14px);font-weight:500;color:var(--tx2)}
 .h-t.on{color:var(--tx);font-weight:700}
 .h-dot{width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);opacity:0}.h-t.on .h-dot{opacity:1}
-.w-line{height:clamp(16px,3.2vh,26px)}.w-line svg{width:100%;height:100%;overflow:visible}
+.w-line{height:clamp(16px,calc(3.2*var(--vh)),26px)}.w-line svg{width:100%;height:100%;overflow:visible}
 .h-h{display:flex;flex-direction:column;align-items:center;gap:2px}
-.h-h span{font-size:clamp(8.5px,1.25vh,10.5px);font-weight:600;letter-spacing:.08em;color:var(--tx3);padding:1.5px 7px;border-radius:6px}
+.h-h span{font-size:clamp(8.5px,calc(1.25*var(--vh)),10.5px);font-weight:600;letter-spacing:.08em;color:var(--tx3);padding:1.5px 7px;border-radius:6px}
 .h-h.on span{background:rgba(255,255,255,.09);color:var(--tx)}
-.h-p{font-size:clamp(9px,1.4vh,11px);color:#7fb7ff;font-weight:600;display:flex;align-items:center;gap:3px}
+.h-p{font-size:clamp(9px,calc(1.4*var(--vh)),11px);color:#7fb7ff;font-weight:600;display:flex;align-items:center;gap:3px}
 .h-p.lo{opacity:.4}.h-p.hi{color:var(--red);text-shadow:0 0 8px var(--red-glow)}
 
 /* RADYO — OLED siyah, baştan başa, ekolayzır */
-.dock{display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(68px,14vh,86px)}
+.dock{display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(68px,calc(14*var(--vh)),86px)}
 .player{width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:space-between;
-  padding:clamp(8px,1.4vh,12px) clamp(18px,2.6vw,26px)}
+  padding:clamp(8px,calc(1.4*var(--vh)),12px) clamp(18px,calc(2.6*var(--vw)),26px)}
 .p-top{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0}
-.p-meta{flex:1;min-width:0;font-size:clamp(12px,2vh,14.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-meta{flex:1;min-width:0;font-size:clamp(12px,calc(2*var(--vh)),14.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .p-song{color:#f2f2f4;font-weight:600;letter-spacing:.01em}
 .p-sep{color:rgba(242,242,244,.5);font-weight:400;margin:0 7px}
 .p-chan{color:rgba(242,242,244,.7);font-weight:500;font-size:.82em;letter-spacing:.14em;text-transform:uppercase}
-.play{width:clamp(24px,4.2vh,32px);height:clamp(24px,4.2vh,32px);color:#d97724;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .12s,filter .15s}
+.play{width:clamp(24px,calc(4.2*var(--vh)),32px);height:clamp(24px,calc(4.2*var(--vh)),32px);color:#d97724;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .12s,filter .15s}
 .play:active{transform:scale(.9);filter:brightness(1.2)}
 .play svg{width:100%;height:100%}
-.eq{display:block;width:100%;height:clamp(16px,3.6vh,26px)}
+.eq{display:block;width:100%;height:clamp(16px,calc(3.6*var(--vh)),26px)}
 
 /* MODAL */
 .modal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px}
@@ -123,6 +124,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .opt:active{background:rgba(229,72,77,.25)}
 input[type=file]{display:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.screen>header,.screen>main,.screen>section,.screen>footer{position:relative;z-index:2}
+.toast{position:absolute;left:50%;top:calc(12*var(--vh));transform:translateX(-50%);background:rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:7px 16px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .3s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
 </style>
 </head>
 <body>
@@ -134,8 +140,6 @@ input[type=file]{display:none}
   <mask id="mm" maskContentUnits="objectBoundingBox"><rect x="-1" y="-1" width="3" height="3" fill="#fff"/><circle cx=".76" cy=".34" r=".42" fill="#000"/></mask>
 </defs></svg>
 
-<div id="bgPhoto" class="bg-photo"></div>
-<div class="bg-vignette"></div>
 <input type="file" id="mp3Input" accept="audio/*" multiple />
 <input type="file" id="photoInput" accept="image/*" multiple />
 <audio id="audioTag" preload="none"></audio>
@@ -143,11 +147,14 @@ input[type=file]{display:none}
 <div id="barTrack" hidden><i id="barFill"></i></div>
 
 <div class="screen">
+<div id="bgPhoto" class="bg-photo"></div>
+<div class="bg-vignette"></div>
   <header class="top-bar">
     <div class="date-wrap">
       <b id="bigDay">--</b>
-      <div class="date-r"><span id="dayLine"></span><u></u><em id="clockT">--:--</em></div>
+      <div class="date-r"><span id="dayLine"></span><u></u><span id="monthLine"></span></div>
     </div>
+    <div class="clock" id="clockT">--:--</div>
     <div class="loc" onclick="openCity()">
       <span class="pin"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="1.9" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
       <span class="loc-text" id="locText">Konum alınıyor</span>
@@ -198,8 +205,6 @@ input[type=file]{display:none}
       <canvas class="eq" id="eq"></canvas>
     </div>
   </footer>
-</div>
-
 <div class="modal" id="cityModal" onclick="closeCity()">
   <div class="panel" onclick="event.stopPropagation()">
     <div style="display:flex;justify-content:space-between;align-items:center">
@@ -210,6 +215,9 @@ input[type=file]{display:none}
     <div class="res" id="cityRes"></div>
   </div>
 </div>
+<div class="toast" id="toast"></div>
+</div>
+
 
 <script>
 const $ = id => document.getElementById(id);
@@ -529,7 +537,7 @@ $('mp3Input').addEventListener('change',e=>{
 
 /* ---------- EKOLAYZIR (görsel animasyon; gerçek ses analizi değil) ---------- */
 const eq=$('eq'), ectx=eq.getContext('2d'), NB=64, bars=new Float32Array(NB); let eqRaf=null;
-function eqSize(){ const r=eq.getBoundingClientRect(), dp=window.devicePixelRatio||1; eq.width=Math.max(1,r.width*dp); eq.height=Math.max(1,r.height*dp); }
+function eqSize(){ const dp=window.devicePixelRatio||1; eq.width=Math.max(1,eq.clientWidth*dp); eq.height=Math.max(1,eq.clientHeight*dp); }
 function eqFrame(ts){
   const w=eq.width,h=eq.height,t=ts/1000,gap=w/NB,bw=Math.max(2,gap*.4); let mx=0;
   ectx.clearRect(0,0,w,h); ectx.lineCap='round'; ectx.lineWidth=bw;
@@ -569,11 +577,36 @@ $('cityInput').addEventListener('input',e=>{
 function setDate(){
   const n=new Date();
   $('bigDay').textContent=pad(n.getDate());
-  $('dayLine').textContent=DAYS[n.getDay()]+', '+MON3[n.getMonth()]+'. '+n.getFullYear();
+  $('dayLine').textContent=DAYS[n.getDay()]; $('monthLine').textContent=MON3[n.getMonth()]+'. '+n.getFullYear();
   $('clockT').textContent=pad(n.getHours())+':'+pad(n.getMinutes());
 }
 setDate(); setInterval(setDate,5000);
-eqSize(); eqKick();
+/* ---------- DİK TELEFON → YATAY EKRAN ---------- */
+/* Telefon dik tutulurken düzen 90° döndürülür. Tarih bloğuna çift dokun: sağa → sola → kapalı */
+const scr=document.querySelector('.screen'), modes=['cw','ccw','off'];
+const modeNames={cw:'Yön: sağa',ccw:'Yön: sola',off:'Döndürme kapalı'};
+function getMode(){ try{ return localStorage.getItem('rot')||'cw'; }catch{ return 'cw'; } }
+function applyLayout(){
+  const W=innerWidth,H=innerHeight,mode=getMode(); let w=W,h=H;
+  if (H>W && mode!=='off'){
+    w=H; h=W;
+    scr.style.cssText=`position:fixed;left:0;top:0;width:${w}px;height:${h}px;transform-origin:0 0;padding:${h*.016}px ${w*.03}px;`+
+      `transform:${mode==='cw'?`translateX(${W}px) rotate(90deg)`:`translateY(${H}px) rotate(-90deg)`}`;
+  } else scr.style.cssText='';
+  document.documentElement.style.setProperty('--vh',h/100+'px');
+  document.documentElement.style.setProperty('--vw',w/100+'px');
+  eqSize(); eqKick();
+}
+function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('on'),1600); }
+let lastTap=0;
+document.querySelector('.date-wrap').addEventListener('click',()=>{
+  const n=Date.now(); if (n-lastTap<400){
+    const m=modes[(modes.indexOf(getMode())+1)%modes.length]; try{ localStorage.setItem('rot',m); }catch{}
+    applyLayout(); toast(modeNames[m]); lastTap=0;
+  } else lastTap=n;
+});
+addEventListener('resize',applyLayout); addEventListener('orientationchange',()=>setTimeout(applyLayout,150));
+applyLayout();
 ui(); startGps();
 </script>
 </body>
