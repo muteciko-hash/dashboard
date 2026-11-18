@@ -37,10 +37,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
           max(env(safe-area-inset-bottom),clamp(8px,1.6vh,16px)) max(env(safe-area-inset-left),clamp(18px,3vw,40px))}
 
 /* ÜST BAR */
-.top-bar{display:flex;align-items:center;justify-content:center;position:relative;height:clamp(22px,3.8vh,30px);flex-shrink:0}
-.loc{display:inline-flex;align-items:center;gap:7px;padding:3px 10px;border-radius:999px;cursor:pointer}
-.loc-text{font-size:clamp(12px,1.8vh,14px);font-weight:500;letter-spacing:-.01em}
-.date-text{font-size:clamp(11px,1.6vh,13px);font-weight:300;color:var(--tx3)}
+.top-bar{display:flex;align-items:center;justify-content:center;position:relative;height:clamp(32px,6vh,46px);flex-shrink:0}
+.loc{display:inline-flex;align-items:center;gap:clamp(8px,1.4vh,12px);padding:clamp(4px,.9vh,8px) clamp(14px,2.4vh,22px) clamp(4px,.9vh,8px) clamp(6px,1.1vh,10px);border-radius:999px;cursor:pointer;
+  background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.pin{width:clamp(22px,4vh,30px);height:clamp(22px,4vh,30px);border-radius:50%;background:rgba(229,72,77,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.loc-text{font-size:clamp(15px,2.9vh,21px);font-weight:500;letter-spacing:-.025em}
+.sep{width:1px;height:clamp(12px,2.4vh,18px);background:rgba(255,255,255,.18)}
+.date-big{position:absolute;left:0;display:flex;flex-direction:column;line-height:1.12}
+.date-big b{font-size:clamp(17px,3.4vh,26px);font-weight:500;letter-spacing:-.03em}
+.date-big span{font-size:clamp(12px,2.1vh,16px);font-weight:300;color:var(--tx2);letter-spacing:-.01em}
 .gps{position:absolute;right:0;display:inline-flex;align-items:center;gap:6px;font-size:10.5px;color:var(--tx2);
   border:1px solid var(--line);padding:3px 10px;border-radius:999px;cursor:pointer}
 .gps i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
@@ -51,32 +56,33 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .left{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,10px)}
 .temp-row{display:flex;align-items:center;gap:clamp(8px,1.4vw,16px)}
 .temp{display:flex;line-height:.9}
-.temp b{font-size:clamp(40px,9vh,72px);font-weight:200;letter-spacing:-.05em}
+.temp b{font-size:clamp(52px,12vh,92px);font-weight:200;letter-spacing:-.05em}
 .temp sup{font-size:clamp(15px,2.8vh,24px);font-weight:300;color:var(--tx2);margin:clamp(6px,1.2vh,12px) 0 0 3px}
 .wicon{height:clamp(40px,8.5vh,70px);width:auto;flex-shrink:0;filter:drop-shadow(0 8px 14px rgba(0,0,0,.7))}
 .cond{font-size:clamp(14px,2.4vh,21px);font-weight:300;letter-spacing:-.01em;color:rgba(245,245,247,.9)}
-.metrics{display:flex;gap:clamp(18px,2.4vw,32px);margin-top:clamp(2px,.8vh,8px)}
+.metrics{display:grid;grid-template-columns:auto auto;gap:clamp(4px,1vh,9px) clamp(16px,2.2vw,28px);margin-top:clamp(2px,.8vh,8px);justify-content:start}
 .metric{display:flex;flex-direction:column;gap:2px}
-.metric span{font-size:clamp(10px,1.4vh,11.5px);color:var(--tx3);font-weight:400}
+.metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(10px,1.4vh,11.5px);color:var(--tx3);font-weight:400}
 .metric b{font-size:clamp(13px,2vh,16px);font-weight:400}
 
 /* PUSULA — küçük cam kart */
 .glass{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.14);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 14px 30px rgba(0,0,0,.7);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%)}
-.compass{height:clamp(84px,25vh,150px);aspect-ratio:1.5;border-radius:clamp(14px,3vh,22px);display:grid;grid-template-columns:1fr auto;
-  padding:clamp(8px,1.8vh,14px) clamp(9px,1.6vh,14px) clamp(8px,1.8vh,14px) clamp(8px,1.4vh,12px);cursor:pointer;align-self:flex-start;flex-shrink:0}
-.c-left{display:flex;flex-direction:column;justify-content:space-between;align-items:center;text-align:center;min-width:0}
-.alt{font-size:clamp(22px,6vh,46px);font-weight:200;letter-spacing:-.045em;line-height:1}
-.alt-l{font-size:clamp(7.5px,1.5vh,11.5px);font-weight:300;line-height:1.1;color:var(--tx2)}
-.coords{font-size:clamp(7.5px,1.45vh,11px);line-height:1.4;letter-spacing:.015em;white-space:nowrap}
-.tape{position:relative;width:clamp(46px,11vh,80px)}
+.compass{height:clamp(110px,33vh,200px);aspect-ratio:1.2;border-radius:clamp(16px,3.4vh,26px);display:grid;grid-template-columns:1fr auto;
+  padding:clamp(10px,2.2vh,18px) clamp(10px,2vh,16px) clamp(10px,2.2vh,18px) clamp(8px,1.6vh,14px);cursor:pointer;flex-shrink:0}
+.c-left{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;gap:2px}
+.alt{font-size:clamp(28px,8vh,62px);font-weight:200;letter-spacing:-.045em;line-height:1}
+.alt-l{font-size:clamp(8.5px,1.9vh,14px);font-weight:300;line-height:1.12;color:var(--tx2)}
+.tape{position:relative;width:clamp(54px,13vh,96px)}
 .t-in{position:absolute;inset:3px 0}
-.ticks{position:absolute;left:0;top:0;bottom:0;width:clamp(18px,4.6vh,34px)}
+.ticks{position:absolute;left:0;top:0;bottom:0;width:clamp(22px,5.4vh,42px)}
 .ticks i{position:absolute;left:0;right:0;height:1px;background:rgba(245,245,247,.9)}
-.letter{position:absolute;right:0;font-size:clamp(12px,3vh,22px);font-weight:600;line-height:1;transform:translateY(-50%)}
+.letter{position:absolute;right:0;font-size:clamp(14px,3.6vh,28px);font-weight:600;line-height:1;transform:translateY(-50%)}
 .letter.top{top:0}.letter.bot{top:100%}
-.mk{position:absolute;left:-5px;width:clamp(26px,6.2vh,44px);height:clamp(2.5px,.5vh,4px);border-radius:3px;background:var(--red);box-shadow:0 0 8px var(--red-glow);transform:translateY(-50%)}
-.mk-l{position:absolute;right:0;font-size:clamp(9px,2vh,14px);font-weight:300;transform:translateY(-50%)}
+.mk{position:absolute;left:-6px;width:clamp(32px,7.6vh,56px);height:clamp(2.5px,.55vh,4.5px);border-radius:3px;background:var(--red);box-shadow:0 0 8px var(--red-glow);transform:translateY(-50%)}
+.mk-l{position:absolute;right:0;font-size:clamp(10px,2.4vh,17px);font-weight:300;transform:translateY(-50%)}
+.live-coords{display:flex;align-items:center;gap:clamp(8px,1.4vh,12px);font-size:clamp(10px,1.9vh,14px);font-weight:400;letter-spacing:.02em;white-space:nowrap;color:var(--tx)}
+.live-coords i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
 
 /* HAVA DURUMU SAHNESİ */
 .art{display:flex;align-items:center;justify-content:center;height:100%;max-height:clamp(125px,31vh,230px);position:relative;--glow:rgba(255,185,56,.16)}
@@ -84,7 +90,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .art svg{position:relative;height:100%;width:auto;max-width:100%;overflow:visible;filter:drop-shadow(0 14px 24px rgba(0,0,0,.65))}
 
 /* ORTA KOLON SAĞ: GÜNLÜK */
-.right{display:flex;justify-content:flex-end}
+.right{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:clamp(6px,1.2vh,10px)}
 .daily{width:100%;max-width:clamp(200px,22vw,260px);border-radius:18px;padding:clamp(6px,1.1vh,11px) clamp(10px,1.3vw,15px);
   display:flex;flex-direction:column;gap:clamp(1px,.4vh,4px)}
 .d-row{display:flex;align-items:center;justify-content:space-between;padding:clamp(2px,.45vh,4px) 6px;border-radius:8px;cursor:pointer;position:relative}
@@ -97,14 +103,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .d-t{font-size:clamp(11px,1.6vh,13px);color:var(--tx2)}.d-row.on .d-t{color:var(--tx);font-weight:500}
 
 /* SAATLİK */
-.hourly{display:flex;align-items:center;gap:12px;height:clamp(54px,11vh,84px);flex-shrink:0}
+.hourly{display:flex;align-items:center;gap:12px;height:clamp(66px,14vh,98px);flex-shrink:0}
 .wave{flex:1;height:100%;display:flex;flex-direction:column;justify-content:space-between}
 .w-row{display:grid;grid-template-columns:repeat(8,1fr);text-align:center}
 .h-t{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:clamp(11.5px,1.8vh,14px);font-weight:300;color:var(--tx2)}
 .h-t.on{color:var(--tx);font-weight:500}
 .h-dot{width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);opacity:0}.h-t.on .h-dot{opacity:1}
 .w-line{height:clamp(16px,3.2vh,26px)}.w-line svg{width:100%;height:100%;overflow:visible}
-.h-h{cursor:pointer;display:flex;justify-content:center}
+.h-h{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
+.h-p{font-size:clamp(9px,1.4vh,11px);color:#7fb7ff;font-weight:500;display:flex;align-items:center;gap:3px}.h-p.lo{opacity:.4}.h-p.hi{color:var(--red);font-weight:600;text-shadow:0 0 8px var(--red-glow)}
 .h-h span{font-size:clamp(9.5px,1.3vh,11px);color:var(--tx3);padding:1.5px 8px;border-radius:6px}
 .h-h.on span{background:rgba(255,255,255,.09);color:var(--tx)}
 .arrows{display:flex;flex-direction:column;gap:6px}
@@ -112,24 +119,24 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .arr:active{background:rgba(255,255,255,.1)}
 
 /* RADYO — pusula kartıyla aynı dil */
-.dock{display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(84px,19vh,112px)}
+.dock{display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(60px,13vh,80px)}
 .player{width:min(620px,92vw);height:100%;border-radius:clamp(18px,3.6vh,26px);display:flex;align-items:center;gap:clamp(10px,1.6vw,16px);padding:0 clamp(12px,1.6vw,18px) 0 clamp(10px,1.4vw,14px)}
-.cover{height:76%;aspect-ratio:1;border-radius:clamp(12px,2.6vh,18px);background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
+.cover{height:80%;aspect-ratio:1;border-radius:clamp(12px,2.6vh,18px);background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex-shrink:0;cursor:pointer;text-align:center}
 .cover-t{font-size:clamp(8px,1.4vh,10.5px);font-weight:600;letter-spacing:.04em;line-height:1.2;color:var(--tx2)}
 .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(4px,.9vh,8px)}
-.name{font-size:clamp(14px,2.5vh,19px);font-weight:500;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.name{font-size:clamp(13px,2.3vh,17px);font-weight:500;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sub{font-size:clamp(10.5px,1.7vh,13px);font-weight:300;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:-2px}
 .bar{height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;cursor:pointer}
 .bar i{display:block;height:100%;width:100%;background:var(--red);box-shadow:0 0 8px var(--red-glow);border-radius:3px}
 .bar i.live{animation:live 2.4s ease-in-out infinite}@keyframes live{50%{opacity:.4}}
 .times{display:flex;justify-content:space-between;font-size:clamp(9px,1.3vh,10.5px);color:var(--tx3)}
 .transport{display:flex;align-items:center;gap:clamp(8px,1.4vw,14px);flex-shrink:0}
-.skip{width:clamp(40px,8.4vh,54px);height:clamp(40px,8.4vh,54px);border-radius:50%;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
+.skip{width:clamp(34px,7vh,46px);height:clamp(34px,7vh,46px);border-radius:50%;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
   display:flex;align-items:center;justify-content:center;transition:transform .12s,background .2s}
 .skip:active{transform:scale(.92);background:#323235}
 .skip svg{width:46%;height:46%}
-.play{width:clamp(48px,10.4vh,66px);height:clamp(48px,10.4vh,66px);border-radius:50%;background:var(--tx);color:#000;display:flex;align-items:center;justify-content:center;
+.play{width:clamp(40px,8.6vh,56px);height:clamp(40px,8.6vh,56px);border-radius:50%;background:var(--tx);color:#000;display:flex;align-items:center;justify-content:center;
   box-shadow:0 6px 16px rgba(0,0,0,.6);transition:transform .12s}
 .play:active{transform:scale(.93)}.play svg{width:40%;height:40%}
 .tools{display:flex;flex-direction:column;justify-content:space-between;height:68%;flex-shrink:0}
@@ -144,6 +151,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .res{display:flex;flex-direction:column;gap:6px;max-height:150px;overflow-y:auto}
 .opt{padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.05);font-size:13px;cursor:pointer}
 .opt:active{background:rgba(229,72,77,.25)}
+.times{display:none!important}
 input[type=file]{display:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -166,42 +174,40 @@ input[type=file]{display:none}
 <div class="screen">
   <header class="top-bar">
     <div class="loc" onclick="openCity()">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(245,245,247,.65)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span class="pin"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
       <span class="loc-text" id="locText">Konum alınıyor</span>
-      <span class="date-text" id="dateText"></span>
     </div>
+    <div class="date-big"><b id="dayName"></b><span id="dayDate"></span></div>
     <div class="gps" onclick="forceGps()"><i></i><span id="gpsText">GPS bekleniyor</span></div>
   </header>
 
   <main class="middle">
     <section class="left">
-      <section class="compass glass" id="compass" onclick="startCompass()">
-      <div class="c-left">
-        <div>
-          <div class="alt" id="altVal">--</div>
-          <div class="alt-l">deniz seviyesinden<br>metre</div>
-        </div>
-        <div class="coords"><div id="latDms">--</div><div id="lonDms">--</div></div>
-      </div>
-      <div class="tape"><div class="t-in" id="tapeIn">
-        <div class="ticks" id="ticks"></div>
-        <span class="letter top" id="cTop">N</span><span class="letter bot" id="cBot">E</span>
-        <div class="mk" id="mk" style="top:50%"></div><span class="mk-l" id="mkL" style="top:50%">dokun</span>
-      </div></div>
-    </section>
-      <div class="temp-row">
+            <div class="temp-row">
         <div class="temp"><b id="mainTemp">--</b><sup>°c</sup></div>
       </div>
       <div class="cond" id="mainCond">Yükleniyor</div>
       <div class="metrics">
         <div class="metric"><span>Rüzgar</span><b id="windText">--</b></div>
         <div class="metric"><span>Nem</span><b id="humText">--</b></div>
+        <div class="metric"><span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 18a5 5 0 0 0-10 0M2 18h20M12 10V2M9 5l3-3 3 3"/></svg> Gün doğumu</span><b id="sunUp">--:--</b></div>
+        <div class="metric"><span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 18a5 5 0 0 0-10 0M2 18h20M12 2v8M9 7l3 3 3-3"/></svg> Gün batımı</span><b id="sunDown">--:--</b></div>
       </div>
     </section>
 
     <section class="art" id="art"></section>
 
-    <section class="right"><div class="daily glass" id="dailyList"></div></section>
+    <section class="right">
+      <div class="compass glass" id="compass" onclick="startCompass()">
+        <div class="c-left"><div class="alt" id="altVal">--</div><div class="alt-l">deniz seviyesinden<br>metre</div></div>
+        <div class="tape"><div class="t-in" id="tapeIn">
+        <div class="ticks" id="ticks"></div>
+        <span class="letter top" id="cTop">N</span><span class="letter bot" id="cBot">E</span>
+        <div class="mk" id="mk" style="top:50%"></div><span class="mk-l" id="mkL" style="top:50%">dokun</span>
+      </div></div>
+      </div>
+      <div class="live-coords"><i></i><span id="latDms">--</span><span id="lonDms">--</span></div>
+    </section>
   </main>
 
   <section class="hourly">
@@ -393,41 +399,33 @@ const MONTHS=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağust
 let days=[], aDay=0, aHour=1;
 async function fetchWeather(lat,lon,place){
   try{
-    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&hourly=temperature_2m&daily=weather_code,temperature_2m_max&timezone=auto`)).json();
+    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,sunrise,sunset&timezone=auto`)).json();
     const now=new Date();
     $('locText').textContent=place;
-    $('dateText').textContent=`${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]}`;
+    
     if (typeof d.elevation==='number'){ elev=d.elevation; if (gpsAlt==null) $('altVal').textContent=Math.round(elev); }
     const cur=Math.round(d.current.temperature_2m), info=wx(d.current.weather_code);
     $('mainTemp').textContent=cur; $('mainCond').textContent=info.label;
     $('windText').textContent=d.current.wind_speed_10m.toFixed(1)+' km/sa';
     $('humText').textContent='%'+Math.round(d.current.relative_humidity_2m);
     setArt(info.type,d.current.is_day===0);
+    $('sunUp').textContent=(d.daily.sunrise[0]||'').slice(11,16)||'--:--'; $('sunDown').textContent=(d.daily.sunset[0]||'').slice(11,16)||'--:--';
     days=[];
     for (let i=0;i<6;i++){
       const dt=new Date(d.daily.time[i]+"T12:00:00"), w=wx(i===0?d.current.weather_code:d.daily.weather_code[i]);
-      const hrs=[8,9,10,11,12,13,14,15];
+      const st=+(d.current.time||"T08").slice(11,13)||0; const hrs=i===0?[0,1,2,3,4,5,6,7].map(k=>st+k):[8,9,10,11,12,13,14,15];
       days.push({day:i===0?"Bugün":DAYS[dt.getDay()],short:w.short,label:w.label,type:w.type,night:i===0&&d.current.is_day===0,max:Math.round(d.daily.temperature_2m_max[i]),
-        hours:hrs.map(h=>pad(h)+':00'),temps:hrs.map(h=>Math.round(d.hourly.temperature_2m[i*24+h]??cur))});
+        hours:hrs.map(h=>pad(h%24)+':00'),pops:hrs.map(h=>Math.round(d.hourly.precipitation_probability?.[i*24+h]??0)),temps:hrs.map(h=>Math.round(d.hourly.temperature_2m[i*24+h]??cur))});
     }
-    aDay=0; drawDaily(); drawWave();
+    aDay=0; aHour=0; drawWave();
   }catch{}
-}
-function drawDaily(){
-  const box=$('dailyList'); box.innerHTML='';
-  days.forEach((it,i)=>{
-    const r=document.createElement('div'); r.className='d-row'+(i===aDay?' on':'');
-    r.innerHTML=`<div class="d-l"><span class="d-ic">${smallIcon(it.type)}</span><div class="d-m"><span class="d-day">${it.day}</span><span class="d-sub">${it.short}</span></div></div><span class="d-t">${it.max}°</span>`;
-    r.onclick=()=>{ aDay=i; $('mainTemp').textContent=it.max; $('mainCond').textContent=it.label; setArt(it.type,it.night); drawDaily(); drawWave(); };
-    box.appendChild(r);
-  });
 }
 function drawWave(){
   if (!days.length) return;
   const d=days[aDay], tr=$('wTemps'), hr=$('wHours'); tr.innerHTML=''; hr.innerHTML='';
   d.temps.forEach((t,i)=>{
     const a=document.createElement('div'); a.className='h-t'+(i===aHour?' on':''); a.innerHTML=`<span>${t}°</span><span class="h-dot"></span>`; a.onclick=()=>{aHour=i;drawWave();}; tr.appendChild(a);
-    const b=document.createElement('div'); b.className='h-h'+(i===aHour?' on':''); b.innerHTML=`<span>${d.hours[i]}</span>`; b.onclick=()=>{aHour=i;drawWave();}; hr.appendChild(b);
+    const b=document.createElement('div'); b.className='h-h'+(i===aHour?' on':''); b.innerHTML=`<span>${d.hours[i]}</span><span class="h-p${d.pops[i]<10?' lo':''}${d.pops[i]>=60?' hi':''}"><svg width="7" height="9" viewBox="0 0 10 14" fill="currentColor"><path d="M5 0C5 0 0 6 0 9a5 5 0 0 0 10 0C10 6 5 0 5 0z"/></svg>${d.pops[i]}%</span>`; b.onclick=()=>{aHour=i;drawWave();}; hr.appendChild(b);
   });
   const mn=Math.min(...d.temps), mx=Math.max(...d.temps);
   const p=d.temps.map((t,i)=>({x:(i+.5)*100,y:23-(mx===mn?.5:(t-mn)/(mx-mn))*17}));
@@ -527,6 +525,8 @@ $('cityInput').addEventListener('input',e=>{
   },300);
 });
 
+function setDate(){const n=new Date();$('dayName').textContent=DAYS[n.getDay()];$('dayDate').textContent=n.getDate()+' '+MONTHS[n.getMonth()];}
+setDate(); setInterval(setDate,60000);
 ui(); startGps();
 </script>
 </body>
