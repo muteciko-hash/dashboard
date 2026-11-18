@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Kabin Hava Durumu Ekranı</title>
+  <title>Kabin Hava Durumu & Medya Ekranı</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --glass-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 100%);
-      --glass-surface-hover: linear-gradient(135deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.09) 100%);
-      --glass-border: rgba(255, 255, 255, 0.22);
-      --glass-highlight: rgba(255, 255, 255, 0.42);
-      --glass-shadow: 0 14px 34px rgba(0, 0, 0, 0.34), inset 0 1px 1px rgba(255, 255, 255, 0.28);
-      --text-main: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.78);
-      --text-soft: rgba(255, 255, 255, 0.58);
+      --bg-base: #121312;
+      --panel-dark: rgba(24, 25, 24, 0.84);
+      --panel-elevated: rgba(32, 33, 32, 0.92);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.14);
+      --accent-amber: #f5a623;
+      --accent-amber-glow: rgba(245, 166, 35, 0.45);
+      --text-primary: #f4f4f2;
+      --text-secondary: rgba(244, 244, 242, 0.62);
+      --text-muted: rgba(244, 244, 242, 0.38);
     }
 
     * {
@@ -33,1086 +35,1296 @@
       height: 100dvh;
       max-height: 100dvh;
       overflow: hidden;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #0d1518;
-      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
     }
 
-    /* Arka Plan Fotoğraf Katmanları */
-    .bg-layer {
+    /* Arka Plan Fotoğraf Katmanı + Mat Koyu Atmosfer Filtresi */
+    .bg-photo {
       position: fixed;
       inset: 0;
       background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
-      transition: opacity 0.9s ease-in-out;
+      background-position: center;
+      opacity: 0.24;
+      transition: opacity 0.8s ease, background-image 0.8s ease;
       z-index: 0;
     }
 
-    /* Okunabilirliği Artıran Sinematik Gölge Katmanı */
-    .bg-overlay {
+    .bg-vignette {
       position: fixed;
       inset: 0;
       z-index: 1;
       pointer-events: none;
       background:
-        linear-gradient(180deg, rgba(8, 15, 19, 0.48) 0%, rgba(8, 15, 19, 0.14) 46%, rgba(6, 13, 12, 0.62) 100%),
-        radial-gradient(circle at 24% 38%, rgba(0, 0, 0, 0.26), transparent 62%);
+        radial-gradient(circle at 50% 42%, rgba(28, 29, 28, 0.35) 0%, rgba(14, 15, 14, 0.92) 78%, #0d0e0d 100%);
     }
 
-    /* Ana Kapsayıcı - Ekrana Tam Oturma */
-    .app-container {
+    /* Ana Ekran Düzeni - 100dvh Tam Oturum */
+    .dashboard {
       position: relative;
       z-index: 2;
       width: 100%;
       height: 100%;
-      padding: clamp(10px, 2.2vh, 24px) clamp(14px, 2.4vw, 32px);
-      display: flex;
-      gap: clamp(14px, 2.2vw, 28px);
-    }
-
-    /* Gelişmiş Cam Efekti Sınıfı */
-    .glass-panel {
-      background: var(--glass-surface);
-      backdrop-filter: blur(26px) saturate(165%);
-      -webkit-backdrop-filter: blur(26px) saturate(165%);
-      border: 1px solid var(--glass-border);
-      border-top-color: var(--glass-highlight);
-      border-left-color: rgba(255, 255, 255, 0.32);
-      box-shadow: var(--glass-shadow);
-    }
-
-    /* Sol Dikey Cam Menü Çubuğu */
-    .sidebar {
-      width: clamp(44px, 4.4vw, 56px);
-      height: 100%;
-      border-radius: 18px;
+      padding: clamp(12px, 2.2vh, 24px) clamp(18px, 3.2vw, 44px) clamp(14px, 2.4vh, 24px);
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: space-between;
-      padding: clamp(10px, 2vh, 18px) 0;
-      flex-shrink: 0;
     }
 
-    .sidebar-top {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: clamp(8px, 2.2vh, 22px);
-    }
-
-    .nav-btn {
-      width: clamp(30px, 3.2vw, 36px);
-      height: clamp(30px, 3.2vw, 36px);
-      border-radius: 11px;
-      border: 1px solid transparent;
-      background: transparent;
-      color: rgba(255, 255, 255, 0.72);
+    /* 1. ÜST KONUM VE TARİH BARI */
+    .top-header {
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .nav-btn:hover, .nav-btn:active {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.14);
-    }
-
-    .nav-btn.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.12));
-      border-color: rgba(255, 255, 255, 0.35);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Sağ Ana İçerik Alanı */
-    .main-area {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-width: 0;
-      min-height: 0;
-    }
-
-    /* Üst Bar */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: clamp(32px, 5.5vh, 42px);
+      position: relative;
+      height: clamp(26px, 4vh, 34px);
       flex-shrink: 0;
     }
 
-    .welcome-box {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+    .location-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
+      padding: 4px 12px;
+      border-radius: 999px;
+      transition: background 0.2s ease;
     }
 
-    .welcome-label {
-      font-size: clamp(10px, 1.4vh, 11.5px);
-      font-weight: 400;
-      color: var(--text-muted);
-      line-height: 1.1;
+    .location-trigger:hover {
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    .user-name-row {
+    .loc-pin {
+      color: var(--text-secondary);
       display: flex;
       align-items: center;
-      gap: 6px;
     }
 
-    .user-name {
-      font-size: clamp(13px, 1.9vh, 15px);
-      font-weight: 600;
+    .loc-name {
+      font-size: clamp(12px, 1.75vh, 14px);
+      font-weight: 500;
+      color: var(--text-primary);
       letter-spacing: 0.1px;
-      color: var(--text-main);
     }
 
-    .gps-pill {
-      font-size: 10px;
-      padding: 2px 7px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      color: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
+    .loc-chevron {
+      color: var(--text-secondary);
+      font-size: 11px;
     }
 
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: clamp(8px, 1.1vw, 12px);
+    .header-date {
+      font-size: clamp(11px, 1.65vh, 13px);
+      color: var(--text-muted);
+      margin-left: 6px;
+      font-weight: 400;
     }
 
-    .circle-btn {
-      width: clamp(30px, 4.4vh, 36px);
-      height: clamp(30px, 4.4vh, 36px);
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.08));
-      backdrop-filter: blur(18px) saturate(150%);
-      -webkit-backdrop-filter: blur(18px) saturate(150%);
-      border: 1px solid rgba(255, 255, 255, 0.26);
-      border-top-color: rgba(255, 255, 255, 0.45);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .circle-btn:hover, .circle-btn:active {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0.14));
-      transform: scale(1.04);
-    }
-
-    .avatar-btn {
-      width: clamp(30px, 4.4vh, 36px);
-      height: clamp(30px, 4.4vh, 36px);
-      border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.48);
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.24), rgba(30, 48, 56, 0.65));
-      backdrop-filter: blur(16px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    /* Gövde Alanı */
-    .dashboard-body {
-      flex: 1;
-      display: flex;
-      align-items: stretch;
-      justify-content: space-between;
-      gap: clamp(18px, 3vw, 40px);
-      padding-top: clamp(6px, 1.6vh, 18px);
-      min-height: 0;
-    }
-
-    /* Sol Bölüm */
-    .left-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-width: 0;
-      min-height: 0;
-    }
-
-    .hero-section {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .forecast-badge {
-      display: inline-block;
-      width: fit-content;
-      font-size: clamp(10px, 1.5vh, 12px);
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.92);
-      background: rgba(255, 255, 255, 0.10);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(12px);
-      padding: 3px 10px;
-      border-radius: 999px;
-      margin-bottom: clamp(6px, 1.2vh, 12px);
-    }
-
-    .hero-title {
-      font-size: clamp(24px, 5.2vh, 52px);
-      font-weight: 300;
-      line-height: 1.08;
-      letter-spacing: -0.6px;
-      color: #ffffff;
-      margin-bottom: clamp(6px, 1.4vh, 14px);
-      text-shadow: 0 4px 22px rgba(0, 0, 0, 0.28);
-    }
-
-    .hero-title strong {
-      font-weight: 500;
-    }
-
-    .hero-description {
-      max-width: 390px;
-      font-size: clamp(10.5px, 1.65vh, 12.5px);
-      line-height: 1.45;
-      color: rgba(255, 255, 255, 0.84);
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    /* Alt Saatlik Eğri ve Günler */
-    .timeline-wrapper {
-      width: 100%;
-      margin-top: auto;
-      flex-shrink: 0;
-    }
-
-    .hourly-temps {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      align-items: center;
-      text-align: center;
-      margin-bottom: 2px;
-    }
-
-    .hour-item {
+    .gps-live-badge {
+      position: absolute;
+      right: 0;
       display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      font-size: clamp(12px, 1.9vh, 15px);
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.86);
-      cursor: pointer;
-      transition: transform 0.2s ease, color 0.2s ease;
-    }
-
-    .hour-item.active {
-      color: #ffffff;
-      font-weight: 600;
-      transform: scale(1.06);
-    }
-
-    .curve-box {
-      position: relative;
-      width: 100%;
-      height: clamp(36px, 8.8vh, 72px);
-      margin-bottom: clamp(4px, 1vh, 10px);
-    }
-
-    .curve-box svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-    }
-
-    .active-node {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.26), 0 0 14px rgba(255, 255, 255, 0.98);
-      transform: translate(-50%, -50%);
-      transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1), top 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-      pointer-events: none;
-    }
-
-    .active-node::after {
-      content: '';
-      position: absolute;
-      top: 6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1px;
-      height: clamp(22px, 5vh, 42px);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.65), transparent);
-    }
-
-    .days-bar {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.24);
-      padding-top: clamp(6px, 1.4vh, 12px);
-    }
-
-    .day-btn {
-      background: none;
-      border: none;
-      font-family: inherit;
-      font-size: clamp(10.5px, 1.6vh, 12.5px);
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.66);
-      cursor: pointer;
-      position: relative;
-      transition: color 0.2s ease;
-    }
-
-    .day-btn.active {
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .day-btn.active::before {
-      content: '';
-      position: absolute;
-      top: calc(-1 * clamp(7px, 1.5vh, 13px));
-      left: 20%;
-      right: 20%;
-      height: 2px;
-      background: #ffffff;
-      border-radius: 2px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.95);
-    }
-
-    /* Sağ Sütun: Ana Derece + 3 Şehir Kartı */
-    .right-panel {
-      width: clamp(215px, 25vw, 295px);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: clamp(6px, 1.2vh, 14px);
-      flex-shrink: 0;
-      min-height: 0;
-    }
-
-    .current-weather-header {
-      padding: 0 4px;
-      flex-shrink: 0;
-    }
-
-    .location-row {
-      display: flex;
       align-items: center;
       gap: 6px;
-      font-size: clamp(11.5px, 1.7vh, 13.5px);
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.95);
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: 999px;
       cursor: pointer;
     }
 
-    .main-temp {
-      font-size: clamp(36px, 7.2vh, 70px);
-      font-weight: 300;
-      line-height: 1.02;
-      letter-spacing: -2px;
-      color: #ffffff;
-      margin: clamp(2px, 0.5vh, 6px) 0 clamp(4px, 1vh, 10px) 0;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+    .gps-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-amber);
+      box-shadow: 0 0 8px var(--accent-amber);
+      animation: pulseDot 2.2s infinite;
     }
 
-    .metrics-row {
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.8); }
+    }
+
+    /* 2. ORTA ANA SAHNE (Sol Derece + Merkez 3D İkon + Sağ 6 Günlük Liste) */
+    .main-stage {
+      display: grid;
+      grid-template-columns: 1.05fr 1.2fr 1.05fr;
+      align-items: center;
+      gap: clamp(12px, 2vw, 28px);
+      flex: 1;
+      min-height: 0;
+      padding: clamp(4px, 1vh, 12px) 0;
+    }
+
+    /* Sol Büyük Sıcaklık & Metrikler */
+    .left-weather {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: clamp(4px, 1.5vw, 20px);
+    }
+
+    .temp-hero {
+      display: flex;
+      align-items: flex-start;
+      line-height: 0.95;
+      margin-bottom: clamp(8px, 1.5vh, 14px);
+    }
+
+    .temp-number {
+      font-size: clamp(54px, 10.5vh, 92px);
+      font-weight: 200;
+      letter-spacing: -3px;
+      color: var(--text-primary);
+    }
+
+    .temp-unit {
+      font-size: clamp(18px, 3vh, 26px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-top: clamp(6px, 1.2vh, 12px);
+      margin-left: 3px;
+    }
+
+    .weather-subtitle {
+      font-size: clamp(16px, 2.7vh, 24px);
+      font-weight: 300;
+      color: rgba(244, 244, 242, 0.86);
+      margin-bottom: clamp(14px, 2.6vh, 26px);
+      letter-spacing: -0.2px;
+    }
+
+    .weather-stats {
       display: flex;
       align-items: center;
-      gap: clamp(10px, 1.2vw, 16px);
-      font-size: clamp(10px, 1.45vh, 11.5px);
-      color: rgba(255, 255, 255, 0.88);
+      gap: clamp(18px, 2.6vw, 34px);
     }
 
-    .metric-item {
-      display: inline-flex;
-      align-items: center;
+    .stat-block {
+      display: flex;
+      flex-direction: column;
       gap: 4px;
     }
 
-    /* Şehir Kartları */
-    .city-list {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      gap: clamp(6px, 1.3vh, 12px);
-      flex: 1;
-      min-height: 0;
+    .stat-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: clamp(10px, 1.4vh, 11.5px);
+      color: var(--text-muted);
     }
 
-    .city-card {
-      border-radius: clamp(13px, 2vh, 18px);
-      padding: clamp(7px, 1.55vh, 14px) clamp(12px, 1.6vw, 18px);
+    .stat-value {
+      font-size: clamp(13px, 2vh, 16px);
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    /* Merkez 3D Hacimli Hava Durumu İllüstrasyonu */
+    .center-illustration {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      max-height: clamp(135px, 27vh, 235px);
+      position: relative;
+    }
+
+    .center-illustration svg {
+      width: auto;
+      height: 100%;
+      max-width: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+    }
+
+    /* Sağ 6 Günlük Tahmin Kartı */
+    .right-forecast {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: clamp(4px, 1vw, 12px);
+    }
+
+    .forecast-card {
+      width: 100%;
+      max-width: clamp(220px, 23vw, 275px);
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: clamp(8px, 1.4vh, 14px) clamp(12px, 1.4vw, 18px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(4px, 0.9vh, 9px);
+      backdrop-filter: blur(14px);
+    }
+
+    .forecast-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: clamp(3px, 0.55vh, 5px) 6px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      position: relative;
+      transition: background 0.2s ease;
     }
 
-    .city-card:hover, .city-card:active {
-      background: var(--glass-surface-hover);
-      border-color: rgba(255, 255, 255, 0.45);
-      transform: translateY(-1px);
+    .forecast-row:hover {
+      background: rgba(255, 255, 255, 0.04);
     }
 
-    .city-info {
+    .forecast-row.active::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 18%;
+      bottom: 18%;
+      width: 2.5px;
+      border-radius: 4px;
+      background: var(--accent-amber);
+      box-shadow: 0 0 8px var(--accent-amber);
+    }
+
+    .f-left {
       display: flex;
-      flex-direction: column;
-      gap: 1px;
+      align-items: center;
+      gap: 10px;
       min-width: 0;
     }
 
-    .country-label {
-      font-size: clamp(9px, 1.2vh, 10px);
-      font-weight: 400;
-      color: rgba(255, 255, 255, 0.68);
+    .f-icon {
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
     }
 
-    .city-name {
-      font-size: clamp(12.5px, 1.85vh, 14.5px);
+    .forecast-row.active .f-icon {
+      color: var(--text-primary);
+    }
+
+    .f-texts {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .f-day {
+      font-size: clamp(11px, 1.55vh, 12.5px);
       font-weight: 500;
-      color: #ffffff;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .f-desc {
+      font-size: clamp(9px, 1.25vh, 10px);
+      color: var(--text-muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .city-condition {
-      font-size: clamp(9.5px, 1.35vh, 11px);
+    .f-temp {
+      font-size: clamp(11.5px, 1.6vh, 13px);
       font-weight: 400;
-      color: rgba(255, 255, 255, 0.80);
-    }
-
-    .city-temp-wrap {
-      display: flex;
-      align-items: flex-start;
-      gap: 4px;
+      color: var(--text-secondary);
       flex-shrink: 0;
     }
 
-    .city-temp {
-      font-size: clamp(20px, 3.4vh, 28px);
-      font-weight: 300;
-      line-height: 1;
-      color: #ffffff;
+    .forecast-row.active .f-temp {
+      color: var(--text-primary);
+      font-weight: 500;
     }
 
-    /* Cam Modal (İsim & Şehir Arama) */
-    .modal-backdrop {
+    /* 3. SAATLİK DALGA GRAFİĞİ BÖLÜMÜ */
+    .hourly-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      height: clamp(74px, 14.5vh, 112px);
+      padding: 0 clamp(4px, 1vw, 12px);
+      flex-shrink: 0;
+    }
+
+    .wave-container {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .wave-temps {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      text-align: center;
+      align-items: end;
+      height: 28px;
+    }
+
+    .w-temp-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      font-size: clamp(12px, 1.85vh, 15px);
+      font-weight: 300;
+      color: var(--text-secondary);
+      transition: color 0.2s ease;
+    }
+
+    .w-temp-cell.active {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .amber-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-amber);
+      box-shadow: 0 0 10px var(--accent-amber);
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.25s ease;
+    }
+
+    .w-temp-cell.active .amber-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .wave-svg-wrap {
+      width: 100%;
+      height: clamp(22px, 4.2vh, 34px);
+    }
+
+    .wave-svg-wrap svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .wave-times {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      text-align: center;
+      align-items: center;
+    }
+
+    .w-time-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+    }
+
+    .w-tick {
+      width: 1px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .w-time-pill {
+      font-size: clamp(9.5px, 1.35vh, 11px);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .w-time-cell.active .w-time-pill {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-primary);
+    }
+
+    .wave-nav-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .mini-sq-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.2s ease;
+    }
+
+    .mini-sq-btn:hover {
+      background: rgba(255, 255, 255, 0.09);
+      color: var(--text-primary);
+    }
+
+    /* 4. EN ALT MÜZİK ÇALAR BARI (2. Görsel Mimarisi + 1. Görsel Renk Paleti) */
+    .music-dock-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: clamp(78px, 15vh, 108px);
+      padding-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .music-bar {
+      position: relative;
+      width: min(640px, 86vw);
+      height: clamp(62px, 11.2vh, 82px);
+      background: linear-gradient(135deg, rgba(30, 31, 30, 0.92) 0%, rgba(20, 21, 20, 0.95) 100%);
+      border: 1px solid var(--border-light);
+      border-radius: 14px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(22px);
+      display: flex;
+      align-items: center;
+      padding: 0 18px 0 12px;
+      gap: 14px;
+    }
+
+    /* Sol Dikey Aksiyon İkonları (Kalp, +, Arka Plan/Paylaş) */
+    .music-left-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      height: 82%;
+      padding: 2px 4px;
+      flex-shrink: 0;
+    }
+
+    .m-side-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .m-side-btn:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .m-side-btn.liked {
+      color: var(--accent-amber);
+    }
+
+    /* Barın Üstüne ve Altına Taşan Kare Albüm Kapağı */
+    .album-cover-overhang {
+      width: clamp(76px, 13.8vh, 102px);
+      height: clamp(76px, 13.8vh, 102px);
+      border-radius: 12px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, #272928, #141514);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.78), 0 0 0 1px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .album-cover-art {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(245, 166, 35, 0.25), transparent 55%),
+        linear-gradient(160deg, #2b2c2a 0%, #161716 100%);
+      padding: 8px;
+      text-align: center;
+    }
+
+    .album-badge-text {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.22);
+      text-transform: uppercase;
+      line-height: 1.25;
+    }
+
+    /* Sağ Parça Bilgisi + İlerleme Çubuğu + Kontroller */
+    .music-right-panel {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .track-meta-and-progress {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .track-header-line {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .track-title {
+      font-size: clamp(11.5px, 1.75vh, 13.5px);
+      font-weight: 700;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .track-artist {
+      font-size: clamp(10.5px, 1.5vh, 12px);
+      font-weight: 400;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      cursor: pointer;
+      position: relative;
+      margin-top: 3px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 32%;
+      background: linear-gradient(90deg, var(--accent-amber), #ffcf70);
+      border-radius: 999px;
+      box-shadow: 0 0 8px var(--accent-amber-glow);
+      transition: width 0.15s linear;
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Oynatma Tuşları */
+    .playback-controls {
+      display: flex;
+      align-items: center;
+      gap: clamp(10px, 1.4vw, 16px);
+      flex-shrink: 0;
+    }
+
+    .ctrl-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s ease, transform 0.15s ease;
+    }
+
+    .ctrl-btn:hover {
+      color: var(--text-primary);
+      transform: scale(1.08);
+    }
+
+    .play-circle-btn {
+      width: clamp(32px, 5.2vh, 38px);
+      height: clamp(32px, 5.2vh, 38px);
+      border-radius: 50%;
+      border: none;
+      background: var(--text-primary);
+      color: #121312;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+
+    .play-circle-btn:hover {
+      transform: scale(1.06);
+      background: var(--accent-amber);
+      color: #121312;
+    }
+
+    /* Konum Arama Penceresi */
+    .modal-overlay {
       position: fixed;
       inset: 0;
-      z-index: 20;
-      background: rgba(0, 0, 0, 0.52);
-      backdrop-filter: blur(8px);
+      z-index: 30;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(10px);
       display: none;
       align-items: center;
       justify-content: center;
       padding: 16px;
     }
 
-    .modal-backdrop.open {
+    .modal-overlay.open {
       display: flex;
     }
 
-    .modal-card {
+    .modal-box {
       width: 100%;
       max-width: 380px;
-      border-radius: 20px;
+      background: #1b1c1b;
+      border: 1px solid var(--border-light);
+      border-radius: 18px;
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.75);
     }
 
-    .modal-title {
-      font-size: 15px;
-      font-weight: 600;
-    }
-
-    .glass-input {
+    .modal-input {
       width: 100%;
       padding: 10px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
-      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-size: 13.5px;
       outline: none;
     }
 
-    .glass-input::placeholder {
-      color: rgba(255, 255, 255, 0.55);
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .modal-btn {
-      padding: 8px 14px;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      background: rgba(255, 255, 255, 0.16);
-      color: #fff;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .modal-btn.primary {
-      background: rgba(255, 255, 255, 0.30);
-      font-weight: 600;
-    }
-
-    .search-results {
+    .modal-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      max-height: 140px;
+      max-height: 160px;
       overflow-y: auto;
     }
 
-    .search-result-item {
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
+    .modal-item {
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.04);
       font-size: 13px;
       cursor: pointer;
     }
 
-    .search-result-item:hover {
-      background: rgba(255, 255, 255, 0.22);
+    .modal-item:hover {
+      background: rgba(245, 166, 35, 0.18);
     }
 
-    #fileInput {
+    input[type="file"] {
       display: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Arka Plan Fotoğraf Katmanları -->
-  <div id="bgLayerA" class="bg-layer" style="opacity: 1;"></div>
-  <div id="bgLayerB" class="bg-layer" style="opacity: 0;"></div>
-  <div class="bg-overlay"></div>
+  <!-- Arka Plan Fotoğrafı + Mat Koyu Filtre -->
+  <div id="bgPhoto" class="bg-photo"></div>
+  <div class="bg-vignette"></div>
 
-  <!-- Cihazdan Çoklu Arka Plan Fotoğrafı Seçici -->
-  <input type="file" id="fileInput" accept="image/*" multiple />
+  <!-- Gizli Dosya Seçiciler -->
+  <input type="file" id="audioFileInput" accept="audio/*" multiple />
+  <input type="file" id="bgFileInput" accept="image/*" multiple />
+  <audio id="audioPlayer"></audio>
 
-  <div class="app-container">
-    <!-- Sol Dikey Cam Menü Çubuğu -->
-    <aside class="sidebar glass-panel">
-      <div class="sidebar-top">
-        <button class="nav-btn active" title="Tam Ekran Yap / Çık" onclick="toggleFullScreen()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-            <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-            <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-            <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-          </svg>
-        </button>
-        <button class="nav-btn" title="GPS Konumumu Güncelle" onclick="requestLocationAndWeather(true)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="9"/>
-            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-          </svg>
-        </button>
-        <button class="nav-btn" title="Güzergah Şehirleri" onclick="openModal('city')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <div class="dashboard">
+    <!-- 1. ÜST HEADER -->
+    <header class="top-header">
+      <div class="location-trigger" onclick="openCityModal()" title="Şehir değiştir veya GPS'e dön">
+        <span class="loc-pin">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-        </button>
-        <button class="nav-btn" title="Kaptan Adını Düzenle" onclick="openModal('name')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-          </svg>
-        </button>
+        </span>
+        <span class="loc-name" id="cityLabel">Konum Alınıyor...</span>
+        <span class="loc-chevron">⌄</span>
+        <span class="header-date" id="dateLabel">(Çarşamba, 18 Kasım)</span>
       </div>
 
-      <button class="nav-btn" title="Sonraki Arka Plan Fotoğrafı" onclick="nextBackground()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="3"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <polyline points="21 15 16 10 5 21"/>
-        </svg>
-      </button>
-    </aside>
+      <div class="gps-live-badge" onclick="forceGpsRefresh()" title="Şimdi GPS konumunu güncelle">
+        <span class="gps-dot"></span>
+        <span id="gpsTelemetry">GPS Aktif</span>
+      </div>
+    </header>
 
-    <!-- Ana İçerik -->
-    <main class="main-area">
-      <!-- Üst Bilgi Barı -->
-      <header class="top-bar">
-        <div class="welcome-box" onclick="openModal('name')" title="İsmi değiştirmek için dokunun">
-          <span class="welcome-label">İyi Yolculuklar</span>
-          <div class="user-name-row">
-            <span class="user-name" id="driverName">Kaptan</span>
-            <span class="gps-pill" id="gpsStatus">Konum bekleniyor...</span>
+    <!-- 2. ORTA ANA SAHNE -->
+    <main class="main-stage">
+      <!-- Sol Derece ve Metrikler -->
+      <section class="left-weather">
+        <div class="temp-hero">
+          <span class="temp-number" id="mainTemp">--</span>
+          <span class="temp-unit">°c</span>
+        </div>
+        <div class="weather-subtitle" id="mainCondition">Hava Durumu Yükleniyor</div>
+
+        <div class="weather-stats">
+          <div class="stat-block">
+            <span class="stat-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+              </svg>
+              Rüzgar
+            </span>
+            <span class="stat-value" id="windVal">-- km/h</span>
+          </div>
+
+          <div class="stat-block">
+            <span class="stat-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+              </svg>
+              Nem
+            </span>
+            <span class="stat-value" id="humidityVal">--%</span>
           </div>
         </div>
+      </section>
 
-        <div class="top-actions">
-          <button class="circle-btn" title="Arka Plan Fotoğrafları Seç" onclick="document.getElementById('fileInput').click()">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <!-- Merkez 3D Hacimli Hava Durumu İllüstrasyonu -->
+      <section class="center-illustration" id="centerArt"></section>
+
+      <!-- Sağ 6 Günlük Tahmin Kartı -->
+      <section class="right-forecast">
+        <div class="forecast-card" id="forecastList"></div>
+      </section>
+    </main>
+
+    <!-- 3. SAATLİK DALGA GRAFİĞİ -->
+    <section class="hourly-section">
+      <div class="wave-container">
+        <div class="wave-temps" id="waveTemps"></div>
+        <div class="wave-svg-wrap">
+          <svg viewBox="0 0 800 34" preserveAspectRatio="none">
+            <path id="waveCurvePath" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="1.4" d="" />
+          </svg>
+        </div>
+        <div class="wave-times" id="waveTimes"></div>
+      </div>
+
+      <div class="wave-nav-btns">
+        <button class="mini-sq-btn" title="Önceki Saat" onclick="shiftSelectedHour(-1)">‹</button>
+        <button class="mini-sq-btn" title="Sonraki Saat" onclick="shiftSelectedHour(1)">›</button>
+      </div>
+    </section>
+
+    <!-- 4. EN ALT MÜZİK ÇALAR DOCK BARI (2. Fotoğraf Mimarisi + 1. Fotoğraf Renkleri) -->
+    <footer class="music-dock-wrapper">
+      <div class="music-bar">
+        <!-- Sol Dikey Hızlı Aksiyonlar -->
+        <div class="music-left-actions">
+          <button class="m-side-btn" id="likeBtn" title="Favorilere Ekle" onclick="toggleLike()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+          </button>
+          <button class="m-side-btn" title="Cihazdan MP3 / Müzik Ekle" onclick="document.getElementById('audioFileInput').click()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
               <line x1="12" y1="5" x2="12" y2="19"/>
               <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
           </button>
-          <button class="circle-btn" title="Şehir Ara" onclick="openModal('city')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="7"/>
-              <line x1="20" y1="20" x2="16.35" y2="16.35"/>
+          <button class="m-side-btn" title="Arka Plan Fotoğrafı Seç / Değiştir" onclick="cycleOrPickBackground()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
             </svg>
           </button>
-          <button class="circle-btn" title="GPS Konumu Yenile" onclick="requestLocationAndWeather(true)">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
+        </div>
+
+        <!-- Barın Üstüne ve Altına Taşan Kare Albüm Kapağı -->
+        <div class="album-cover-overhang" onclick="togglePlay()" title="Oynat / Duraklat">
+          <div class="album-cover-art" id="albumArtBox">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.6" style="margin-bottom:4px;">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="3"/>
             </svg>
-          </button>
-          <div class="avatar-btn" title="Kaptan Profili" onclick="openModal('name')" id="avatarInitial">
-            K
+            <span class="album-badge-text" id="albumCoverLabel">YOL<br>MODU</span>
           </div>
         </div>
-      </header>
 
-      <!-- Gövde -->
-      <div class="dashboard-body">
-        <!-- Sol Bölüm -->
-        <section class="left-panel">
-          <div class="hero-section">
-            <div class="forecast-badge">Hava Tahmini</div>
-            <h1 class="hero-title" id="heroTitle">
-              Yol Durumu<br><strong>Yükleniyor...</strong>
-            </h1>
-            <p class="hero-description" id="heroDesc">
-              GPS konumu alınıyor. Güzergah üzerindeki rüzgar hızı, yağış olasılığı ve saatlik sıcaklık değişimi hazırlanıyor.
-            </p>
+        <!-- Sağ Parça Bilgisi + İlerleme + Oynatma Kontrolleri -->
+        <div class="music-right-panel">
+          <div class="track-meta-and-progress">
+            <div class="track-header-line">
+              <span class="track-title" id="trackTitle">GECE YOLCULUĞU</span>
+              <span class="track-artist" id="trackArtist">Kabin Ses Sistemi</span>
+            </div>
+
+            <div class="progress-track" id="progressTrack" onclick="seekAudio(event)">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="time-row">
+              <span id="currentTimeText">0:00</span>
+              <span id="durationTimeText">3:45</span>
+            </div>
           </div>
 
-          <!-- Alt Sıcaklık Eğrisi ve Günler -->
-          <div class="timeline-wrapper">
-            <div class="hourly-temps" id="hourlyRow"></div>
-
-            <div class="curve-box">
-              <svg id="curveSvg" viewBox="0 0 600 76" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="curveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
-                    <stop offset="50%" stop-color="rgba(255,255,255,0.98)"/>
-                    <stop offset="100%" stop-color="rgba(255,255,255,0.35)"/>
-                  </linearGradient>
-                  <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
-                    <stop offset="100%" stop-color="rgba(255,255,255,0.0)"/>
-                  </linearGradient>
-                </defs>
-                <path id="areaPath" fill="url(#areaGrad)" d=""/>
-                <path id="linePath" fill="none" stroke="url(#curveGrad)" stroke-width="2" stroke-linecap="round" d=""/>
+          <div class="playback-controls">
+            <button class="ctrl-btn" title="Önceki Parça" onclick="prevTrack()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="11 19 2 12 11 5 11 19"/>
+                <polygon points="22 19 13 12 22 5 22 19"/>
               </svg>
-              <div id="activeNode" class="active-node"></div>
-            </div>
-
-            <div class="days-bar" id="daysBar"></div>
-          </div>
-        </section>
-
-        <!-- Sağ Bölüm -->
-        <aside class="right-panel">
-          <div class="current-weather-header">
-            <div class="location-row" onclick="requestLocationAndWeather(true)" title="GPS Konumuna Dön">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+            </button>
+            <button class="play-circle-btn" id="playPauseBtn" title="Oynat / Duraklat" onclick="togglePlay()">
+              <svg id="playIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="6 4 20 12 6 20 6 4"/>
               </svg>
-              <span id="mainCity">Konum Belirleniyor</span>
-            </div>
-
-            <div class="main-temp" id="mainTemp">--°C</div>
-
-            <div class="metrics-row">
-              <span class="metric-item" title="Rüzgar Hızı">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                  <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
-                </svg>
-                <span id="windVal">-- km/s</span>
-              </span>
-              <span class="metric-item" title="Nem Oranı">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
-                </svg>
-                <span id="humVal">--%</span>
-              </span>
-              <span class="metric-item" title="Rüzgar Hamlesi">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
-                </svg>
-                <span id="gustVal">-- km/s</span>
-              </span>
-            </div>
+            </button>
+            <button class="ctrl-btn" title="Sonraki Parça" onclick="nextTrack()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="13 19 22 12 13 5 13 19"/>
+                <polygon points="2 19 11 12 2 5 2 19"/>
+              </svg>
+            </button>
           </div>
-
-          <div class="city-list" id="cityList"></div>
-        </aside>
+        </div>
       </div>
-    </main>
+    </footer>
   </div>
 
-  <!-- Kaptan Adı / Şehir Arama Cam Penceresi -->
-  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
-    <div class="modal-card glass-panel" onclick="event.stopPropagation()">
-      <div class="modal-title" id="modalTitle">Kaptan Adını Düzenle</div>
-      <input type="text" id="modalInput" class="glass-input" placeholder="Adınızı veya araç adını yazın..." />
-      <div class="search-results" id="searchResults"></div>
-      <div class="modal-actions">
-        <button class="modal-btn" onclick="closeModal()">İptal</button>
-        <button class="modal-btn primary" id="modalSaveBtn" onclick="saveModal()">Kaydet</button>
+  <!-- Şehir Arama & GPS Dönüş Penceresi -->
+  <div class="modal-overlay" id="cityModal" onclick="closeCityModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong style="font-size:14px;">Konum / Güzergah Seç</strong>
+        <button onclick="forceGpsRefresh(); closeCityModal();" style="background:rgba(245,166,35,0.2); border:1px solid #f5a623; color:#f5a623; padding:4px 10px; border-radius:8px; font-size:11.5px; cursor:pointer;">GPS'e Dön</button>
       </div>
+      <input type="text" id="citySearchInput" class="modal-input" placeholder="Şehir adı yazın (Örn: Bolu, Ankara, Kapıkule)..." />
+      <div class="modal-list" id="citySearchResults"></div>
     </div>
   </div>
 
   <script>
-    /* =====================================================================
-       1. KENDİ ARKA PLAN FOTOĞRAFLARIN (Aynı Klasördeki Dosya Adları)
-       ===================================================================== */
-    const ARKA_PLANLAR = [
-      "arka-plan-1.jpg",
-      "arka-plan-2.jpg",
-      "arka-plan-3.jpg"
-    ];
-
-    const VARSAYILAN_FIRTINA_BG = `url("data:image/svg+xml;utf8,${encodeURIComponent(`
-      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'>
-        <defs>
-          <linearGradient id='sky' x1='0' y1='0' x2='0' y2='1'>
-            <stop offset='0%' stop-color='#1f3238'/>
-            <stop offset='46%' stop-color='#445c60'/>
-            <stop offset='66%' stop-color='#b5b38c'/>
-            <stop offset='72%' stop-color='#475c34'/>
-            <stop offset='100%' stop-color='#172414'/>
-          </linearGradient>
-          <radialGradient id='flash' cx='43%' cy='64%' r='35%'>
-            <stop offset='0%' stop-color='rgba(255,252,230,0.88)'/>
-            <stop offset='45%' stop-color='rgba(210,225,195,0.22)'/>
-            <stop offset='100%' stop-color='rgba(0,0,0,0)'/>
-          </radialGradient>
-        </defs>
-        <rect width='1600' height='900' fill='url(#sky)'/>
-        <ellipse cx='420' cy='210' rx='460' ry='170' fill='#18262b' opacity='0.68'/>
-        <ellipse cx='1080' cy='240' rx='520' ry='190' fill='#1e2f34' opacity='0.58'/>
-        <rect width='1600' height='900' fill='url(#flash)'/>
-        <polyline points='665,370 648,435 675,455 658,525 692,588' fill='none' stroke='#ffffff' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.95'/>
-        <polyline points='675,455 705,495 698,530' fill='none' stroke='#ffffff' stroke-width='1.8' opacity='0.75'/>
-        <path d='M0,620 Q420,595 820,618 T1600,605 L1600,900 L0,900 Z' fill='#283b1e' opacity='0.9'/>
-        <path d='M0,675 Q520,645 980,680 T1600,660 L1600,900 L0,900 Z' fill='#192713' opacity='0.94'/>
-      </svg>
-    `)}")`;
-
-    let gecerliBgListesi = [];
-    let aktifBgIndex = 0;
-    let aktifKatmanA = true;
-    const bgLayerA = document.getElementById('bgLayerA');
-    const bgLayerB = document.getElementById('bgLayerB');
-
-    function setBackgroundImage(cssUrl) {
-      const hedef = aktifKatmanA ? bgLayerB : bgLayerA;
-      const eski = aktifKatmanA ? bgLayerA : bgLayerB;
-      hedef.style.backgroundImage = cssUrl;
-      hedef.style.opacity = '1';
-      eski.style.opacity = '0';
-      aktifKatmanA = !aktifKatmanA;
-    }
+    /* =========================================================================
+       1. ARKA PLAN FOTOĞRAFLARI (Klasördeki Fotoğraflar + Cihazdan Seçme)
+       ========================================================================= */
+    const KULLANICI_ARKA_PLANLARI = ["arka-plan-1.jpg", "arka-plan-2.jpg", "arka-plan-3.jpg"];
+    let yukluArkaPlanlar = [];
+    let bgIndex = 0;
 
     function initBackgrounds() {
-      bgLayerA.style.backgroundImage = VARSAYILAN_FIRTINA_BG;
-      ARKA_PLANLAR.forEach((dosya) => {
+      KULLANICI_ARKA_PLANLARI.forEach(src => {
         const img = new Image();
         img.onload = () => {
-          gecerliBgListesi.push(`url("${dosya}")`);
-          if (gecerliBgListesi.length === 1) {
-            setBackgroundImage(gecerliBgListesi[0]);
+          yukluArkaPlanlar.push(`url("${src}")`);
+          if (yukluArkaPlanlar.length === 1) {
+            document.getElementById('bgPhoto').style.backgroundImage = yukluArkaPlanlar[0];
           }
         };
-        img.src = dosya;
+        img.src = src;
       });
     }
 
-    function nextBackground() {
-      if (gecerliBgListesi.length === 0) return;
-      aktifBgIndex = (aktifBgIndex + 1) % gecerliBgListesi.length;
-      setBackgroundImage(gecerliBgListesi[aktifBgIndex]);
+    function cycleOrPickBackground() {
+      if (yukluArkaPlanlar.length > 0) {
+        bgIndex = (bgIndex + 1) % yukluArkaPlanlar.length;
+        document.getElementById('bgPhoto').style.backgroundImage = yukluArkaPlanlar[bgIndex];
+      } else {
+        document.getElementById('bgFileInput').click();
+      }
     }
 
-    document.getElementById('fileInput').addEventListener('change', (e) => {
+    document.getElementById('bgFileInput').addEventListener('change', (e) => {
       const files = Array.from(e.target.files);
       if (!files.length) return;
-      gecerliBgListesi = files.map(f => `url("${URL.createObjectURL(f)}")`);
-      aktifBgIndex = 0;
-      setBackgroundImage(gecerliBgListesi[0]);
+      yukluArkaPlanlar = files.map(f => `url("${URL.createObjectURL(f)}")`);
+      bgIndex = 0;
+      document.getElementById('bgPhoto').style.backgroundImage = yukluArkaPlanlar[0];
     });
 
-    /* =====================================================================
-       2. KAPTAN İSMİ KAYDETME (localStorage)
-       ===================================================================== */
-    function loadDriverName() {
-      const saved = localStorage.getItem('tir_kaptan_adi') || 'Kaptan';
-      document.getElementById('driverName').textContent = saved;
-      document.getElementById('avatarInitial').textContent = saved.charAt(0).toUpperCase();
-    }
-
-    /* =====================================================================
-       3. HAVA DURUMU KODLARI VE CANLI API ENTEGRASYONU
-       ===================================================================== */
-    function decodeWeather(code) {
-      if (code === 0) return { top: "Açık Gökyüzü", bold: "ve Güneşli", short: "Açık", type: "sun" };
-      if ([1, 2].includes(code)) return { top: "Parçalı Bulutlu", bold: "ve Açık Görüş", short: "Parçalı Bulutlu", type: "cloud" };
-      if (code === 3) return { top: "Çok Bulutlu", bold: "ve Kapalı Hava", short: "Çok Bulutlu", type: "cloud" };
-      if ([45, 48].includes(code)) return { top: "Yoğun Sis", bold: "Düşük Görüş Mesafesi", short: "Sisli", type: "cloud" };
-      if ([51, 53, 55, 61, 80].includes(code)) return { top: "Hafif Yağmur", bold: "ve Islak Zemin", short: "Yağmurlu", type: "rain" };
-      if ([63, 65, 81, 82].includes(code)) return { top: "Sağanak", bold: "ve Şiddetli Yağmur", short: "Sağanak Yağış", type: "rain" };
-      if ([71, 73, 75, 77, 85, 86].includes(code)) return { top: "Kar Yağışı", bold: "ve Buzlanma Riski", short: "Karlı", type: "rain" };
-      if ([95, 96, 99].includes(code)) return { top: "Fırtına", bold: "ve Şiddetli Sağanak", short: "Fırtınalı", type: "rain" };
-      return { top: "Değişken", bold: "Hava Koşulları", short: "Bulutlu", type: "cloud" };
-    }
-
-    function getSmallIcon(type) {
-      if (type === "sun") {
-        return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/></svg>`;
+    /* =========================================================================
+       2. 3D HACİMLİ HAVA DURUMU İLLÜSTRASYONLARI (İlk Görseldeki Stil)
+       ========================================================================= */
+    function get3DWeatherSVG(type) {
+      if (type === 'storm') {
+        return `
+          <svg viewBox="0 0 260 220">
+            <defs>
+              <radialGradient id="cloudBody" cx="45%" cy="30%" r="65%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="55%" stop-color="#cfcfcd"/>
+                <stop offset="100%" stop-color="#7a7c7a"/>
+              </radialGradient>
+              <radialGradient id="innerLightningGlow" cx="62%" cy="68%" r="42%">
+                <stop offset="0%" stop-color="#ffbe3b" stop-opacity="0.92"/>
+                <stop offset="55%" stop-color="#f5a623" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#f5a623" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="boltGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffd166"/>
+                <stop offset="50%" stop-color="#f5a623"/>
+                <stop offset="100%" stop-color="#d97706"/>
+              </linearGradient>
+              <filter id="softCloud" x="-15%" y="-15%" width="130%" height="130%">
+                <feGaussianBlur stdDeviation="2.2"/>
+              </filter>
+            </defs>
+            <g filter="url(#softCloud)">
+              <circle cx="95" cy="82" r="44" fill="url(#cloudBody)"/>
+              <circle cx="145" cy="72" r="52" fill="url(#cloudBody)"/>
+              <circle cx="188" cy="96" r="36" fill="url(#cloudBody)"/>
+              <circle cx="62" cy="102" r="32" fill="url(#cloudBody)"/>
+              <rect x="58" y="88" width="135" height="44" rx="22" fill="url(#cloudBody)"/>
+              <ellipse cx="148" cy="104" rx="58" ry="28" fill="url(#innerLightningGlow)"/>
+            </g>
+            <polygon points="134,116 108,162 129,162 114,208 164,148 139,148 152,116" fill="url(#boltGrad)" style="filter: drop-shadow(0 0 14px rgba(245,166,35,0.65));"/>
+          </svg>`;
       }
-      if (type === "rain") {
-        return `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`;
+      if (type === 'sun') {
+        return `
+          <svg viewBox="0 0 240 220">
+            <defs>
+              <radialGradient id="sunSphere" cx="38%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ffe28a"/>
+                <stop offset="55%" stop-color="#f5a623"/>
+                <stop offset="100%" stop-color="#b86508"/>
+              </radialGradient>
+            </defs>
+            <circle cx="120" cy="110" r="78" fill="rgba(245,166,35,0.14)"/>
+            <circle cx="120" cy="110" r="56" fill="url(#sunSphere)" style="filter: drop-shadow(0 0 26px rgba(245,166,35,0.5));"/>
+          </svg>`;
       }
-      return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`;
+      if (type === 'rain') {
+        return `
+          <svg viewBox="0 0 260 220">
+            <defs>
+              <radialGradient id="rainCloud" cx="45%" cy="30%" r="65%">
+                <stop offset="0%" stop-color="#eef0ef"/>
+                <stop offset="60%" stop-color="#a8aca9"/>
+                <stop offset="100%" stop-color="#5e6260"/>
+              </radialGradient>
+            </defs>
+            <circle cx="95" cy="82" r="44" fill="url(#rainCloud)"/>
+            <circle cx="145" cy="72" r="52" fill="url(#rainCloud)"/>
+            <circle cx="188" cy="96" r="36" fill="url(#rainCloud)"/>
+            <circle cx="62" cy="102" r="32" fill="url(#rainCloud)"/>
+            <rect x="58" y="88" width="135" height="44" rx="22" fill="url(#rainCloud)"/>
+            <line x1="95" y1="146" x2="85" y2="178" stroke="#f5a623" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="130" y1="148" x2="120" y2="184" stroke="#f5a623" stroke-width="3.5" stroke-linecap="round"/>
+            <line x1="165" y1="146" x2="155" y2="178" stroke="#f5a623" stroke-width="3.5" stroke-linecap="round"/>
+          </svg>`;
+      }
+      return `
+        <svg viewBox="0 0 260 220">
+          <defs>
+            <radialGradient id="partSun" cx="40%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#ffe28a"/>
+              <stop offset="100%" stop-color="#f5a623"/>
+            </radialGradient>
+            <radialGradient id="partCloud" cx="45%" cy="30%" r="65%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="65%" stop-color="#c4c6c4"/>
+              <stop offset="100%" stop-color="#767876"/>
+            </radialGradient>
+          </defs>
+          <circle cx="168" cy="74" r="38" fill="url(#partSun)" style="filter: drop-shadow(0 0 18px rgba(245,166,35,0.45));"/>
+          <circle cx="96" cy="96" r="42" fill="url(#partCloud)"/>
+          <circle cx="144" cy="88" r="48" fill="url(#partCloud)"/>
+          <circle cx="184" cy="110" r="34" fill="url(#partCloud)"/>
+          <circle cx="64" cy="114" r="30" fill="url(#partCloud)"/>
+          <rect x="60" y="102" width="130" height="42" rx="21" fill="url(#partCloud)"/>
+        </svg>`;
     }
 
-    let gunlukVeriler = [];
-    let seciliGun = 0;
-    let seciliNokta = 2;
-
-    const GUN_ISIMLERI = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
-
-    async function fetchWeatherForCoords(lat, lon, cityName) {
-      try {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_gusts_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&timezone=auto`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        const curTemp = Math.round(data.current.temperature_2m);
-        const curWind = Math.round(data.current.wind_speed_10m);
-        const curHum = Math.round(data.current.relative_humidity_2m);
-        const curGust = Math.round(data.current.wind_gusts_10m);
-        const curCode = data.current.weather_code;
-
-        document.getElementById('mainCity').textContent = cityName;
-        document.getElementById('mainTemp').textContent = `${curTemp}°C`;
-        document.getElementById('windVal').textContent = `${curWind} km/s`;
-        document.getElementById('humVal').textContent = `${curHum}%`;
-        document.getElementById('gustVal').textContent = `${curGust} km/s`;
-
-        // 6 Günlük veriyi hazırla
-        gunlukVeriler = [];
-        for (let d = 0; d < 6; d++) {
-          const dateObj = new Date(data.daily.time[d] + "T12:00:00");
-          const dayName = d === 0 ? "Bugün" : GUN_ISIMLERI[dateObj.getDay()];
-          const wCode = d === 0 ? curCode : data.daily.weather_code[d];
-          const wInfo = decodeWeather(wCode);
-          const maxT = Math.round(data.daily.temperature_2m_max[d]);
-          const minT = Math.round(data.daily.temperature_2m_min[d]);
-          const rainProb = data.daily.precipitation_probability_max[d] ?? 0;
-          const maxW = Math.round(data.daily.wind_speed_10m_max[d]);
-
-          // O günün 6 saatlik kesiti (06:00, 09:00, 12:00, 15:00, 18:00, 21:00)
-          const baseIdx = d * 24;
-          const saatIndeksleri = [6, 9, 12, 15, 18, 21];
-          const temps = saatIndeksleri.map(h => Math.round(data.hourly.temperature_2m[baseIdx + h] ?? curTemp));
-          const types = saatIndeksleri.map(h => decodeWeather(data.hourly.weather_code[baseIdx + h] ?? wCode).type);
-
-          gunlukVeriler.push({
-            dayName,
-            temps,
-            types,
-            title: `${wInfo.top}<br><strong>${wInfo.bold}</strong>`,
-            desc: `${cityName} güzergahında gün içi en yüksek sıcaklık ${maxT}°C, en düşük ${minT}°C. Rüzgar hızı saatte ${maxW} km/s seviyelerinde, yağış ihtimali %${rainProb}.`
-          });
-        }
-
-        seciliGun = 0;
-        const currentHour = new Date().getHours();
-        seciliNokta = Math.min(5, Math.max(0, Math.floor((currentHour - 5) / 3)));
-        renderDaysAndCurve();
-      } catch (err) {
-        document.getElementById('gpsStatus').textContent = 'Bağlantı hatası';
+    function getSmallOutlineIcon(type) {
+      if (type === 'sun') {
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`;
       }
+      if (type === 'storm') {
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><polyline points="13 13 11 17 14 17 12 21"/></svg>`;
+      }
+      if (type === 'rain') {
+        return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><line x1="10" y1="19" x2="9" y2="22"/><line x1="14" y1="19" x2="13" y2="22"/></svg>`;
+      }
+      return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>`;
     }
 
-    async function reverseGeocode(lat, lon) {
+    function mapWeatherCode(code) {
+      if (code === 0) return { label: "Açık ve Güneşli", short: "Güneşli", type: "sun" };
+      if ([1, 2].includes(code)) return { label: "Parçalı Bulutlu", short: "Parçalı Bulutlu", type: "cloud" };
+      if ([3, 45, 48].includes(code)) return { label: "Çok Bulutlu", short: "Bulutlu", type: "cloud" };
+      if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return { label: "Yağmurlu", short: "Yağışlı", type: "rain" };
+      if ([71, 73, 75, 77, 85, 86].includes(code)) return { label: "Kar Yağışlı", short: "Karlı", type: "rain" };
+      if ([95, 96, 99].includes(code)) return { label: "Fırtına ve Sağanak", short: "Fırtınalı", type: "storm" };
+      return { label: "Parçalı Bulutlu", short: "Bulutlu", type: "cloud" };
+    }
+
+    /* =========================================================================
+       3. AKILLI TIR GPS TAKİBİ (Her 3 km veya Her 4 Dakikada Otomatik Güncelleme)
+       ========================================================================= */
+    const MESAFE_ESIGI_KM = 3.0;         // 3 km yer değiştirince güncelle
+    const SURE_ESIGI_MS = 4 * 60 * 1000; // 4 dakikada bir güncelle
+    let sonGuncelLat = null;
+    let sonGuncelLon = null;
+    let sonGuncellemeZamani = 0;
+    let manuelSehirSecili = false;
+
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    async function resolvePlaceName(lat, lon) {
       try {
         const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=tr`);
         const info = await res.json();
         const ilce = info.locality || info.city || "";
         const il = info.principalSubdivision || "";
+        const ulke = info.countryName || "";
         if (ilce && il && ilce !== il) return `${ilce}, ${il}`;
-        return ilce || il || "Mevcut Konum";
+        return il ? `${il}, ${ulke}` : (ilce || "GPS Konumu");
       } catch {
         return "GPS Konumu";
       }
     }
 
-    function requestLocationAndWeather(forcePrompt = false) {
-      const statusEl = document.getElementById('gpsStatus');
-      statusEl.textContent = 'Konum izni isteniyor...';
+    async function handlePositionUpdate(lat, lon, force = false) {
+      const now = Date.now();
+      let mesafe = 0;
 
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          async (pos) => {
-            const { latitude, longitude } = pos.coords;
-            statusEl.textContent = 'GPS Aktif';
-            const placeName = await reverseGeocode(latitude, longitude);
-            fetchWeatherForCoords(latitude, longitude, placeName);
-          },
-          async () => {
-            statusEl.textContent = 'Ağ Konumu';
-            await fallbackIpLocation();
-          },
-          { enableHighAccuracy: true, timeout: 8000, maximumAge: forcePrompt ? 0 : 60000 }
-        );
+      if (sonGuncelLat !== null && sonGuncelLon !== null) {
+        mesafe = haversineKm(sonGuncelLat, sonGuncelLon, lat, lon);
+      }
+
+      const sureDoldu = (now - sonGuncellemeZamani) >= SURE_ESIGI_MS;
+      const mesafeDoldu = mesafe >= MESAFE_ESIGI_KM;
+
+      if (force || sonGuncelLat === null || mesafeDoldu || sureDoldu) {
+        sonGuncelLat = lat;
+        sonGuncelLon = lon;
+        sonGuncellemeZamani = now;
+
+        const saatStr = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('gpsTelemetry').textContent = `GPS • ${saatStr}`;
+
+        const placeName = await resolvePlaceName(lat, lon);
+        await loadWeatherData(lat, lon, placeName);
       } else {
-        statusEl.textContent = 'Ağ Konumu';
-        fallbackIpLocation();
+        document.getElementById('gpsTelemetry').textContent = `GPS • +${mesafe.toFixed(1)} km`;
       }
     }
 
-    async function fallbackIpLocation() {
+    function startContinuousGps() {
+      if (!('geolocation' in navigator)) {
+        fallbackIpWeather();
+        return;
+      }
+
+      // Sürekli hareket takibi (Tır hareket ettikçe koordinatları dinler)
+      navigator.geolocation.watchPosition(
+        (pos) => {
+          if (manuelSehirSecili) return;
+          handlePositionUpdate(pos.coords.latitude, pos.coords.longitude, false);
+        },
+        () => {
+          if (sonGuncelLat === null) fallbackIpWeather();
+        },
+        { enableHighAccuracy: true, maximumAge: 15000, timeout: 10000 }
+      );
+
+      // Araç sabit dursa bile her 4 dakikada bir tazeleme kontrolü
+      setInterval(() => {
+        if (manuelSehirSecili) return;
+        navigator.geolocation.getCurrentPosition(
+          (pos) => handlePositionUpdate(pos.coords.latitude, pos.coords.longitude, false),
+          () => {},
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      }, SURE_ESIGI_MS);
+    }
+
+    function forceGpsRefresh() {
+      manuelSehirSecili = false;
+      document.getElementById('gpsTelemetry').textContent = 'GPS Aranıyor...';
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => handlePositionUpdate(pos.coords.latitude, pos.coords.longitude, true),
+          () => fallbackIpWeather(),
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 8000 }
+        );
+      } else {
+        fallbackIpWeather();
+      }
+    }
+
+    async function fallbackIpWeather() {
       try {
         const res = await fetch('https://ipwho.is/');
         const data = await res.json();
         if (data && data.latitude) {
-          fetchWeatherForCoords(data.latitude, data.longitude, data.city || "İstanbul");
+          document.getElementById('gpsTelemetry').textContent = 'Ağ Konumu';
+          loadWeatherData(data.latitude, data.longitude, `${data.city}, ${data.country}`);
           return;
         }
       } catch {}
-      fetchWeatherForCoords(41.0082, 28.9784, "İstanbul");
+      loadWeatherData(41.0082, 28.9784, "İstanbul, Türkiye");
     }
 
-    /* =====================================================================
-       4. GÜZERGAH ŞEHİR KARTLARI (Sağ Sütun)
-       ===================================================================== */
-    const guzergahSehirleri = [
-      { name: "İstanbul", country: "Türkiye", lat: 41.0082, lon: 28.9784 },
-      { name: "Bolu", country: "Türkiye", lat: 40.7392, lon: 31.6089 },
-      { name: "Ankara", country: "Türkiye", lat: 39.9334, lon: 32.8597 }
-    ];
+    /* =========================================================================
+       4. HAVA DURUMU VERİSİ VE DALGA GRAFİĞİ
+       ========================================================================= */
+    const GUNLER = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
+    const AYLAR = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
 
-    async function loadRouteCards() {
-      const listEl = document.getElementById('cityList');
+    let dailyForecasts = [];
+    let selectedDayIdx = 0;
+    let selectedHourIdx = 1;
+
+    async function loadWeatherData(lat, lon, cityName) {
+      try {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&hourly=temperature_2m&daily=weather_code,temperature_2m_max&timezone=auto`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const nowDate = new Date();
+        document.getElementById('cityLabel').textContent = cityName;
+        document.getElementById('dateLabel').textContent = `(${GUNLER[nowDate.getDay()]}, ${nowDate.getDate()} ${AYLAR[nowDate.getMonth()]})`;
+
+        const curTemp = Math.round(data.current.temperature_2m);
+        const curWind = data.current.wind_speed_10m.toFixed(1);
+        const curHum = Math.round(data.current.relative_humidity_2m);
+        const curInfo = mapWeatherCode(data.current.weather_code);
+
+        document.getElementById('mainTemp').textContent = curTemp;
+        document.getElementById('mainCondition').textContent = curInfo.label;
+        document.getElementById('windVal').textContent = `${curWind}km/h`;
+        document.getElementById('humidityVal').textContent = `${curHum}%`;
+        document.getElementById('centerArt').innerHTML = get3DWeatherSVG(curInfo.type);
+
+        // 6 Günlük Liste
+        dailyForecasts = [];
+        for (let i = 0; i < 6; i++) {
+          const d = new Date(data.daily.time[i] + "T12:00:00");
+          const wInfo = mapWeatherCode(i === 0 ? data.current.weather_code : data.daily.weather_code[i]);
+          const baseH = i * 24;
+          const hours = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00"];
+          const temps = [8, 9, 10, 11, 12, 13, 14, 15].map(h => Math.round(data.hourly.temperature_2m[baseH + h] ?? curTemp));
+
+          dailyForecasts.push({
+            day: i === 0 ? "Bugün" : GUNLER[d.getDay()],
+            short: wInfo.short,
+            label: wInfo.label,
+            type: wInfo.type,
+            maxTemp: Math.round(data.daily.temperature_2m_max[i]),
+            hours,
+            temps
+          });
+        }
+
+        selectedDayIdx = 0;
+        renderForecastList();
+        renderHourlyWave();
+      } catch {}
+    }
+
+    function renderForecastList() {
+      const listEl = document.getElementById('forecastList');
       listEl.innerHTML = '';
 
-      for (const city of guzergahSehirleri) {
-        let tempText = "--°";
-        let condText = "Yükleniyor";
-        let iconType = "cloud";
-
-        try {
-          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weather_code`);
-          const data = await res.json();
-          tempText = `${Math.round(data.current.temperature_2m)}°`;
-          const decoded = decodeWeather(data.current.weather_code);
-          condText = decoded.short;
-          iconType = decoded.type;
-        } catch {}
-
-        const card = document.createElement('div');
-        card.className = 'city-card glass-panel';
-        card.innerHTML = `
-          <div class="city-info">
-            <span class="country-label">${city.country}</span>
-            <span class="city-name">${city.name}</span>
-            <span class="city-condition">${condText}</span>
+      dailyForecasts.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'forecast-row' + (idx === selectedDayIdx ? ' active' : '');
+        row.innerHTML = `
+          <div class="f-left">
+            <span class="f-icon">${getSmallOutlineIcon(item.type)}</span>
+            <div class="f-texts">
+              <span class="f-day">${item.day}</span>
+              <span class="f-desc">${item.short}</span>
+            </div>
           </div>
-          <div class="city-temp-wrap">
-            <span class="city-temp">${tempText}</span>
-            ${getSmallIcon(iconType)}
-          </div>
+          <span class="f-temp">${item.maxTemp}°</span>
         `;
-        card.onclick = () => {
-          document.getElementById('gpsStatus').textContent = 'Seçili Şehir';
-          fetchWeatherForCoords(city.lat, city.lon, city.name);
+        row.onclick = () => {
+          selectedDayIdx = idx;
+          document.getElementById('mainTemp').textContent = item.maxTemp;
+          document.getElementById('mainCondition').textContent = item.label;
+          document.getElementById('centerArt').innerHTML = get3DWeatherSVG(item.type);
+          renderForecastList();
+          renderHourlyWave();
         };
-        listEl.appendChild(card);
-      }
+        listEl.appendChild(row);
+      });
     }
 
-    /* =====================================================================
-       5. SAATLİK EĞRİ VE GÜNLER ÇİZİMİ
-       ===================================================================== */
-    function renderDaysAndCurve() {
-      if (!gunlukVeriler.length) return;
-      const veri = gunlukVeriler[seciliGun];
+    function renderHourlyWave() {
+      if (!dailyForecasts.length) return;
+      const dayData = dailyForecasts[selectedDayIdx];
+      const tempsEl = document.getElementById('waveTemps');
+      const timesEl = document.getElementById('waveTimes');
+      tempsEl.innerHTML = '';
+      timesEl.innerHTML = '';
 
-      document.getElementById('heroTitle').innerHTML = veri.title;
-      document.getElementById('heroDesc').textContent = veri.desc;
+      dayData.temps.forEach((t, i) => {
+        const tCell = document.createElement('div');
+        tCell.className = 'w-temp-cell' + (i === selectedHourIdx ? ' active' : '');
+        tCell.innerHTML = `<span class="amber-dot"></span><span>${t}°</span>`;
+        tCell.onclick = () => { selectedHourIdx = i; renderHourlyWave(); };
+        tempsEl.appendChild(tCell);
 
-      // Gün butonları
-      const daysBar = document.getElementById('daysBar');
-      daysBar.innerHTML = '';
-      gunlukVeriler.forEach((g, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'day-btn' + (idx === seciliGun ? ' active' : '');
-        btn.textContent = g.dayName;
-        btn.onclick = () => {
-          seciliGun = idx;
-          renderDaysAndCurve();
-        };
-        daysBar.appendChild(btn);
+        const timeCell = document.createElement('div');
+        timeCell.className = 'w-time-cell' + (i === selectedHourIdx ? ' active' : '');
+        timeCell.innerHTML = `<span class="w-tick"></span><span class="w-time-pill">${dayData.hours[i]}</span>`;
+        timeCell.onclick = () => { selectedHourIdx = i; renderHourlyWave(); };
+        timesEl.appendChild(timeCell);
       });
 
-      // Saatlik sıcaklıklar
-      const hourlyRow = document.getElementById('hourlyRow');
-      hourlyRow.innerHTML = '';
-      veri.temps.forEach((t, i) => {
-        const div = document.createElement('div');
-        div.className = 'hour-item' + (i === seciliNokta ? ' active' : '');
-        div.innerHTML = `<span>${t}°</span>${getSmallIcon(veri.types[i])}`;
-        div.onclick = () => {
-          seciliNokta = i;
-          renderDaysAndCurve();
-        };
-        hourlyRow.appendChild(div);
-      });
-
-      // Eğri noktaları
-      const temps = veri.temps;
-      const minT = Math.min(...temps);
-      const maxT = Math.max(...temps);
-      const pts = temps.map((t, i) => {
-        const x = (i + 0.5) * (600 / 6);
+      // Yumuşak SVG dalga eğrisi
+      const minT = Math.min(...dayData.temps);
+      const maxT = Math.max(...dayData.temps);
+      const pts = dayData.temps.map((t, i) => {
+        const x = (i + 0.5) * (800 / 8);
         const norm = maxT === minT ? 0.5 : (t - minT) / (maxT - minT);
-        const y = 58 - norm * 38;
+        const y = 28 - norm * 20;
         return { x, y };
       });
 
@@ -1121,100 +1333,180 @@
         const cpX = (pts[i].x + pts[i + 1].x) / 2;
         d += ` C ${cpX} ${pts[i].y}, ${cpX} ${pts[i + 1].y}, ${pts[i + 1].x} ${pts[i + 1].y}`;
       }
-
-      document.getElementById('linePath').setAttribute('d', d);
-      document.getElementById('areaPath').setAttribute('d', `${d} L ${pts[pts.length - 1].x} 76 L ${pts[0].x} 76 Z`);
-
-      const aktifPt = pts[seciliNokta];
-      const node = document.getElementById('activeNode');
-      node.style.left = `${(aktifPt.x / 600) * 100}%`;
-      node.style.top = `${(aktifPt.y / 76) * 100}%`;
+      document.getElementById('waveCurvePath').setAttribute('d', d);
     }
 
-    /* =====================================================================
-       6. İSİM DEĞİŞTİRME VE ŞEHİR ARAMA PENCERESİ
-       ===================================================================== */
-    let activeModalMode = 'name';
-    let searchTimer = null;
+    function shiftSelectedHour(dir) {
+      selectedHourIdx = (selectedHourIdx + dir + 8) % 8;
+      renderHourlyWave();
+    }
 
-    function openModal(mode) {
-      activeModalMode = mode;
-      const backdrop = document.getElementById('modalBackdrop');
-      const title = document.getElementById('modalTitle');
-      const input = document.getElementById('modalInput');
-      const results = document.getElementById('searchResults');
-      const saveBtn = document.getElementById('modalSaveBtn');
+    /* =========================================================================
+       5. MÜZİK ÇALAR BAR MANTIĞI (MP3 Yükleme + Dahili Yol Ambiyansı)
+       ========================================================================= */
+    const audioEl = document.getElementById('audioPlayer');
+    let playlist = [
+      { title: "GECE YOLCULUĞU", artist: "Uzun Yol Ambiyans", url: null, duration: 225 },
+      { title: "ANADOLU OTOBANI", artist: "Kabin FM", url: null, duration: 198 }
+    ];
+    let currentTrackIdx = 0;
+    let isPlaying = false;
+    let simTimer = null;
+    let simElapsed = 64;
 
-      results.innerHTML = '';
-      if (mode === 'name') {
-        title.textContent = 'Kaptan / Araç Adını Düzenle';
-        input.placeholder = 'Örn: Kaptan Ahmet veya 34 TR 01...';
-        input.value = localStorage.getItem('tir_kaptan_adi') || '';
-        saveBtn.style.display = 'inline-block';
+    function formatTime(sec) {
+      if (!isFinite(sec) || sec < 0) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    function updatePlayerUI() {
+      const track = playlist[currentTrackIdx];
+      document.getElementById('trackTitle').textContent = track.title;
+      document.getElementById('trackArtist').textContent = track.artist;
+      document.getElementById('albumCoverLabel').innerHTML = track.title.slice(0, 10).replace(' ', '<br>');
+
+      const playIcon = document.getElementById('playIcon');
+      playIcon.innerHTML = isPlaying
+        ? `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`
+        : `<polygon points="6 4 20 12 6 20 6 4"/>`;
+    }
+
+    function togglePlay() {
+      const track = playlist[currentTrackIdx];
+      if (track.url) {
+        if (audioEl.paused) {
+          audioEl.play();
+          isPlaying = true;
+        } else {
+          audioEl.pause();
+          isPlaying = false;
+        }
       } else {
-        title.textContent = 'Güzergah Şehri Ara';
-        input.placeholder = 'Şehir adı yazın (Örn: Edirne, İzmir, Mersin)...';
-        input.value = '';
-        saveBtn.style.display = 'none';
+        isPlaying = !isPlaying;
+        clearInterval(simTimer);
+        if (isPlaying) {
+          simTimer = setInterval(() => {
+            simElapsed = (simElapsed + 1) % track.duration;
+            document.getElementById('currentTimeText').textContent = formatTime(simElapsed);
+            document.getElementById('durationTimeText').textContent = formatTime(track.duration);
+            document.getElementById('progressFill').style.width = `${(simElapsed / track.duration) * 100}%`;
+          }, 1000);
+        }
       }
-
-      backdrop.classList.add('open');
-      setTimeout(() => input.focus(), 50);
+      updatePlayerUI();
     }
 
-    function closeModal() {
-      document.getElementById('modalBackdrop').classList.remove('open');
+    function loadTrack(idx, autoPlay = true) {
+      currentTrackIdx = (idx + playlist.length) % playlist.length;
+      const track = playlist[currentTrackIdx];
+      clearInterval(simTimer);
+
+      if (track.url) {
+        audioEl.src = track.url;
+        if (autoPlay) {
+          audioEl.play();
+          isPlaying = true;
+        }
+      } else {
+        audioEl.pause();
+        simElapsed = 0;
+        document.getElementById('durationTimeText').textContent = formatTime(track.duration);
+        if (autoPlay) {
+          isPlaying = false;
+          togglePlay();
+          return;
+        }
+      }
+      updatePlayerUI();
     }
 
-    function saveModal() {
-      if (activeModalMode === 'name') {
-        const val = document.getElementById('modalInput').value.trim() || 'Kaptan';
-        localStorage.setItem('tir_kaptan_adi', val);
-        loadDriverName();
-        closeModal();
+    function nextTrack() { loadTrack(currentTrackIdx + 1, true); }
+    function prevTrack() { loadTrack(currentTrackIdx - 1, true); }
+
+    audioEl.addEventListener('timeupdate', () => {
+      if (!audioEl.duration) return;
+      const pct = (audioEl.currentTime / audioEl.duration) * 100;
+      document.getElementById('progressFill').style.width = `${pct}%`;
+      document.getElementById('currentTimeText').textContent = formatTime(audioEl.currentTime);
+      document.getElementById('durationTimeText').textContent = formatTime(audioEl.duration);
+    });
+
+    audioEl.addEventListener('ended', nextTrack);
+
+    function seekAudio(e) {
+      const rect = document.getElementById('progressTrack').getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const track = playlist[currentTrackIdx];
+      if (track.url && audioEl.duration) {
+        audioEl.currentTime = ratio * audioEl.duration;
+      } else {
+        simElapsed = Math.floor(ratio * track.duration);
+        document.getElementById('progressFill').style.width = `${ratio * 100}%`;
+        document.getElementById('currentTimeText').textContent = formatTime(simElapsed);
       }
     }
 
-    document.getElementById('modalInput').addEventListener('input', (e) => {
-      if (activeModalMode !== 'city') return;
-      clearTimeout(searchTimer);
+    function toggleLike() {
+      document.getElementById('likeBtn').classList.toggle('liked');
+    }
+
+    // Cihazdan MP3/Ses Dosyası Ekleme (+ Butonu)
+    document.getElementById('audioFileInput').addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+      playlist = files.map(f => ({
+        title: f.name.replace(/\.[^/.]+$/, "").toUpperCase(),
+        artist: "Yerel Medya",
+        url: URL.createObjectURL(f),
+        duration: 0
+      }));
+      loadTrack(0, true);
+    });
+
+    /* =========================================================================
+       6. ŞEHİR ARAMA PENCERESİ
+       ========================================================================= */
+    let searchTimeout = null;
+    function openCityModal() {
+      document.getElementById('cityModal').classList.add('open');
+      setTimeout(() => document.getElementById('citySearchInput').focus(), 50);
+    }
+    function closeCityModal() {
+      document.getElementById('cityModal').classList.remove('open');
+    }
+
+    document.getElementById('citySearchInput').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
       const q = e.target.value.trim();
       if (q.length < 2) return;
-
-      searchTimer = setTimeout(async () => {
+      searchTimeout = setTimeout(async () => {
         try {
           const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=5&language=tr`);
           const data = await res.json();
-          const resultsEl = document.getElementById('searchResults');
-          resultsEl.innerHTML = '';
+          const list = document.getElementById('citySearchResults');
+          list.innerHTML = '';
           (data.results || []).forEach(item => {
             const div = document.createElement('div');
-            div.className = 'search-result-item';
+            div.className = 'modal-item';
             div.textContent = `${item.name}${item.admin1 ? ', ' + item.admin1 : ''} (${item.country || ''})`;
             div.onclick = () => {
-              document.getElementById('gpsStatus').textContent = 'Seçili Şehir';
-              fetchWeatherForCoords(item.latitude, item.longitude, item.name);
-              closeModal();
+              manuelSehirSecili = true;
+              document.getElementById('gpsTelemetry').textContent = 'Manuel Konum';
+              loadWeatherData(item.latitude, item.longitude, `${item.name}, ${item.country || ''}`);
+              closeCityModal();
             };
-            resultsEl.appendChild(div);
+            list.appendChild(div);
           });
         } catch {}
       }, 300);
     });
 
-    function toggleFullScreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(() => {});
-      } else {
-        document.exitFullscreen().catch(() => {});
-      }
-    }
-
     // Başlat
-    loadDriverName();
     initBackgrounds();
-    requestLocationAndWeather(false);
-    loadRouteCards();
+    updatePlayerUI();
+    startContinuousGps();
   </script>
 </body>
 </html>
