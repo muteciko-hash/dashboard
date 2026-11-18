@@ -63,9 +63,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .metric b{font-size:clamp(12px,calc(1.9*var(--vh)),15px);font-weight:600;letter-spacing:.02em}
 
 /* HAVA DURUMU SAHNESİ — ortaya dokun = sonraki kanal */
-.art{display:flex;align-items:center;justify-content:center;height:100%;max-height:clamp(125px,calc(31*var(--vh)),230px);position:relative;cursor:pointer;--glow:rgba(255,185,56,.16)}
+.art{display:flex;align-items:center;justify-content:center;height:100%;max-height:clamp(125px,calc(31*var(--vh)),230px);position:relative;cursor:pointer;--glow:rgba(243,178,59,.10)}
 .art::before{content:'';position:absolute;inset:-14%;background:radial-gradient(closest-side,var(--glow),transparent);transition:background .8s}
-.art svg{position:relative;height:100%;width:auto;max-width:100%;overflow:visible;filter:drop-shadow(0 14px 24px rgba(0,0,0,.65));transition:transform .18s}
+.art svg{position:relative;height:100%;width:auto;max-width:100%;overflow:visible;transition:transform .18s}
 .art:active svg{transform:scale(.94)}
 
 /* PUSULA — sağ üst, OLED siyah */
@@ -98,7 +98,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .h-h span{font-size:clamp(8.5px,calc(1.25*var(--vh)),10.5px);font-weight:600;letter-spacing:.08em;color:var(--tx3);padding:1.5px 7px;border-radius:6px}
 .h-h.on span{background:rgba(255,255,255,.09);color:var(--tx)}
 .h-p{font-size:clamp(9px,calc(1.4*var(--vh)),11px);color:#7fb7ff;font-weight:600;display:flex;align-items:center;gap:3px}
-.h-p.lo{opacity:.4}.h-p.hi{color:var(--red);text-shadow:0 0 8px var(--red-glow)}
+.h-p.lo{opacity:.45}.h-p.hi{color:#9ecaff}
 
 /* RADYO — OLED siyah, baştan başa, ekolayzır */
 .dock{display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(68px,calc(14*var(--vh)),86px)}
@@ -132,13 +132,6 @@ input[type=file]{display:none}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute"><defs>
-  <radialGradient id="cg" cx="45%" cy="28%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#cfcfd2"/><stop offset="1" stop-color="#7a7a80"/></radialGradient>
-  <radialGradient id="dg" cx="45%" cy="28%" r="70%"><stop offset="0" stop-color="#c4c7cd"/><stop offset=".6" stop-color="#7d8087"/><stop offset="1" stop-color="#43454b"/></radialGradient>
-  <radialGradient id="sg" cx="38%" cy="35%" r="65%"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".6" stop-color="#ffb938"/><stop offset="1" stop-color="#c97a0a"/></radialGradient>
-  <radialGradient id="mg" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#d5dbea"/><stop offset="1" stop-color="#8d96ad"/></radialGradient>
-  <mask id="mm" maskContentUnits="objectBoundingBox"><rect x="-1" y="-1" width="3" height="3" fill="#fff"/><circle cx=".76" cy=".34" r=".42" fill="#000"/></mask>
-</defs></svg>
 
 <input type="file" id="mp3Input" accept="audio/*" multiple />
 <input type="file" id="photoInput" accept="image/*" multiple />
@@ -232,34 +225,99 @@ $('photoInput').addEventListener('change', e => {
   bgList = fs.map(f => `url("${URL.createObjectURL(f)}")`); bgIdx = 0; $('bgPhoto').style.backgroundImage = bgList[0];
 });
 
-/* ---------- İKONLAR ---------- */
-const CL=(f,tr='')=>`<g fill="url(#${f})" transform="${tr}"><circle cx="95" cy="82" r="44"/><circle cx="145" cy="72" r="52"/><circle cx="188" cy="96" r="36"/><circle cx="62" cy="102" r="32"/><rect x="58" y="88" width="135" height="44" rx="22"/></g>`;
-const SUN=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r*1.45}" fill="rgba(255,185,56,.14)"/><circle cx="${x}" cy="${y}" r="${r}" fill="url(#sg)"/>`;
-const MOON=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="url(#mg)" mask="url(#mm)"/>`;
-const GLOW={sun:'rgba(255,185,56,.18)',pcloud:'rgba(255,185,56,.12)',cloud:'rgba(190,200,220,.1)',fog:'rgba(190,200,220,.1)',rain:'rgba(110,170,255,.14)',snow:'rgba(200,225,255,.14)',storm:'rgba(255,185,56,.2)'};
-function bigArt(t,night){
-  const lines=(a)=>`<g stroke="#7fb7ff" stroke-width="4" stroke-linecap="round">${a}</g>`;
-  const b={
-    sun: night?MOON(120,110,56):SUN(120,110,54),
-    pcloud:(night?MOON(178,70,36):SUN(178,70,34))+CL('cg','translate(0 16)'),
-    cloud:CL('dg','translate(30 -10) scale(.78)')+CL('cg','translate(0 22)'),
-    fog:CL('cg','translate(0 -12)')+`<g stroke="rgba(255,255,255,.55)" stroke-width="7" stroke-linecap="round"><path d="M64 150h130M84 168h110M70 186h100"/></g>`,
-    rain:CL('dg','translate(0 -10)')+lines('<path d="M92 142l-9 30M126 146l-9 34M160 142l-9 30M193 146l-9 30"/>'),
-    snow:CL('cg','translate(0 -10)')+`<g fill="#fff"><circle cx="90" cy="156" r="5"/><circle cx="130" cy="174" r="5"/><circle cx="170" cy="154" r="5"/><circle cx="112" cy="198" r="4.5"/><circle cx="152" cy="200" r="4.5"/><circle cx="196" cy="180" r="4.5"/></g>`,
-    storm:CL('dg','translate(0 -12)')+`<polygon points="134,112 108,160 129,160 114,208 164,146 139,146 152,112" fill="url(#sg)" style="filter:drop-shadow(0 0 12px rgba(255,185,56,.7))"/>`
-  }[t]||'';
-  return `<svg viewBox="0 0 260 220">${b}</svg>`;
+/* ---------- HAVA DURUMU ÇİZGİ İKONLARI ---------- */
+const C_CLOSED = "M 74 128 A 26 26 0 1 1 80.4 76.8 A 38 38 0 0 1 156.0 80.1 A 24 24 0 1 1 154 128 Z";
+const C_OPEN   = "M 92 128 L 74 128 A 26 26 0 1 1 80.4 76.8 A 38 38 0 0 1 156.0 80.1 A 24 24 0 1 1 154 128 L 136 128";
+const cloudClosed = (tr="") => `<path d="${C_CLOSED}" fill="#000" stroke="#f5f5f7" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" transform="${tr}"/>`;
+const cloudOpen   = (tr="") => `<g transform="${tr}"><path d="${C_CLOSED}" fill="#000" stroke="none"/><path d="${C_OPEN}" fill="none" stroke="#f5f5f7" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/></g>`;
+
+function sunLines(cx, cy, r, r1, r2, sw=6.5){
+  let rays = "";
+  for (let i=0; i<8; i++){
+    const a = i * Math.PI / 4, ca = Math.cos(a), sa = Math.sin(a);
+    rays += `<line x1="${(cx+r1*ca).toFixed(1)}" y1="${(cy+r1*sa).toFixed(1)}" x2="${(cx+r2*ca).toFixed(1)}" y2="${(cy+r2*sa).toFixed(1)}"/>`;
+  }
+  return `<g stroke="#f3b23b" stroke-width="${sw}" stroke-linecap="round" fill="none"><circle cx="${cx}" cy="${cy}" r="${r}"/>${rays}</g>`;
 }
-function setArt(t,night){ const a=$('art'); a.innerHTML=bigArt(t,night); a.style.setProperty('--glow',night&&t==='sun'?'rgba(190,205,240,.14)':(GLOW[t]||GLOW.cloud)); }
+function moonLines(cx, cy, s=1){
+  return `<g transform="translate(${cx},${cy}) scale(${s})" stroke="#f3b23b" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" fill="#000">`+
+    `<path d="M 12 -30 A 32 32 0 1 0 32 18 A 24 24 0 1 1 12 -30 Z"/>`+
+    `<path d="M 24 -22 v 8 M 20 -18 h 8" stroke-width="4.5"/></g>`;
+}
+function bigSnowflake(cx, cy){
+  let g = "";
+  for (let i=0; i<6; i++){
+    g += `<g transform="rotate(${i*60} ${cx} ${cy})">`+
+         `<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy-46}"/>`+
+         `<polyline points="${cx-11},${cy-35} ${cx},${cy-25} ${cx+11},${cy-35}"/>`+
+         `</g>`;
+  }
+  return `<g stroke="#63a7cf" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none">${g}</g>`;
+}
+
+const GLOW = {
+  sun:'rgba(243,178,59,.11)', msunny:'rgba(243,178,59,.09)', pcloud:'rgba(243,178,59,.07)',
+  cloud:'rgba(245,245,247,.06)', fog:'rgba(245,245,247,.06)',
+  crain:'rgba(99,167,207,.09)', rain:'rgba(99,167,207,.10)', sleet:'rgba(99,167,207,.10)',
+  csnow:'rgba(99,167,207,.10)', snow:'rgba(99,167,207,.11)',
+  ctstorm:'rgba(243,178,59,.10)', tstorm:'rgba(243,178,59,.10)'
+};
+
+function bigArt(t, night){
+  const bolt = `<polyline points="122,102 106,129 122,129 108,156" fill="none" stroke="#f3b23b" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const b = {
+    sun: night ? moonLines(110, 95, 1.1) : sunLines(110, 95, 24, 35, 47, 6.5),
+    msunny: (night ? moonLines(134, 72, 0.85) : sunLines(134, 72, 22, 32, 42, 6)) + cloudClosed("translate(-12 22) scale(.76)"),
+    pcloud: (night ? moonLines(154, 66, 0.72) : sunLines(154, 66, 17, 25, 33, 5.5)) + cloudClosed("translate(-4 10)"),
+    cloud: cloudClosed("translate(-4 8)"),
+    fog: `<g stroke="#f5f5f7" stroke-width="6.5" stroke-linecap="round" fill="none">`+
+         `<path d="M 62 74 Q 86 64 110 74 T 158 74"/>`+
+         `<path d="M 62 96 Q 86 86 110 96 T 158 96"/>`+
+         `<path d="M 62 118 Q 86 108 110 118 T 158 118"/></g>`,
+    crain: cloudOpen("translate(-4 -4)") +
+           `<g stroke="#63a7cf" stroke-width="5.8" stroke-linecap="round">`+
+           `<line x1="94" y1="118" x2="89" y2="129"/><line x1="112" y1="118" x2="107" y2="129"/><line x1="130" y1="118" x2="125" y2="129"/>`+
+           `<line x1="88" y1="139" x2="83" y2="150"/><line x1="106" y1="139" x2="101" y2="150"/><line x1="124" y1="139" x2="119" y2="150"/></g>`,
+    rain: cloudOpen("translate(-4 -4)") +
+          `<g stroke="#63a7cf" stroke-width="6" stroke-linecap="round">`+
+          `<line x1="96" y1="116" x2="82" y2="152"/><line x1="114" y1="116" x2="100" y2="152"/><line x1="132" y1="116" x2="118" y2="152"/></g>`,
+    sleet: cloudOpen("translate(-4 -4)") +
+           `<g stroke="#63a7cf" stroke-width="5.8" stroke-linecap="round">`+
+           `<line x1="96" y1="116" x2="87" y2="138"/><line x1="114" y1="116" x2="105" y2="138"/><line x1="132" y1="116" x2="123" y2="138"/></g>`+
+           `<g fill="#63a7cf"><circle cx="83" cy="149" r="3.3"/><circle cx="101" cy="149" r="3.3"/><circle cx="119" cy="149" r="3.3"/></g>`,
+    csnow: cloudOpen("translate(-4 -4)") +
+           `<g stroke="#63a7cf" stroke-width="5.5" stroke-linecap="round" transform="translate(110 128)">`+
+           `<line x1="0" y1="-16" x2="0" y2="16"/><line x1="-13.9" y1="-8" x2="13.9" y2="8"/><line x1="-13.9" y1="8" x2="13.9" y2="-8"/></g>`,
+    snow: bigSnowflake(110, 95),
+    ctstorm: cloudOpen("translate(-4 -4)") + bolt,
+    tstorm: cloudOpen("translate(-4 -4)") + bolt +
+            `<g stroke="#63a7cf" stroke-width="5.5" stroke-linecap="round">`+
+            `<line x1="86" y1="128" x2="81" y2="140"/><line x1="98" y1="128" x2="93" y2="140"/>`+
+            `<line x1="130" y1="128" x2="125" y2="140"/><line x1="142" y1="128" x2="137" y2="140"/></g>`
+  }[t] || cloudClosed("translate(-4 8)");
+  return `<svg viewBox="0 0 220 185">${b}</svg>`;
+}
+
+function setArt(t, night){
+  const a = $('art');
+  a.innerHTML = bigArt(t, night);
+  a.style.setProperty('--glow', night && t==='sun' ? 'rgba(243,178,59,.08)' : (GLOW[t] || GLOW.cloud));
+}
+
 function wx(code){
-  if (code===0) return {label:"Açık ve güneşli",type:"sun"};
-  if ([1,2].includes(code)) return {label:"Parçalı bulutlu",type:"pcloud"};
-  if (code===3) return {label:"Çok bulutlu",type:"cloud"};
-  if ([45,48].includes(code)) return {label:"Sisli",type:"fog"};
-  if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) return {label:"Yağmurlu",type:"rain"};
-  if ([71,73,75,77,85,86].includes(code)) return {label:"Kar yağışlı",type:"snow"};
-  if ([95,96,99].includes(code)) return {label:"Fırtına ve sağanak",type:"storm"};
-  return {label:"Bulutlu",type:"cloud"};
+  if (code===0) return {label:"Açık ve güneşli", type:"sun"};
+  if (code===1) return {label:"Az bulutlu", type:"msunny"};
+  if (code===2) return {label:"Parçalı bulutlu", type:"pcloud"};
+  if (code===3) return {label:"Çok bulutlu", type:"cloud"};
+  if ([45,48].includes(code)) return {label:"Sisli", type:"fog"};
+  if ([51,53,55,61,80].includes(code)) return {label:"Hafif yağmurlu", type:"crain"};
+  if ([63,65,81,82].includes(code)) return {label:"Yağmurlu", type:"rain"};
+  if ([56,57,66,67].includes(code)) return {label:"Sulu kar", type:"sleet"};
+  if ([71,77,85].includes(code)) return {label:"Hafif kar yağışlı", type:"csnow"};
+  if ([73,75,86].includes(code)) return {label:"Kar yağışlı", type:"snow"};
+  if (code===95) return {label:"Gök gürültülü fırtına", type:"ctstorm"};
+  if ([96,99].includes(code)) return {label:"Fırtına ve sağanak", type:"tstorm"};
+  return {label:"Bulutlu", type:"cloud"};
 }
 
 /* ---------- PUSULA / RAKIM / KOORDİNAT ---------- */
@@ -354,7 +412,8 @@ const DAYS=["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumarte
 const MON3=["OCA","ŞUB","MAR","NİS","MAY","HAZ","TEM","AĞU","EYL","EKİ","KAS","ARA"];
 async function fetchWeather(lat,lon,place){
   try{
-    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&hourly=temperature_2m,precipitation_probability&daily=weather_code,temperature_2m_max,sunrise,sunset&timezone=auto`)).json();
+    const d = await (await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day&hourly=temperature_2m,relative_humidity_2m&daily=weather_code,temperature_2m_max,sunrise,sunset&timezone=auto`)).json();
+    if (!d || !d.current || !d.hourly) return;
     $('locText').textContent=place;
     if (typeof d.elevation==='number'){ elev=d.elevation; if (gpsAlt==null) $('altVal').textContent=Math.round(elev); }
     const info=wx(d.current.weather_code);
@@ -370,23 +429,42 @@ async function fetchWeather(lat,lon,place){
 /* Saatlik şerit: şimdiki saatten başlar, saat ilerledikçe kendiliğinden kayar */
 let hAll=null,lastStart=-1;
 function setHourly(d){
-  const ct=d.current.time||''; let i0=d.hourly.time.findIndex(x=>x>ct); i0=(i0<0?d.hourly.time.length:i0)-1; if(i0<0) i0=0;
-  hAll={time:d.hourly.time,temp:d.hourly.temperature_2m,pop:d.hourly.precipitation_probability||[],i0,min:+ct.slice(14,16)||0,at:Date.now()};
+  const ct=d.current.time||'';
+  let i0=d.hourly.time.findIndex(x=>x>ct);
+  i0=(i0<0?d.hourly.time.length:i0)-1;
+  if(i0<0) i0=0;
+  hAll={
+    time:d.hourly.time,
+    temp:d.hourly.temperature_2m||[],
+    hum:d.hourly.relative_humidity_2m||[],
+    curTemp:d.current.temperature_2m,
+    curHum:d.current.relative_humidity_2m,
+    i0,
+    min:+ct.slice(14,16)||0,
+    at:Date.now()
+  };
   lastStart=-1; drawWave();
 }
 function drawWave(){
-  if (!hAll) return;
-  const st=hAll.i0+Math.floor((Date.now()-hAll.at+hAll.min*60000)/3600000);
+  if (!hAll || !hAll.time.length) return;
+  const maxStart=Math.max(0,hAll.time.length-8);
+  const elapsed=Math.max(0,Math.floor((Date.now()-hAll.at+hAll.min*60000)/3600000));
+  const st=Math.min(maxStart,hAll.i0+elapsed);
   if (st===lastStart) return; lastStart=st;
-  const temps=[],pops=[],hours=[];
-  for (let k=0;k<8;k++){ const j=st+k;
-    temps.push(Math.round(hAll.temp[j]??hAll.temp[hAll.temp.length-1])); pops.push(Math.round(hAll.pop[j]??0));
-    hours.push(k===0?'ŞİMDİ':((hAll.time[j]||'').slice(11,16)||'--')); }
+  const temps=[],hums=[],hours=[];
+  for (let k=0;k<8;k++){
+    const j=Math.min(hAll.time.length-1,st+k);
+    const rawT=(k===0 && elapsed===0 && typeof hAll.curTemp==='number') ? hAll.curTemp : hAll.temp[j];
+    const rawH=(k===0 && elapsed===0 && typeof hAll.curHum==='number') ? hAll.curHum : hAll.hum[j];
+    temps.push(Math.round(rawT??0));
+    hums.push(Math.round(rawH??0));
+    hours.push(k===0?'ŞİMDİ':((hAll.time[j]||'').slice(11,16)||'--'));
+  }
   const tr=$('wTemps'), hr=$('wHours'); tr.innerHTML=''; hr.innerHTML='';
   temps.forEach((t,i)=>{
     const a=document.createElement('div'); a.className='h-t'+(i===0?' on':''); a.innerHTML=`<span>${t}°</span><span class="h-dot"></span>`; tr.appendChild(a);
     const b=document.createElement('div'); b.className='h-h'+(i===0?' on':'');
-    b.innerHTML=`<span>${hours[i]}</span><span class="h-p${pops[i]<10?' lo':''}${pops[i]>=60?' hi':''}"><svg width="7" height="9" viewBox="0 0 10 14" fill="currentColor"><path d="M5 0C5 0 0 6 0 9a5 5 0 0 0 10 0C10 6 5 0 5 0z"/></svg>${pops[i]}%</span>`; hr.appendChild(b);
+    b.innerHTML=`<span>${hours[i]}</span><span class="h-p${hums[i]<35?' lo':''}${hums[i]>=80?' hi':''}"><svg width="7" height="9" viewBox="0 0 10 14" fill="currentColor"><path d="M5 0C5 0 0 6 0 9a5 5 0 0 0 10 0C10 6 5 0 5 0z"/></svg>${hums[i]}%</span>`; hr.appendChild(b);
   });
   const mn=Math.min(...temps), mx=Math.max(...temps);
   const p=temps.map((t,i)=>({x:(i+.5)*100,y:23-(mx===mn?.5:(t-mn)/(mx-mn))*17}));
@@ -406,12 +484,11 @@ let tracks=[
   S("Darksynth FM","Darksynth","DARK\nSYNTH","https://stream.nightride.fm/darksynth.mp3",{type:"nightride",id:"darksynth"}),
   S("Datawave FM","Datawave","DATA\nWAVE","https://stream.nightride.fm/datawave.mp3",{type:"nightride",id:"datawave"}),
   S("Spacesynth FM","Spacesynth","SPACE\nSYNTH","https://stream.nightride.fm/spacesynth.mp3",{type:"nightride",id:"spacesynth"}),
-  S("SomaFM Groove Salad","Ambient ve downtempo","GROOVE\nSALAD","https://ice1.somafm.com/groovesalad-128-mp3",{type:"somafm",id:"groovesalad"}),
-  S("SomaFM Drone Zone","Derin uzay ve atmosfer","DRONE\nZONE","https://ice1.somafm.com/dronezone-128-mp3",{type:"somafm",id:"dronezone"}),
-  S("SomaFM Space Station","Mid-tempo elektronik","SPACE\nSOMA","https://ice1.somafm.com/spacestation-128-mp3",{type:"somafm",id:"spacestation"}),
-  S("SomaFM Vaporwaves","Vaporwave ve retro","VAPOR\nWAVES","https://ice1.somafm.com/vaporwaves-128-mp3",{type:"somafm",id:"vaporwaves"}),
-  S("SomaFM Secret Agent","Lounge ve caz","SECRET\nAGENT","https://ice1.somafm.com/secretagent-128-mp3",{type:"somafm",id:"secretagent"}),
-  S("SomaFM Lush","Yumuşak vokaller","SOMA\nLUSH","https://ice1.somafm.com/lush-128-mp3",{type:"somafm",id:"lush"}),
+  S("Nightwave Plaza","Vaporwave ve gece sürüşü","NIGHTWAVE\nPLAZA","https://radio.plaza.one/mp3",{type:"plaza"}),
+  S("Radio Paradise Mellow","Sakin ve atmosferik","RP\nMELLOW","https://stream.radioparadise.com/mellow-128",{type:"rp",chan:1}),
+  S("Radio Paradise Rock","Klasik ve alternatif rock","RP\nROCK","https://stream.radioparadise.com/rock-128",{type:"rp",chan:2}),
+  S("FIP Radio","Caz, soul ve dünya müziği","FIP\nRADIO","https://icecast.radiofrance.fr/fip-midfi.mp3"),
+  S("FIP Electro","Downtempo ve elektronik","FIP\nELECTRO","https://icecast.radiofrance.fr/fipelectro-midfi.mp3"),
   S("Power FM","Türkiye • yabancı hit","POWER\nFM","https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"),
   S("Power Türk","Türkiye • Türkçe pop","POWER\nTÜRK","https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"),
   S("Power Love","Türkiye • slow ve romantik","POWER\nLOVE","https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"),
@@ -419,7 +496,7 @@ let tracks=[
   S("Metro FM","Türkiye • hit müzik","METRO\nFM",SW+"METRO_FM.mp3"),
   S("Süper FM","Türkiye • Türkçe hit","SÜPER\nFM",SW+"SUPER_FM.mp3"),
   S("Joy Türk","Türkiye • Türkçe slow","JOY\nTÜRK",SW+"JOY_TURK.mp3"),
-  S("Radio Paradise","Global • eklektik","RADIO\nPARADISE","https://stream.radioparadise.com/mp3-128",{type:"rp"})
+  S("Radio Paradise","Global • eklektik","RADIO\nPARADISE","https://stream.radioparadise.com/mp3-128",{type:"rp",chan:0})
 ];
 let ti=0, playing=false, liveSec=0, liveTimer=null, skipTimer=null, metaTimer=null, metaAbort=null, nowPlaying="";
 function ui(sub){
@@ -474,12 +551,13 @@ async function fetchNowPlaying(){
   metaAbort = ctrl;
   let found = "";
   try{
-    if (t.meta && t.meta.type === "somafm"){
-      const d = await (await fetch(`https://somafm.com/songs/${t.meta.id}.json`, { signal: ctrl.signal })).json();
-      const s = d && d.songs && d.songs[0];
+    if (t.meta && t.meta.type === "plaza"){
+      const d = await (await fetch("https://api.plaza.one/status", { signal: ctrl.signal })).json();
+      const s = d && d.song;
       if (s && (s.artist || s.title)) found = [s.artist, s.title].filter(Boolean).join(" - ");
     } else if (t.meta && t.meta.type === "rp"){
-      const d = await (await fetch("https://api.radioparadise.com/api/now_playing?chan=0", { signal: ctrl.signal })).json();
+      const ch = t.meta.chan ?? 0;
+      const d = await (await fetch(`https://api.radioparadise.com/api/now_playing?chan=${ch}`, { signal: ctrl.signal })).json();
       if (d && (d.artist || d.title)) found = [d.artist, d.title].filter(Boolean).join(" - ");
     } else if (t.meta && t.meta.type === "nightride"){
       const d = await (await fetch("https://stream.nightride.fm/status-json.xsl", { signal: ctrl.signal })).json();
@@ -581,6 +659,7 @@ function setDate(){
   $('clockT').textContent=pad(n.getHours())+':'+pad(n.getMinutes());
 }
 setDate(); setInterval(setDate,5000);
+
 /* ---------- DİK TELEFON → YATAY EKRAN ---------- */
 /* Telefon dik tutulurken düzen 90° döndürülür. Tarih bloğuna çift dokun: sağa → sola → kapalı */
 const scr=document.querySelector('.screen'), modes=['cw','ccw','off'];
