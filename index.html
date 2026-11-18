@@ -9,7 +9,7 @@
 <title>Kabin Paneli</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#000;
@@ -38,18 +38,18 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
 /* ÜST BAR */
 .top-bar{display:flex;align-items:center;justify-content:center;position:relative;height:clamp(32px,6vh,46px);flex-shrink:0}
-.loc{display:inline-flex;align-items:center;gap:clamp(8px,1.4vh,12px);padding:clamp(4px,.9vh,8px) clamp(14px,2.4vh,22px) clamp(4px,.9vh,8px) clamp(6px,1.1vh,10px);border-radius:999px;cursor:pointer;
-  background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.pin{width:clamp(22px,4vh,30px);height:clamp(22px,4vh,30px);border-radius:50%;background:rgba(229,72,77,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.loc-text{font-size:clamp(16.5px,3.15vh,23px);font-weight:500;letter-spacing:-.025em}
+.loc{display:inline-flex;align-items:center;gap:clamp(7px,1.2vh,10px);padding:4px 8px;cursor:pointer;
+  background:none;border:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.pin{width:clamp(18px,3.2vh,24px);height:clamp(18px,3.2vh,24px);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.loc-text{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-size:clamp(18.5px,3.55vh,26px);font-weight:200;letter-spacing:-.015em;color:var(--tx)}
 .sep{width:1px;height:clamp(12px,2.4vh,18px);background:rgba(255,255,255,.18)}
-.date-wrap{position:absolute;left:0;display:flex;align-items:center;gap:clamp(10px,1.6vw,16px)}
-.date-big{display:flex;flex-direction:column;line-height:1.12}
-.date-big b{font-size:clamp(17px,3.4vh,26px);font-weight:500;letter-spacing:-.03em}
-.date-big span{font-size:clamp(12px,2.1vh,16px);font-weight:300;color:var(--tx2);letter-spacing:-.01em}
-.digital-clock{font-size:clamp(22px,4.3vh,34px);font-weight:300;letter-spacing:.03em;font-variant-numeric:tabular-nums;color:var(--tx);line-height:1;
-  padding-left:clamp(10px,1.6vw,16px);border-left:1px solid rgba(255,255,255,.14)}
-.gps{position:absolute;right:0;display:inline-flex;align-items:center;gap:6px;font-size:10.5px;color:var(--tx2);
+.date-wrap{position:absolute;left:0;display:flex;align-items:center;gap:clamp(12px,1.8vw,18px)}
+.date-big{display:flex;flex-direction:column;line-height:1.12;font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif}
+.date-big b{font-size:clamp(17px,3.4vh,26px);font-weight:200;letter-spacing:-.02em;color:var(--tx)}
+.date-big span{font-size:clamp(13px,2.3vh,18px);font-weight:200;color:var(--tx2);letter-spacing:-.01em}
+.digital-clock{font-family:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-size:clamp(24px,4.6vh,36px);font-weight:200;letter-spacing:.01em;font-variant-numeric:tabular-nums;color:var(--tx);line-height:1;
+  padding-left:clamp(12px,1.8vw,18px);border-left:1px solid rgba(255,255,255,.12)}
+.gps{position:absolute;right:0;display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:200;color:var(--tx2);
   border:1px solid var(--line);padding:3px 10px;border-radius:999px;cursor:pointer}
 .gps i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
 @keyframes pulse{50%{opacity:.35;transform:scale(.8)}}
@@ -59,14 +59,14 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .left{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,1vh,10px)}
 .temp-row{display:flex;align-items:center;gap:clamp(8px,1.4vw,16px)}
 .temp{display:flex;line-height:.9}
-.temp b{font-size:clamp(52px,12vh,92px);font-weight:200;letter-spacing:-.05em}
-.temp sup{font-size:clamp(15px,2.8vh,24px);font-weight:300;color:var(--tx2);margin:clamp(6px,1.2vh,12px) 0 0 3px}
+.temp b{font-size:clamp(54px,12.4vh,94px);font-weight:100;letter-spacing:-.04em}
+.temp sup{font-size:clamp(16px,3vh,25px);font-weight:200;color:var(--tx2);margin:clamp(6px,1.2vh,12px) 0 0 3px}
 .wicon{height:clamp(40px,8.5vh,70px);width:auto;flex-shrink:0;filter:drop-shadow(0 8px 14px rgba(0,0,0,.7))}
-.cond{font-size:clamp(14px,2.4vh,21px);font-weight:300;letter-spacing:-.01em;color:rgba(245,245,247,.9)}
+.cond{font-size:clamp(14px,2.4vh,21px);font-weight:200;letter-spacing:-.01em;color:rgba(245,245,247,.9)}
 .metrics{display:grid;grid-template-columns:auto auto;gap:clamp(4px,1vh,9px) clamp(16px,2.2vw,28px);margin-top:clamp(2px,.8vh,8px);justify-content:start}
 .metric{display:flex;flex-direction:column;gap:2px}
-.metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(10px,1.4vh,11.5px);color:var(--tx3);font-weight:400}
-.metric b{font-size:clamp(13px,2vh,16px);font-weight:400}
+.metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(10px,1.4vh,11.5px);color:var(--tx3);font-weight:300}
+.metric b{font-size:clamp(13.5px,2.1vh,16.5px);font-weight:200;letter-spacing:.01em}
 
 /* PUSULA — OLED siyah, sınırsız */
 .glass{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.14);
@@ -74,17 +74,17 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .compass{height:clamp(110px,33vh,200px);aspect-ratio:1.2;border-radius:2px;background:#000000;border:none;box-shadow:none;display:grid;grid-template-columns:1fr auto;
   padding:clamp(10px,2.2vh,18px) clamp(10px,2vh,16px) clamp(10px,2.2vh,18px) clamp(8px,1.6vh,14px);cursor:pointer;flex-shrink:0}
 .c-left{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;gap:2px}
-.alt{font-size:clamp(28px,8vh,62px);font-weight:200;letter-spacing:-.045em;line-height:1}
-.alt-l{font-size:clamp(8.5px,1.9vh,14px);font-weight:300;line-height:1.12;color:var(--tx2)}
+.alt{font-size:clamp(30px,8.2vh,64px);font-weight:100;letter-spacing:-.035em;line-height:1}
+.alt-l{font-size:clamp(8.5px,1.9vh,14px);font-weight:200;line-height:1.12;color:var(--tx2)}
 .tape{position:relative;width:clamp(54px,13vh,96px)}
 .t-in{position:absolute;inset:3px 0}
 .ticks{position:absolute;left:0;top:0;bottom:0;width:clamp(22px,5.4vh,42px)}
 .ticks i{position:absolute;left:0;right:0;height:1px;background:rgba(245,245,247,.9)}
-.letter{position:absolute;right:0;font-size:clamp(14px,3.6vh,28px);font-weight:600;line-height:1;transform:translateY(-50%)}
+.letter{position:absolute;right:0;font-size:clamp(14px,3.6vh,28px);font-weight:400;line-height:1;transform:translateY(-50%)}
 .letter.top{top:0}.letter.bot{top:100%}
 .mk{position:absolute;left:-6px;width:clamp(32px,7.6vh,56px);height:clamp(2.5px,.55vh,4.5px);border-radius:3px;background:var(--red);box-shadow:0 0 8px var(--red-glow);transform:translateY(-50%)}
-.mk-l{position:absolute;right:0;font-size:clamp(10px,2.4vh,17px);font-weight:300;transform:translateY(-50%)}
-.live-coords{display:flex;align-items:center;gap:clamp(8px,1.4vh,12px);font-size:clamp(10px,1.9vh,14px);font-weight:400;letter-spacing:.02em;white-space:nowrap;color:var(--tx)}
+.mk-l{position:absolute;right:0;font-size:clamp(11px,2.5vh,18px);font-weight:200;transform:translateY(-50%)}
+.live-coords{display:flex;align-items:center;gap:clamp(8px,1.4vh,12px);font-size:clamp(10.5px,2vh,14.5px);font-weight:200;letter-spacing:.02em;white-space:nowrap;color:var(--tx)}
 .live-coords i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
 
 /* HAVA DURUMU SAHNESİ */
@@ -101,21 +101,21 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .d-l{display:flex;align-items:center;gap:9px;min-width:0}
 .d-ic{color:var(--tx2);display:flex}.d-row.on .d-ic{color:var(--tx)}
 .d-m{display:flex;flex-direction:column;min-width:0}
-.d-day{font-size:clamp(10.5px,1.55vh,12.5px);font-weight:500;line-height:1.15}
+.d-day{font-size:clamp(10.5px,1.55vh,12.5px);font-weight:400;line-height:1.15}
 .d-sub{font-size:clamp(8.5px,1.2vh,10px);color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.d-t{font-size:clamp(11px,1.6vh,13px);color:var(--tx2)}.d-row.on .d-t{color:var(--tx);font-weight:500}
+.d-t{font-size:clamp(11px,1.6vh,13px);font-weight:200;color:var(--tx2)}.d-row.on .d-t{color:var(--tx);font-weight:300}
 
 /* SAATLİK */
 .hourly{display:flex;align-items:center;gap:12px;height:auto;min-height:clamp(74px,14.5vh,102px);margin-bottom:clamp(10px,1.8vh,16px);flex-shrink:0}
 .wave{flex:1;display:flex;flex-direction:column;justify-content:space-between;gap:2px}
 .w-row{display:grid;grid-template-columns:repeat(8,1fr);text-align:center}
-.h-t{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:clamp(11.5px,1.8vh,14px);font-weight:300;color:var(--tx2)}
-.h-t.on{color:var(--tx);font-weight:500}
+.h-t{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font-size:clamp(12px,1.9vh,15px);font-weight:200;color:var(--tx2)}
+.h-t.on{color:var(--tx);font-weight:300}
 .h-dot{width:5px;height:5px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);opacity:0}.h-t.on .h-dot{opacity:1}
 .w-line{height:clamp(16px,3.2vh,26px)}.w-line svg{width:100%;height:100%;overflow:visible}
 .h-h{cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
-.h-p{font-size:clamp(9px,1.4vh,11px);color:#7fb7ff;font-weight:500;display:flex;align-items:center;gap:3px}.h-p.lo{opacity:.4}.h-p.hi{color:var(--red);font-weight:600;text-shadow:0 0 8px var(--red-glow)}
-.h-h span{font-size:clamp(9.5px,1.3vh,11px);color:var(--tx3);padding:1.5px 8px;border-radius:6px}
+.h-p{font-size:clamp(9px,1.4vh,11px);color:#7fb7ff;font-weight:200;display:flex;align-items:center;gap:3px}.h-p.lo{opacity:.4}.h-p.hi{color:var(--red);font-weight:300;text-shadow:0 0 8px var(--red-glow)}
+.h-h span{font-size:clamp(9.5px,1.35vh,11.5px);font-weight:200;color:var(--tx3);padding:1.5px 8px;border-radius:6px}
 .h-h.on span{background:rgba(255,255,255,.09);color:var(--tx)}
 .arrows{display:flex;flex-direction:column;gap:6px}
 .arr{width:clamp(24px,4.4vh,32px);height:clamp(24px,4.4vh,32px);border-radius:9px;border:1px solid var(--line);color:var(--tx2);font-size:15px;display:flex;align-items:center;justify-content:center}
@@ -131,9 +131,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   padding:clamp(9px,1.6vh,13px) clamp(18px,2.6vw,26px)}
 .p-top{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0}
 .p-meta{flex:1;min-width:0;font-size:clamp(12px,2vh,14.5px);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.p-song{color:#f2f2f4;font-weight:500}
-.p-sep{color:rgba(242,242,244,.55);font-weight:300;margin:0 5px}
-.p-chan{color:rgba(242,242,244,.72);font-weight:400}
+.p-song{color:#f2f2f4;font-weight:300}
+.p-sep{color:rgba(242,242,244,.55);font-weight:200;margin:0 5px}
+.p-chan{color:rgba(242,242,244,.72);font-weight:200}
 .transport{display:flex;align-items:center;gap:clamp(14px,2vw,22px);flex-shrink:0}
 .skip{width:clamp(15px,2.4vh,18px);height:clamp(15px,2.4vh,18px);color:#d97724;display:flex;align-items:center;justify-content:center;transition:transform .12s,filter .15s}
 .skip:active{transform:scale(.88);filter:brightness(1.2)}
@@ -177,7 +177,7 @@ input[type=file]{display:none}
 <div class="screen">
   <header class="top-bar">
     <div class="loc" onclick="openCity()">
-      <span class="pin"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+      <span class="pin"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="1.9" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
       <span class="loc-text" id="locText">Konum alınıyor</span>
     </div>
     <div class="date-wrap">
