@@ -7,58 +7,67 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Tır Panel">
 <title>Tır Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
-:root{--gl:rgba(255,255,255,.18);--cd:rgba(12,14,30,.42);--t:#f6f4ff;--d:rgba(246,244,255,.66);--gold:#f3c77a}
+:root{--t:#fff;--d:rgba(255,255,255,.74);--gold:#f6cf8a}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:#070918;color:var(--t);font:400 13px/1.25 -apple-system,"SF Pro Text",system-ui,sans-serif}
+html,body{height:100%;overflow:hidden;background:#070918;color:var(--t);font:300 13px/1.3 'Outfit',-apple-system,"SF Pro Text",system-ui,sans-serif;text-shadow:0 1px 10px rgba(0,0,0,.22)}
 body{padding:env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0)}
 .bg{overflow:hidden}.bg .l{position:absolute;inset:0;background-size:cover;background-position:center;transition:opacity 1.4s ease}
-#bgG{position:fixed;inset:0;z-index:0;filter:blur(10px) brightness(.5) saturate(1.1);transform:scale(1.06)}
+#bgG{position:fixed;inset:0;z-index:0;filter:blur(16px) brightness(.66) saturate(1.3);transform:scale(1.08)}
 #fx{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-.app{position:relative;z-index:2;height:100%;display:flex;gap:10px;padding:10px}
-nav{align-self:center;display:flex;flex-direction:column;gap:6px;padding:8px 6px;border-radius:26px;background:var(--cd);border:1px solid var(--gl);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-nav button{all:unset;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--d);cursor:pointer}
-nav button.on{background:rgba(255,255,255,.22);color:#fff}nav button.off{opacity:.3;pointer-events:none}
-nav svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.app{position:relative;z-index:2;height:calc(100% - 16px);margin:8px;display:flex;gap:12px;padding:12px;border-radius:32px;border:1px solid rgba(255,255,255,.22);border-top-color:rgba(255,255,255,.4);background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.3)}
+nav{align-self:center;display:flex;flex-direction:column;gap:8px;padding:9px 7px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.25);box-shadow:0 10px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.35);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+nav button{all:unset;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--d);cursor:pointer;transition:.25s}
+nav button.on{color:#fff;background:linear-gradient(135deg,rgba(255,255,255,.42),rgba(255,255,255,.12));box-shadow:0 0 20px rgba(255,255,255,.3),inset 0 1px 0 rgba(255,255,255,.6)}
+nav button.off{opacity:.3;pointer-events:none}
+nav svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 main{flex:1;min-width:0;min-height:0}
-.page{display:none;height:100%;gap:10px}.page.on{display:grid}
-#pgW{grid-template-columns:1.75fr 1fr;grid-template-rows:1.15fr 1fr}
+.page{display:none;height:100%;gap:12px}.page.on{display:grid}
+#pgW{grid-template-columns:1.75fr 1fr;grid-template-rows:1.2fr 1fr}
 #pgR{grid-template-columns:1.6fr 1fr;grid-template-rows:1fr 1fr}
-.c{position:relative;border-radius:20px;border:1px solid var(--gl);background:var(--cd);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:12px 14px;overflow:hidden;min-width:0;min-height:0}
-.c h2{font-size:11px;font-weight:500;color:var(--d);margin-bottom:4px}
-.hero{padding:0;background:none}.hero .bg{position:absolute;inset:0}
-.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.5))}
-.hero .in{position:relative;height:100%;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between}
-.loc{display:flex;align-items:center;gap:6px;font-size:13px}.loc svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2}
-.lab{font-size:11px;color:var(--d)}
-.cond{font-size:clamp(28px,8.5vh,56px);font-weight:300;letter-spacing:-.01em;line-height:1.05}
-.hero svg.ic{position:absolute;right:16px;bottom:16px;width:clamp(48px,15vh,80px);height:clamp(48px,15vh,80px);filter:drop-shadow(0 2px 10px rgba(0,0,0,.4))}
-.crv{height:calc(100% - 20px);display:flex;flex-direction:column}
-.crv svg{flex:1;min-height:0;width:100%}
-.hr{display:flex}.hr div{flex:1;text-align:center;font-size:11px;color:var(--d)}.hr b{display:block;font-size:clamp(15px,4vh,22px);font-weight:300;color:var(--t)}
+.c{position:relative;border-radius:24px;border:1px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.4);background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.06));backdrop-filter:blur(26px) saturate(1.6);-webkit-backdrop-filter:blur(26px) saturate(1.6);box-shadow:0 14px 40px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.28);padding:14px 16px;overflow:hidden;min-width:0;min-height:0}
+.c h2{font-size:11px;font-weight:400;letter-spacing:.06em;color:var(--d);margin-bottom:6px}
+.hero{padding:0}.hero .bg{position:absolute;inset:0}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.18) 45%,rgba(0,0,0,.62))}
+.hero .in{position:relative;height:100%;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between}
+.hero .in>div:first-child{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.loc{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:400}.loc svg{width:15px;height:15px;fill:none;stroke:#fff;stroke-width:2}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips span,.chip2,.cbtn{padding:5px 11px;border-radius:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:11px;font-weight:400}
+.lab{font-size:12px;color:var(--d)}
+.cond{font-size:clamp(32px,10vh,66px);font-weight:200;letter-spacing:-.02em;line-height:1.02}
+.hero svg.ic{position:absolute;right:18px;bottom:18px;width:clamp(52px,16vh,86px);height:clamp(52px,16vh,86px);filter:drop-shadow(0 4px 14px rgba(0,0,0,.4))}
+.crv{height:calc(100% - 22px);display:flex;flex-direction:column}.crv svg{flex:1;min-height:0;width:100%}
+#curve{filter:drop-shadow(0 0 6px rgba(246,207,138,.7))}
+.hr{display:flex}.hr div{flex:1;text-align:center;font-size:11px;color:var(--d)}.hr b{display:block;font-size:clamp(16px,4.2vh,24px);font-weight:200;color:var(--t)}.hr div:first-child b{color:var(--gold)}
 .side{grid-row:1/3;grid-column:2;overflow:auto}
-.date{font-size:12px;color:var(--d)}
-.bigt{font-size:clamp(56px,17vh,104px);font-weight:200;line-height:1;margin:2px 0 4px}
-.rows div{display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12px;color:var(--d)}.rows b{font-weight:500;color:var(--t)}
-.days div{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(255,255,255,.1);font-size:12px}
-.days svg{width:26px;height:26px;flex:none}.days span{flex:1;color:var(--d)}.days b{font-weight:500}
-.cmp svg{width:100%;height:calc(100% - 18px)}
-.alt{font-size:clamp(30px,9vh,48px);font-weight:200;line-height:1}.sub{font-size:11px;color:var(--d)}
-.sp{width:100%;height:28%;margin:6px 0}
-.co{font-size:11px;color:var(--d)}.co b{display:block;font-size:14px;font-weight:500;color:var(--t)}
-.mp{padding:0;grid-row:1/3}#map{width:100%;height:100%;background:#0b0d1f;filter:hue-rotate(40deg) saturate(.8)}
+.date{font-size:12px;color:var(--d);text-transform:capitalize}
+.bigt{font-size:clamp(60px,19vh,116px);font-weight:200;line-height:1;margin:2px 0 6px;letter-spacing:-.03em}
+.rows div{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid rgba(255,255,255,.14);font-size:12px;color:var(--d)}.rows b{font-weight:400;color:var(--t)}
+.days div{display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid rgba(255,255,255,.14);font-size:12px}
+.days svg{width:28px;height:28px;flex:none}.days span{flex:1;color:var(--d);text-transform:capitalize}.days b{font-weight:400}
+.cmp svg{width:100%;height:calc(100% - 20px)}
+.cbtn{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);color:#fff;cursor:pointer;white-space:nowrap}.cbtn.hid{display:none}
+.alt{font-size:clamp(32px,10vh,52px);font-weight:200;line-height:1}.sub{font-size:11px;color:var(--d)}
+.sp{width:100%;height:28%;margin:6px 0}.co{font-size:11px;color:var(--d)}.co b{display:block;font-size:15px;font-weight:400;color:var(--t)}
+.mp{padding:0;grid-row:1/3}#map{position:absolute;inset:0;background:#0b0d1f;filter:saturate(.9)}
+.chip2{position:absolute;z-index:500;left:12px;top:12px;pointer-events:none}
 .leaflet-control-attribution,.leaflet-control-zoom{display:none}
+.blob{position:absolute;border-radius:50%;filter:blur(46px);animation:dr 30s ease-in-out infinite alternate}
+@keyframes dr{from{transform:translateX(-8vw)}to{transform:translateX(14vw)}}
 #hi{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;text-align:center;background:rgba(7,9,24,.8);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);transition:opacity 1s,visibility 1s}
 #hi.out{opacity:0;visibility:hidden}
 #hi .orb{position:absolute;width:min(60vw,60vh);aspect-ratio:1;border-radius:50%;background:conic-gradient(#ff5fa2,#6aa8ff,#ffb347,#ff5fa2);filter:blur(60px);opacity:.38;animation:sp 9s linear infinite}
 #hi h2{position:relative;font-size:clamp(30px,8vw,64px);font-weight:200;animation:rs 1.6s both}#hi p{position:relative;margin-top:10px;color:var(--d);animation:rs 1.6s .5s both}
 @keyframes sp{to{transform:rotate(360deg)}}@keyframes rs{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){#hi .orb,#hi h2,#hi p{animation:none}}
+@media (prefers-reduced-motion:reduce){#hi .orb,#hi h2,#hi p,.blob{animation:none}}
 @media (max-aspect-ratio:1/1){
- html,body{overflow:auto}.app{flex-direction:column-reverse;height:auto;min-height:100%}
+ html,body{overflow:auto}.app{flex-direction:column-reverse;height:auto;min-height:calc(100% - 16px)}
  nav{flex-direction:row;align-self:center}main{overflow:visible}
- .page.on{display:flex;flex-direction:column;height:auto}.hero{height:240px}.crv{height:170px}.side{overflow:visible}.mp{height:300px}.cmp,.pos{height:190px}
+ .page.on{display:flex;flex-direction:column;height:auto}.hero{height:250px}.crv{height:170px}.side{overflow:visible}.mp{height:300px}.cmp,.pos{height:200px}
 }
 </style>
 </head>
@@ -75,19 +84,19 @@ main{flex:1;min-width:0;min-height:0}
 <main>
 <section class="page on" id="pgW">
  <div class="c hero"><div class="bg" id="bgH"></div><div class="shade"></div>
-  <div class="in"><div><div class="loc"><svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span id="where">Konum bekleniyor</span></div></div>
+  <div class="in"><div><div class="loc"><svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-12a7 7 0 10-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span id="where">Konum bekleniyor</span></div><div class="chips" id="chips"></div></div>
    <div><div class="lab" id="greet">Hava durumu</div><div class="cond" id="cond">Hava alınıyor</div><div class="lab" id="note" style="margin-top:4px"></div></div></div>
   <svg class="ic" id="ic" viewBox="0 0 64 64"></svg></div>
- <div class="c"><h2>Saatlik sıcaklık</h2><div class="crv"><svg viewBox="0 0 600 60" preserveAspectRatio="none"><path id="curve" fill="none" stroke="#f3c77a" stroke-width="2.2" vector-effect="non-scaling-stroke" d=""/></svg><div class="hr" id="hrs"></div></div></div>
+ <div class="c"><h2>Saatlik sıcaklık</h2><div class="crv"><svg viewBox="0 0 600 60" preserveAspectRatio="none"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6cf8a" stop-opacity=".45"/><stop offset="1" stop-color="#f6cf8a" stop-opacity="0"/></linearGradient></defs><path id="area" fill="url(#ag)" d=""/><path id="curve" fill="none" stroke="#f3c77a" stroke-width="2.2" vector-effect="non-scaling-stroke" d=""/></svg><div class="hr" id="hrs"></div></div></div>
  <div class="c side"><div class="date" id="date">--</div><div class="bigt" id="tmp">--°</div>
   <div class="rows"><div>Hissedilen<b id="feel">--</b></div><div>Nem<b id="hum">--</b></div><div>Rüzgar<b id="wnd">--</b></div><div>Basınç<b id="prs">--</b></div><div>Gün doğumu / batımı<b id="sun">--</b></div></div>
   <h2 style="margin-top:12px">Sonraki günler</h2><div class="days" id="days"></div></div>
 </section>
 
 <section class="page" id="pgR">
- <div class="c mp"><div id="map"></div></div>
+ <div class="c mp"><div id="map"></div><div id="mstat" class="chip2">Harita yükleniyor…</div></div>
  <div class="c cmp" id="cmpC"><h2>Pusula <span id="hdg" style="float:right;color:var(--t)">---°</span></h2>
-  <svg viewBox="-50 -50 100 100"><circle r="46" fill="none" stroke="rgba(255,255,255,.2)"/><g id="dial"></g><path d="M0-51l4 7h-8z" fill="#ff8a8a"/><path d="M0-30l5 30h-10z" fill="#fff"/><path d="M0 30l5-30h-10z" fill="rgba(255,255,255,.3)"/><circle r="2.2" fill="#fff"/></svg></div>
+  <svg viewBox="-50 -50 100 100"><circle r="46" fill="none" stroke="rgba(255,255,255,.2)"/><g id="dial"></g><path d="M0-51l4 7h-8z" fill="#ff8a8a"/><path d="M0-30l5 30h-10z" fill="#fff"/><path d="M0 30l5-30h-10z" fill="rgba(255,255,255,.3)"/><circle r="2.2" fill="#fff"/></svg><button class="cbtn" id="cb">Pusulayı başlat</button></div>
  <div class="c pos"><h2>Rakım</h2><div class="alt"><span id="alt">---</span><span class="sub"> m</span></div>
   <svg class="sp" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline id="spark" fill="none" stroke="#f3c77a" stroke-width="1.6" vector-effect="non-scaling-stroke" points=""/></svg>
   <div style="display:flex;gap:18px"><div class="co">Enlem<b id="lat">--</b></div><div class="co">Boylam<b id="lon">--</b></div></div></div>
@@ -113,12 +122,14 @@ document.querySelectorAll('nav button[data-p]').forEach(b=>b.onclick=()=>{
 
 /* arka plan: fotoğraf yoksa gradyan */
 const G={acik:'#1e6fd9,#7fc4ff 60%,#cfe9ff',parcali:'#3a78c4,#9fbddc,#dfe7ef',bulutlu:'#3f4856,#7d8794,#aab2bc',sis:'#8a95a0,#b7c0c8,#d6dbe0',yagmur:'#232b37,#46515e,#6b7684',kar:'#6a7c93,#a9b8c9,#e6edf5',firtina:'#12141d,#2b2f40,#4a4f66',gece:'#04061a,#101a44,#2b2a5e'};
+const B={acik:'rgba(255,255,255,.5)',parcali:'rgba(255,255,255,.42)',bulutlu:'rgba(28,34,46,.7)',sis:'rgba(238,242,246,.78)',yagmur:'rgba(14,19,29,.72)',kar:'rgba(255,255,255,.6)',firtina:'rgba(8,8,16,.82)',gece:'rgba(95,85,175,.38)'};
+const blobs=k=>[0,1,2,3,4].map(i=>`<i class="blob" style="left:${i*22-12}%;top:${(i*37)%65}%;width:${42+i*6}vmax;height:${22+i*4}vmax;background:${B[k]};animation-delay:-${i*6}s"></i>`).join('');
 let curKey=null;
 function setBg(k){
  if(k===curKey)return;curKey=k;
- const apply=css=>['bgG','bgH'].forEach(id=>{const o=$(id),n=document.createElement('div');n.className='l';n.style.cssText=css+';opacity:0';o.appendChild(n);
+ const apply=(css,fb)=>['bgG','bgH'].forEach(id=>{const o=$(id),n=document.createElement('div');n.className='l';n.style.cssText=css+';opacity:0';if(fb)n.innerHTML=blobs(k);o.appendChild(n);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{n.style.opacity=1;[...o.children].forEach(c=>{if(c!==n)setTimeout(()=>c.remove(),1500)})}))});
- const im=new Image();im.onload=()=>apply(`background-image:url(${k}.jpg)`);im.onerror=()=>apply(`background:linear-gradient(180deg,${G[k]})`);im.src=k+'.jpg';
+ const im=new Image();im.onload=()=>apply(`background-image:url(${k}.jpg)`);im.onerror=()=>apply(`background:linear-gradient(180deg,${G[k]})`,1);im.src=k+'.jpg';
  fx=k=='yagmur'||k=='firtina'?'rain':k=='kar'?'snow':'';storm=k=='firtina'}
 const key=(c,day)=>{let k=c==0?'acik':c<=2?'parcali':c==3?'bulutlu':c<=48?'sis':(c<=67||(c>=80&&c<=82))?'yagmur':c<=86?'kar':'firtina';
  return(!day&&['acik','parcali','bulutlu','sis'].includes(k))?'gece':k};
@@ -138,7 +149,7 @@ function size(){cv.width=innerWidth;cv.height=innerHeight}size();addEventListene
 
 /* harita */
 const map=L.map('map',{zoomControl:false,attributionControl:false}).setView([39,35],6);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+const tl=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);tl.on('load',()=>$('mstat').style.display='none');tl.on('tileerror',()=>{$('mstat').textContent='Harita yüklenemedi, bağlantıyı kontrol et';$('mstat').style.display='block'});
 const halo=L.circleMarker([0,0],{radius:16,stroke:false,fillColor:'#f3c77a',fillOpacity:.25}).addTo(map);
 const me=L.circleMarker([0,0],{radius:6,color:'#fff',weight:2,fillColor:'#f3c77a',fillOpacity:1}).addTo(map);
 let follow=true;map.on('dragstart',()=>{follow=false;setTimeout(()=>follow=true,15000)});
@@ -182,11 +193,11 @@ async function weather(){
   $('feel').textContent=Math.round(c.apparent_temperature)+'°';$('hum').textContent='%'+c.relative_humidity_2m;
   $('wnd').textContent=dirs[Math.round(c.wind_direction_10m/45)%8]+' '+Math.round(c.wind_speed_10m)+' km/s';
   $('prs').textContent=Math.round(c.surface_pressure)+' hPa';
-  $('sun').textContent=d.daily.sunrise[0].slice(11,16)+' / '+d.daily.sunset[0].slice(11,16);
+  $('chips').innerHTML=['Hissedilen '+Math.round(c.apparent_temperature)+'°','Nem %'+c.relative_humidity_2m,'Rüzgar '+dirs[Math.round(c.wind_direction_10m/45)%8]+' '+Math.round(c.wind_speed_10m)+' km/s'].map(x=>`<span>${x}</span>`).join('');$('sun').textContent=d.daily.sunrise[0].slice(11,16)+' / '+d.daily.sunset[0].slice(11,16);
   const i=Math.max(0,d.hourly.time.findIndex(t=>t>=c.time.slice(0,13))),H=[0,1,2,3,4,5].map(k=>i+k*1);
   const v=H.map(k=>d.hourly.temperature_2m[k]),mn=Math.min(...v),mx=Math.max(...v),xy=v.map((t,k)=>[(k+.5)/6*600,50-(t-mn)/((mx-mn)||1)*40]);
   $('curve').setAttribute('d','M'+xy[0].join(',')+xy.slice(1).map((p,k)=>{const q=xy[k],m=(q[0]+p[0])/2;return` C${m},${q[1]} ${m},${p[1]} ${p[0]},${p[1]}`}).join(''));
-  $('hrs').innerHTML=H.map(k=>`<div><b>${Math.round(d.hourly.temperature_2m[k])}°</b>${d.hourly.time[k].slice(11,16)}<br>${wc(d.hourly.weather_code[k])}</div>`).join('');
+  $('area').setAttribute('d',$('curve').getAttribute('d')+` L${xy[5][0]},60 L${xy[0][0]},60Z`);$('hrs').innerHTML=H.map(k=>`<div><b>${Math.round(d.hourly.temperature_2m[k])}°</b>${d.hourly.time[k].slice(11,16)}<br>${wc(d.hourly.weather_code[k])}</div>`).join('');
   $('days').innerHTML=[1,2,3].map(k=>`<div><svg viewBox="0 0 64 64">${ico(d.daily.weather_code[k])}</svg><span>${new Date(d.daily.time[k]).toLocaleDateString('tr-TR',{weekday:'long'})}<br>${wc(d.daily.weather_code[k])}</span><b>${Math.round(d.daily.temperature_2m_max[k])}° / ${Math.round(d.daily.temperature_2m_min[k])}°</b></div>`).join('');
  }catch(e){$('cond').textContent='Hava alınamadı'}}
 setBg('bulutlu');
@@ -199,9 +210,14 @@ $('dial').innerHTML=t;
 function setHeading(h){$('dial').setAttribute('transform',`rotate(${-h})`);$('hdg').textContent=Math.round(h)+'° '+dirs[Math.round(h/45)%8]}
 const onOri=e=>{const h=e.webkitCompassHeading!=null?e.webkitCompassHeading:(e.absolute&&e.alpha!=null?360-e.alpha:null);if(h!=null){compassOn=true;setHeading(h)}};
 let askedC=false;
-async function askCompass(){try{if(typeof DeviceOrientationEvent!=='undefined'&&DeviceOrientationEvent.requestPermission&&await DeviceOrientationEvent.requestPermission()!=='granted')return}catch(e){return}
- if(askedC)return;askedC=true;addEventListener('deviceorientationabsolute',onOri,true);addEventListener('deviceorientation',onOri,true)}
-document.addEventListener('pointerdown',askCompass);askCompass();
+function listen(){if(askedC)return;askedC=true;addEventListener('deviceorientationabsolute',onOri,true);addEventListener('deviceorientation',onOri,true);$('cb').classList.add('hid')}
+async function askCompass(){
+ try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+   const r=await DeviceOrientationEvent.requestPermission();if(r!=='granted'){$('cb').textContent='İzin verilmedi. Safari\'yi kapatıp tekrar aç';return}}
+  listen();setTimeout(()=>{if(!compassOn)$('cb').classList.remove('hid')},3000)}catch(e){$('cb').textContent='Pusula açılamadı'}}
+$('cb').addEventListener('click',askCompass);
+document.addEventListener('click',()=>{if(!askedC&&!compassOn)askCompass()},{once:true});
+if(typeof DeviceOrientationEvent==='undefined'||typeof DeviceOrientationEvent.requestPermission!=='function')listen();
 </script>
 </body>
 </html>
