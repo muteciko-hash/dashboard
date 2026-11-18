@@ -41,11 +41,14 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .loc{display:inline-flex;align-items:center;gap:clamp(8px,1.4vh,12px);padding:clamp(4px,.9vh,8px) clamp(14px,2.4vh,22px) clamp(4px,.9vh,8px) clamp(6px,1.1vh,10px);border-radius:999px;cursor:pointer;
   background:linear-gradient(145deg,rgba(255,255,255,.12),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.16);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .pin{width:clamp(22px,4vh,30px);height:clamp(22px,4vh,30px);border-radius:50%;background:rgba(229,72,77,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.loc-text{font-size:clamp(15px,2.9vh,21px);font-weight:500;letter-spacing:-.025em}
+.loc-text{font-size:clamp(16.5px,3.15vh,23px);font-weight:500;letter-spacing:-.025em}
 .sep{width:1px;height:clamp(12px,2.4vh,18px);background:rgba(255,255,255,.18)}
-.date-big{position:absolute;left:0;display:flex;flex-direction:column;line-height:1.12}
+.date-wrap{position:absolute;left:0;display:flex;align-items:center;gap:clamp(10px,1.6vw,16px)}
+.date-big{display:flex;flex-direction:column;line-height:1.12}
 .date-big b{font-size:clamp(17px,3.4vh,26px);font-weight:500;letter-spacing:-.03em}
 .date-big span{font-size:clamp(12px,2.1vh,16px);font-weight:300;color:var(--tx2);letter-spacing:-.01em}
+.digital-clock{font-size:clamp(22px,4.3vh,34px);font-weight:300;letter-spacing:.03em;font-variant-numeric:tabular-nums;color:var(--tx);line-height:1;
+  padding-left:clamp(10px,1.6vw,16px);border-left:1px solid rgba(255,255,255,.14)}
 .gps{position:absolute;right:0;display:inline-flex;align-items:center;gap:6px;font-size:10.5px;color:var(--tx2);
   border:1px solid var(--line);padding:3px 10px;border-radius:999px;cursor:pointer}
 .gps i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
@@ -65,10 +68,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(10px,1.4vh,11.5px);color:var(--tx3);font-weight:400}
 .metric b{font-size:clamp(13px,2vh,16px);font-weight:400}
 
-/* PUSULA — küçük cam kart */
+/* PUSULA — OLED siyah, sınırsız */
 .glass{background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035));border:1px solid rgba(255,255,255,.14);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 14px 30px rgba(0,0,0,.7);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%)}
-.compass{height:clamp(110px,33vh,200px);aspect-ratio:1.2;border-radius:clamp(16px,3.4vh,26px);display:grid;grid-template-columns:1fr auto;
+.compass{height:clamp(110px,33vh,200px);aspect-ratio:1.2;border-radius:2px;background:#000000;border:none;box-shadow:none;display:grid;grid-template-columns:1fr auto;
   padding:clamp(10px,2.2vh,18px) clamp(10px,2vh,16px) clamp(10px,2.2vh,18px) clamp(8px,1.6vh,14px);cursor:pointer;flex-shrink:0}
 .c-left{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;gap:2px}
 .alt{font-size:clamp(28px,8vh,62px);font-weight:200;letter-spacing:-.045em;line-height:1}
@@ -177,7 +180,10 @@ input[type=file]{display:none}
       <span class="pin"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
       <span class="loc-text" id="locText">Konum alınıyor</span>
     </div>
-    <div class="date-big"><b id="dayName"></b><span id="dayDate"></span></div>
+    <div class="date-wrap">
+      <div class="date-big"><b id="dayName"></b><span id="dayDate"></span></div>
+      <div class="digital-clock" id="clockText"></div>
+    </div>
     <div class="gps" onclick="forceGps()"><i></i><span id="gpsText">GPS bekleniyor</span></div>
   </header>
 
@@ -198,7 +204,7 @@ input[type=file]{display:none}
     <section class="art" id="art"></section>
 
     <section class="right">
-      <div class="compass glass" id="compass" onclick="startCompass()">
+      <div class="compass" id="compass" onclick="startCompass()">
         <div class="c-left"><div class="alt" id="altVal">--</div><div class="alt-l">deniz seviyesinden<br>metre</div></div>
         <div class="tape"><div class="t-in" id="tapeIn">
         <div class="ticks" id="ticks"></div>
@@ -427,20 +433,20 @@ function stepHour(n){ aHour=(aHour+n+8)%8; drawWave(); }
 
 /* ---------- RADYO ---------- */
 const audio=$('audioTag');
-const S=(a,t,b,u)=>({artist:a,title:t,badge:b,url:u,isRadio:true});
+const S=(a,t,b,u,m=null)=>({artist:a,title:t,badge:b,url:u,isRadio:true,meta:m});
 const SW="https://playerservices.streamtheworld.com/api/livestream-redirect/";
 let tracks=[
-  S("Nightride FM","Synthwave • gece sürüşü","NIGHTRIDE\nFM","https://stream.nightride.fm/nightride.mp3"),
-  S("Chillsynth FM","Chill ve outrun","CHILL\nSYNTH","https://stream.nightride.fm/chillsynth.mp3"),
-  S("Darksynth FM","Darksynth","DARK\nSYNTH","https://stream.nightride.fm/darksynth.mp3"),
-  S("Datawave FM","Datawave","DATA\nWAVE","https://stream.nightride.fm/datawave.mp3"),
-  S("Spacesynth FM","Spacesynth","SPACE\nSYNTH","https://stream.nightride.fm/spacesynth.mp3"),
-  S("SomaFM Groove Salad","Ambient ve downtempo","GROOVE\nSALAD","https://ice1.somafm.com/groovesalad-128-mp3"),
-  S("SomaFM Drone Zone","Derin uzay ve atmosfer","DRONE\nZONE","https://ice1.somafm.com/dronezone-128-mp3"),
-  S("SomaFM Space Station","Mid-tempo elektronik","SPACE\nSOMA","https://ice1.somafm.com/spacestation-128-mp3"),
-  S("SomaFM Vaporwaves","Vaporwave ve retro","VAPOR\nWAVES","https://ice1.somafm.com/vaporwaves-128-mp3"),
-  S("SomaFM Secret Agent","Lounge ve caz","SECRET\nAGENT","https://ice1.somafm.com/secretagent-128-mp3"),
-  S("SomaFM Lush","Yumuşak vokaller","SOMA\nLUSH","https://ice1.somafm.com/lush-128-mp3"),
+  S("Nightride FM","Synthwave • gece sürüşü","NIGHTRIDE\nFM","https://stream.nightride.fm/nightride.mp3",{type:"nightride",id:"nightride"}),
+  S("Chillsynth FM","Chill ve outrun","CHILL\nSYNTH","https://stream.nightride.fm/chillsynth.mp3",{type:"nightride",id:"chillsynth"}),
+  S("Darksynth FM","Darksynth","DARK\nSYNTH","https://stream.nightride.fm/darksynth.mp3",{type:"nightride",id:"darksynth"}),
+  S("Datawave FM","Datawave","DATA\nWAVE","https://stream.nightride.fm/datawave.mp3",{type:"nightride",id:"datawave"}),
+  S("Spacesynth FM","Spacesynth","SPACE\nSYNTH","https://stream.nightride.fm/spacesynth.mp3",{type:"nightride",id:"spacesynth"}),
+  S("SomaFM Groove Salad","Ambient ve downtempo","GROOVE\nSALAD","https://ice1.somafm.com/groovesalad-128-mp3",{type:"somafm",id:"groovesalad"}),
+  S("SomaFM Drone Zone","Derin uzay ve atmosfer","DRONE\nZONE","https://ice1.somafm.com/dronezone-128-mp3",{type:"somafm",id:"dronezone"}),
+  S("SomaFM Space Station","Mid-tempo elektronik","SPACE\nSOMA","https://ice1.somafm.com/spacestation-128-mp3",{type:"somafm",id:"spacestation"}),
+  S("SomaFM Vaporwaves","Vaporwave ve retro","VAPOR\nWAVES","https://ice1.somafm.com/vaporwaves-128-mp3",{type:"somafm",id:"vaporwaves"}),
+  S("SomaFM Secret Agent","Lounge ve caz","SECRET\nAGENT","https://ice1.somafm.com/secretagent-128-mp3",{type:"somafm",id:"secretagent"}),
+  S("SomaFM Lush","Yumuşak vokaller","SOMA\nLUSH","https://ice1.somafm.com/lush-128-mp3",{type:"somafm",id:"lush"}),
   S("Power FM","Türkiye • yabancı hit","POWER\nFM","https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio"),
   S("Power Türk","Türkiye • Türkçe pop","POWER\nTÜRK","https://listen.powerapp.com.tr/powerturk/mpeg/icecast.audio"),
   S("Power Love","Türkiye • slow ve romantik","POWER\nLOVE","https://listen.powerapp.com.tr/powerlove/mpeg/icecast.audio"),
@@ -448,22 +454,102 @@ let tracks=[
   S("Metro FM","Türkiye • hit müzik","METRO\nFM",SW+"METRO_FM.mp3"),
   S("Süper FM","Türkiye • Türkçe hit","SÜPER\nFM",SW+"SUPER_FM.mp3"),
   S("Joy Türk","Türkiye • Türkçe slow","JOY\nTÜRK",SW+"JOY_TURK.mp3"),
-  S("Radio Paradise","Global • eklektik","RADIO\nPARADISE","https://stream.radioparadise.com/mp3-128")
+  S("Radio Paradise","Global • eklektik","RADIO\nPARADISE","https://stream.radioparadise.com/mp3-128",{type:"rp"})
 ];
-let ti=0, playing=false, liveSec=0, liveTimer=null, skipTimer=null;
+let ti=0, playing=false, liveSec=0, liveTimer=null, skipTimer=null, metaTimer=null, metaAbort=null, nowPlaying="";
 const fmt=s=>{ if(!isFinite(s)||s<0) return "0:00"; return Math.floor(s/60)+':'+pad(Math.floor(s%60)); };
 function ui(sub){
   const t=tracks[ti];
-  $('songLabel').textContent=sub||t.title;
+  $('songLabel').textContent=sub||nowPlaying||t.title;
   $('artistLabel').textContent=t.artist;
   const f=$('barFill');
   if (t.isRadio){ f.style.width='74%'; f.classList.toggle('live',playing); }
   else f.classList.remove('live');
   $('ppSvg').innerHTML = playing ? `<rect x="5" y="4" width="4.5" height="16" rx="1"/><rect x="14.5" y="4" width="4.5" height="16" rx="1"/>` : `<polygon points="6 4 20 12 6 20"/>`;
+  if ('mediaSession' in navigator && window.MediaMetadata){
+    navigator.mediaSession.metadata = new MediaMetadata({ title: nowPlaying || t.title, artist: t.artist });
+  }
 }
+
+/* ---------- CANLI ŞARKI BİLGİSİ (NOW PLAYING) ---------- */
+function cleanTrackTitle(raw, stationName){
+  if (!raw) return "";
+  const s = String(raw).replace(/\s+/g,' ').trim();
+  if (!s || s.length < 2) return "";
+  const low = s.toLowerCase();
+  if (low === "unknown" || low === "-" || low === stationName.toLowerCase()) return "";
+  return s;
+}
+async function readIcyTitle(url, signal){
+  const res = await fetch(url, { headers: { 'Icy-MetaData': '1' }, signal });
+  const metaint = parseInt(res.headers.get('icy-metaint'), 10);
+  if (!metaint || isNaN(metaint) || !res.body) return "";
+  const reader = res.body.getReader();
+  let buf = new Uint8Array(0);
+  while (true){
+    const { value, done } = await reader.read();
+    if (done || !value) break;
+    const next = new Uint8Array(buf.length + value.length);
+    next.set(buf); next.set(value, buf.length); buf = next;
+    if (buf.length >= metaint + 1){
+      const metaLen = buf[metaint] * 16;
+      if (metaLen === 0) break;
+      if (buf.length >= metaint + 1 + metaLen){
+        const raw = new TextDecoder('utf-8').decode(buf.slice(metaint + 1, metaint + 1 + metaLen));
+        const m = raw.match(/StreamTitle='(.*?)';/i) || raw.match(/StreamTitle='([^']*)'/i);
+        return m ? m[1] : "";
+      }
+    }
+    if (buf.length > metaint + 8192) break;
+  }
+  return "";
+}
+async function fetchNowPlaying(){
+  const idx = ti, t = tracks[idx];
+  if (!playing || !t || !t.isRadio) return;
+  if (metaAbort) metaAbort.abort();
+  const ctrl = new AbortController();
+  metaAbort = ctrl;
+  let found = "";
+  try{
+    if (t.meta && t.meta.type === "somafm"){
+      const d = await (await fetch(`https://somafm.com/songs/${t.meta.id}.json`, { signal: ctrl.signal })).json();
+      const s = d && d.songs && d.songs[0];
+      if (s && (s.artist || s.title)) found = [s.artist, s.title].filter(Boolean).join(" - ");
+    } else if (t.meta && t.meta.type === "rp"){
+      const d = await (await fetch("https://api.radioparadise.com/api/now_playing?chan=0", { signal: ctrl.signal })).json();
+      if (d && (d.artist || d.title)) found = [d.artist, d.title].filter(Boolean).join(" - ");
+    } else if (t.meta && t.meta.type === "nightride"){
+      const d = await (await fetch("https://stream.nightride.fm/status-json.xsl", { signal: ctrl.signal })).json();
+      const src = d && d.icestats && d.icestats.source;
+      const list = Array.isArray(src) ? src : (src ? [src] : []);
+      const hit = list.find(x => x.listenurl && x.listenurl.includes(`/${t.meta.id}.mp3`));
+      if (hit && hit.title) found = hit.title;
+    }
+    if (!found){
+      found = await readIcyTitle(t.url, ctrl.signal);
+    }
+  }catch{}
+  finally{ ctrl.abort(); }
+  const cleaned = cleanTrackTitle(found, t.artist);
+  if (cleaned && idx === ti && playing){
+    nowPlaying = cleaned;
+    ui();
+  }
+}
+function startMetaPolling(){
+  clearInterval(metaTimer);
+  fetchNowPlaying();
+  metaTimer = setInterval(fetchNowPlaying, 18000);
+}
+function stopMetaPolling(){
+  clearInterval(metaTimer);
+  if (metaAbort){ metaAbort.abort(); metaAbort = null; }
+}
+
 function liveStart(){ clearInterval(liveTimer); liveTimer=setInterval(()=>{ if(playing&&tracks[ti].isRadio) liveSec++; },1000); }
 function select(i,go=true){
-  clearTimeout(skipTimer); clearInterval(liveTimer); liveSec=0;
+  clearTimeout(skipTimer); clearInterval(liveTimer); stopMetaPolling(); liveSec=0; nowPlaying="";
   ti=(i+tracks.length)%tracks.length; const t=tracks[ti];
   audio.pause(); audio.removeAttribute('src'); audio.load();
   if (go){ playing=true; ui(t.isRadio?"Yayına bağlanıyor…":t.title); audio.src=t.url; audio.play().catch(()=>{ playing=false; ui("Başlatmak için oynat tuşuna basın"); }); }
@@ -474,12 +560,12 @@ function togglePlay(){
   if (!playing){
     if (!audio.src || audio.src===location.href) return select(ti,true);
     playing=true; ui(t.isRadio?"Yayına bağlanıyor…":t.title); audio.play().catch(()=>{playing=false;ui();});
-  } else { audio.pause(); playing=false; clearInterval(liveTimer); ui(); }
+  } else { audio.pause(); playing=false; clearInterval(liveTimer); stopMetaPolling(); ui(); }
 }
 const nextSong=()=>select(ti+1,true), prevSong=()=>select(ti-1,true);
-audio.addEventListener('playing',()=>{ playing=true; ui(); if(tracks[ti].isRadio) liveStart(); });
-audio.addEventListener('waiting',()=>{ if(playing) ui("Tamponlanıyor…"); });
-audio.addEventListener('error',()=>{ if(!playing) return; ui("Kanal yanıt vermiyor, sonrakine geçiliyor…"); skipTimer=setTimeout(nextSong,1500); });
+audio.addEventListener('playing',()=>{ playing=true; ui(); if(tracks[ti].isRadio){ liveStart(); startMetaPolling(); } });
+audio.addEventListener('waiting',()=>{ if(playing && !nowPlaying) ui("Tamponlanıyor…"); });
+audio.addEventListener('error',()=>{ if(!playing) return; stopMetaPolling(); ui("Kanal yanıt vermiyor, sonrakine geçiliyor…"); skipTimer=setTimeout(nextSong,1500); });
 audio.addEventListener('timeupdate',()=>{
   if (tracks[ti].isRadio || !audio.duration || !isFinite(audio.duration)) return;
   $('barFill').style.width=(audio.currentTime/audio.duration*100)+'%';
@@ -514,8 +600,13 @@ $('cityInput').addEventListener('input',e=>{
   },300);
 });
 
-function setDate(){const n=new Date();$('dayName').textContent=DAYS[n.getDay()];$('dayDate').textContent=n.getDate()+' '+MONTHS[n.getMonth()];}
-setDate(); setInterval(setDate,60000);
+function setDate(){
+  const n=new Date();
+  $('dayName').textContent=DAYS[n.getDay()];
+  $('dayDate').textContent=n.getDate()+' '+MONTHS[n.getMonth()];
+  $('clockText').textContent=pad(n.getHours())+':'+pad(n.getMinutes());
+}
+setDate(); setInterval(setDate,1000);
 ui(); startGps();
 </script>
 </body>
