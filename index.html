@@ -75,11 +75,11 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* KUŞBAKIŞI BEYAZ ÇİZGİ HARİTA + HIZ LİMİTİ */
 .road-wrap{position:relative;width:100%;height:100%;min-height:0;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
 .road-cv{width:100%;height:100%;display:block;
-  -webkit-mask-image:radial-gradient(ellipse 52% 50% at 50% 52%,#000 58%,rgba(0,0,0,.55) 82%,transparent 100%);
-  mask-image:radial-gradient(ellipse 52% 50% at 50% 52%,#000 58%,rgba(0,0,0,.55) 82%,transparent 100%)}
+  -webkit-mask-image:radial-gradient(ellipse 52% 50% at 50% 54%,#000 60%,rgba(0,0,0,.5) 84%,transparent 100%);
+  mask-image:radial-gradient(ellipse 52% 50% at 50% 54%,#000 60%,rgba(0,0,0,.5) 84%,transparent 100%)}
 .road-hud{position:absolute;left:4px;bottom:4px;display:flex;flex-direction:column;gap:2px;pointer-events:none}
 .road-badge{font-size:clamp(8px,calc(1.3*var(--vh)),10px);font-weight:600;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase}
-.road-status{font-size:clamp(7px,calc(1.1*var(--vh)),9px);font-weight:600;letter-spacing:.14em;color:rgba(245,245,247,.26);text-transform:uppercase}
+.road-status{font-size:clamp(7px,calc(1.1*var(--vh)),8.5px);font-weight:600;letter-spacing:.14em;color:rgba(245,245,247,.28);text-transform:uppercase}
 
 .spd-box{position:absolute;right:4px;bottom:2px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;z-index:4}
 .spd-sign{width:clamp(36px,calc(8.6*var(--vh)),60px);height:clamp(36px,calc(8.6*var(--vh)),60px);border-radius:50%;
@@ -110,8 +110,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .live-coords{display:flex;align-items:center;gap:clamp(7px,calc(1.2*var(--vh)),11px);font-size:clamp(8px,calc(1.5*var(--vh)),11px);font-weight:600;letter-spacing:.1em;white-space:nowrap;color:var(--tx)}
 .live-coords i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
 
-/* SAATLİK — boydan boya sınırlara dayalı, çizgi hep düz */
-.hourly{width:100%;display:flex;align-items:center;min-height:clamp(74px,calc(14.5*var(--vh)),102px);margin-bottom:clamp(10px,calc(1.8*var(--vh)),16px);flex-shrink:0}
+/* SAATLİK — solda tarih başlangıcı, sağda saat bitişi hizasında */
+.hourly{width:100%;display:flex;align-items:center;min-height:clamp(74px,calc(14.5*var(--vh)),102px);margin-bottom:clamp(10px,calc(1.8*var(--vh)),16px);padding:0 var(--px);flex-shrink:0}
 .wave{width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:2px}
 .w-row{width:100%;display:grid;grid-template-columns:repeat(8,1fr);text-align:center}
 .h-t{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:clamp(11.5px,calc(1.8*var(--vh)),14px);font-weight:500;color:var(--tx2)}
@@ -124,10 +124,10 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .h-p{font-size:clamp(9px,calc(1.4*var(--vh)),11px);color:#7fb7ff;font-weight:600;display:flex;align-items:center;gap:3px}
 .h-p.lo{opacity:.4}.h-p.hi{color:var(--red);text-shadow:0 0 8px var(--red-glow)}
 
-/* RADYO — OLED siyah, ekolayzır soldan sağa sınırlara dayalı */
+/* RADYO — OLED siyah, ekolayzır tarih başlangıcı ve saat bitişi hizasında */
 .dock{width:100%;display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(74px,calc(15.5*var(--vh)),96px)}
-.player{width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:space-between;padding-top:clamp(6px,calc(1.1*var(--vh)),10px)}
-.p-top{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0;padding:0 var(--px)}
+.player{width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(6px,calc(1.1*var(--vh)),10px) var(--px) 0 var(--px)}
+.p-top{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
 .p-meta{flex:1;min-width:0;font-size:clamp(12px,calc(2*var(--vh)),14.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .p-song{color:#f2f2f4;font-weight:600;letter-spacing:.01em}
 .p-sep{color:rgba(242,242,244,.5);font-weight:400;margin:0 7px}
@@ -196,11 +196,11 @@ input[type=file]{display:none}
       </div>
     </section>
 
-    <section class="road-wrap" id="roadWrap" onclick="cycleRoadZoom()">
+    <section class="road-wrap" id="roadWrap" onclick="handleRoadTap()">
       <canvas class="road-cv" id="roadCanvas"></canvas>
       <div class="road-hud">
-        <span class="road-badge" id="roadZoomLbl">1.5 KM</span>
-        <span class="road-status" id="roadStatus">YOL AĞI</span>
+        <span class="road-badge" id="roadZoomLbl">100 M</span>
+        <span class="road-status" id="roadStatus"></span>
       </div>
       <div class="spd-box" id="spdBox" onclick="event.stopPropagation();toggleSpeedAudio()">
         <div class="spd-sign unset" id="spdSign"><span id="spdLimit">--</span></div>
@@ -363,16 +363,17 @@ function wx(code){
   return {label:"Bulutlu", type:"cloud"};
 }
 
-/* ---------- KUŞBAKIŞI BEYAZ ÇİZGİ HARİTA & HIZ LİMİTİ ---------- */
+/* ---------- KUŞBAKIŞI BEYAZ ÇİZGİ HARİTA (100M ANA YOL + 50M İNCE BAĞLANTI) ---------- */
 const roadCv = $('roadCanvas'), rctx = roadCv.getContext('2d');
 const ZOOM_STEPS = [
-  { meters: 1200, label: '1.2 KM' },
-  { meters: 2200, label: '2.2 KM' },
-  { meters: 3500, label: '3.5 KM' }
+  { meters: 100, label: '100 M' },
+  { meters: 250, label: '250 M' },
+  { meters: 500, label: '500 M' }
 ];
 let zoomIdx = 0;
-let roadWays = [], roadFetchLat = null, roadFetchLon = null, roadFetchAt = 0, roadLoading = false;
-let curLat = null, curLon = null, curSpeedKmh = null, mapHeading = 0;
+let roadWays = [], roadFetchLat = null, roadFetchLon = null, roadFetchAt = 0, roadLastTryAt = 0, roadLoading = false, roadRetryTimer = null;
+let targetLat = null, targetLon = null, renderLat = null, renderLon = null;
+let curSpeedKmh = null, targetHeading = 0, renderHeading = 0, roadAnimRaf = null;
 let activeLimit = null, speedAudioOn = true, lastBeepAt = 0, wasOver = false, audioCtx = null;
 
 function roadSize(){
@@ -381,7 +382,38 @@ function roadSize(){
   roadCv.height = Math.max(1, roadCv.clientHeight * dp);
   drawRoadMap();
 }
-function cycleRoadZoom(){
+function kickRoadAnim(){
+  if (!roadAnimRaf) roadAnimRaf = requestAnimationFrame(stepRoadAnim);
+}
+function stepRoadAnim(){
+  roadAnimRaf = null;
+  if (targetLat === null || targetLon === null) return;
+  if (renderLat === null){ renderLat = targetLat; renderLon = targetLon; renderHeading = targetHeading; drawRoadMap(); return; }
+
+  const dLat = targetLat - renderLat, dLon = targetLon - renderLon;
+  const dHead = ((targetHeading - renderHeading + 540) % 360) - 180;
+  const moving = Math.abs(dLat) > 1e-7 || Math.abs(dLon) > 1e-7 || Math.abs(dHead) > 0.25;
+
+  if (moving){
+    renderLat += dLat * 0.22;
+    renderLon += dLon * 0.22;
+    renderHeading = (renderHeading + dHead * 0.22 + 360) % 360;
+    drawRoadMap();
+    roadAnimRaf = requestAnimationFrame(stepRoadAnim);
+  } else {
+    renderLat = targetLat;
+    renderLon = targetLon;
+    renderHeading = targetHeading;
+    drawRoadMap();
+  }
+}
+
+function handleRoadTap(){
+  if (!roadWays.length && targetLat !== null && targetLon !== null && !roadLoading){
+    fetchRoadNetwork(targetLat, targetLon, true);
+    toast('Yol yenileniyor…');
+    return;
+  }
   zoomIdx = (zoomIdx + 1) % ZOOM_STEPS.length;
   $('roadZoomLbl').textContent = ZOOM_STEPS[zoomIdx].label;
   drawRoadMap();
@@ -439,30 +471,34 @@ function parseMaxSpeed(tags){
 }
 
 async function fetchRoadNetwork(lat, lon, force=false){
+  if (lat == null || lon == null) return;
   const now = Date.now();
   const moved = roadFetchLat !== null ? distKm(roadFetchLat, roadFetchLon, lat, lon) : 99;
-  if (!force && roadWays.length && moved < 1.5 && now - roadFetchAt < 120000) return;
-  if (roadLoading || (!force && now - roadFetchAt < 12000)) return;
-  roadLoading = true;
-  roadFetchAt = now;
-  $('roadStatus').textContent = 'YOL YÜKLENİYOR';
+  if (!force && roadWays.length && moved < 1.1 && now - roadFetchAt < 120000) return;
+  if (roadLoading || (!force && now - roadLastTryAt < 10000)) return;
 
-  const q = `[out:json][timeout:12];way(around:3800,${lat.toFixed(5)},${lon.toFixed(5)})["highway"~"^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link|tertiary|tertiary_link|unclassified|residential)$"];out body geom;`;
+  clearTimeout(roadRetryTimer);
+  roadLoading = true;
+  roadLastTryAt = now;
+  if (!roadWays.length) $('roadStatus').textContent = 'YÜKLENİYOR';
+
+  // Sadece ana yollar ve ana yol bağlantıları (~2.2 km yarıçap) — sokak araları hariç
+  const cosLat = Math.max(0.2, Math.cos(lat * Math.PI / 180));
+  const dLat = 0.020, dLon = 0.020 / cosLat;
+  const box = `${(lat-dLat).toFixed(5)},${(lon-dLon).toFixed(5)},${(lat+dLat).toFixed(5)},${(lon+dLon).toFixed(5)}`;
+  const q = `[out:json][timeout:10];way["highway"~"^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link)$"](${box});out body geom;`;
+
   const endpoints = [
     'https://overpass-api.de/api/interpreter',
-    'https://overpass.kumi.systems/api/interpreter'
+    'https://overpass.private.coffee/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
   ];
 
   for (const ep of endpoints){
     try{
       const ctrl = new AbortController();
-      const tm = setTimeout(() => ctrl.abort(), 11000);
-      const res = await fetch(ep, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-        body: 'data=' + encodeURIComponent(q),
-        signal: ctrl.signal
-      });
+      const tm = setTimeout(() => ctrl.abort(), 12000);
+      const res = await fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctrl.signal });
       clearTimeout(tm);
       if (!res.ok) continue;
       const data = await res.json();
@@ -481,14 +517,19 @@ async function fetchRoadNetwork(lat, lon, force=false){
 
       roadFetchLat = lat;
       roadFetchLon = lon;
-      $('roadStatus').textContent = roadWays.length ? 'CANLI YOL' : 'YOL YOK';
+      roadFetchAt = Date.now();
+      $('roadStatus').textContent = roadWays.length ? '' : 'ANA YOL YOK';
       drawRoadMap();
       roadLoading = false;
       return;
     }catch{}
   }
+
   roadLoading = false;
-  $('roadStatus').textContent = roadWays.length ? 'CANLI YOL' : 'BAĞLANTI YOK';
+  if (!roadWays.length) $('roadStatus').textContent = 'YENİDEN DENENİYOR';
+  roadRetryTimer = setTimeout(() => {
+    if (targetLat !== null && targetLon !== null) fetchRoadNetwork(targetLat, targetLon, true);
+  }, 12000);
 }
 
 function ptSegDistSq(px, py, ax, ay, bx, by){
@@ -536,9 +577,10 @@ function drawRoadMap(){
   const dp = window.devicePixelRatio || 1;
   rctx.clearRect(0, 0, w, h);
 
-  const tx = w * 0.5, ty = h * 0.72;
+  // Ok alt-ortada konumlanır, önümüzdeki 100 metreyi net gösterir
+  const tx = w * 0.5, ty = h * 0.78;
 
-  if (curLat === null || curLon === null){
+  if (renderLat === null || renderLon === null){
     rctx.fillStyle = 'rgba(245,245,247,.25)';
     rctx.beginPath();
     rctx.arc(tx, ty, 4 * dp, 0, Math.PI * 2);
@@ -546,18 +588,18 @@ function drawRoadMap(){
     return;
   }
 
-  const cosLat = Math.cos(curLat * Math.PI / 180);
+  const cosLat = Math.cos(renderLat * Math.PI / 180);
   const mPerDegLat = 110540;
   const mPerDegLon = 111320 * cosLat;
   const zoomMeters = ZOOM_STEPS[zoomIdx].meters;
-  const pxPerMeter = (h * 0.72) / zoomMeters;
+  const pxPerMeter = (h * 0.78) / zoomMeters;
 
-  // En yakın yolu bul
+  // En yakın ana yolu bul
   let bestWay = null, bestDistSq = Infinity;
   const projWays = roadWays.map(way => {
     const mpts = way.pts.map(([la, lo]) => [
-      (lo - curLon) * mPerDegLon,
-      (la - curLat) * mPerDegLat
+      (lo - renderLon) * mPerDegLon,
+      (la - renderLat) * mPerDegLat
     ]);
     let minD = Infinity;
     for (let i = 0; i < mpts.length - 1; i++){
@@ -571,11 +613,12 @@ function drawRoadMap(){
     return { way, mpts, minD };
   });
 
-  const matched = bestWay && bestDistSq <= 75 * 75 ? bestWay.way : null;
+  const matchRadius = manual ? 450 : 90;
+  const matched = bestWay && bestDistSq <= matchRadius * matchRadius ? bestWay.way : null;
   let foundLimit = matched ? matched.limit : null;
   if (matched && foundLimit === null){
     for (const item of projWays){
-      if (item.way.limit !== null && item.minD < 350 * 350){
+      if (item.way.limit !== null && item.minD < 400 * 400){
         if ((matched.ref && item.way.ref === matched.ref) || (matched.name && item.way.name === matched.name)){
           foundLimit = item.way.limit;
           break;
@@ -593,20 +636,24 @@ function drawRoadMap(){
     if (matched.name && way.name === matched.name && way.hw === matched.hw) return true;
     return false;
   };
-  const isMajor = (hw) => /^(motorway|trunk|primary|secondary)$/.test(hw);
 
   rctx.save();
   rctx.translate(tx, ty);
-  rctx.rotate(-mapHeading * Math.PI / 180);
+  rctx.rotate(-renderHeading * Math.PI / 180);
   rctx.lineCap = 'round';
   rctx.lineJoin = 'round';
 
-  // 1. Katman: Ara ve bağlantı yolları
-  rctx.strokeStyle = 'rgba(255,255,255,0.18)';
-  rctx.lineWidth = 1.3 * dp;
+  // 1. Katman: Ana yol araları / bağlantılar — 50 metre yarıçapta ince beyaz çizgiyle görünür
+  const r50 = 50 * pxPerMeter;
+  const connGrad = rctx.createRadialGradient(0, 0, r50 * 0.2, 0, 0, r50);
+  connGrad.addColorStop(0, 'rgba(255,255,255,0.46)');
+  connGrad.addColorStop(1, 'rgba(255,255,255,0)');
+
+  rctx.strokeStyle = connGrad;
+  rctx.lineWidth = 1.35 * dp;
   rctx.beginPath();
-  for (const { way, mpts } of projWays){
-    if (isActiveWay(way) || isMajor(way.hw)) continue;
+  for (const { way, mpts, minD } of projWays){
+    if (isActiveWay(way) || minD > 75 * 75) continue;
     for (let i = 0; i < mpts.length; i++){
       const x = mpts[i][0] * pxPerMeter, y = -mpts[i][1] * pxPerMeter;
       if (i === 0) rctx.moveTo(x, y); else rctx.lineTo(x, y);
@@ -614,29 +661,49 @@ function drawRoadMap(){
   }
   rctx.stroke();
 
-  // 2. Katman: Çevredeki ana yollar
-  rctx.strokeStyle = 'rgba(255,255,255,0.46)';
-  rctx.lineWidth = 2.2 * dp;
-  rctx.beginPath();
-  for (const { way, mpts } of projWays){
-    if (isActiveWay(way) || !isMajor(way.hw)) continue;
-    for (let i = 0; i < mpts.length; i++){
-      const x = mpts[i][0] * pxPerMeter, y = -mpts[i][1] * pxPerMeter;
-      if (i === 0) rctx.moveTo(x, y); else rctx.lineTo(x, y);
-    }
-  }
-  rctx.stroke();
-
-  // 3. Katman: Üzerinde gidilen ana güzergah (parlak beyaz çizgi)
+  // 2. Katman: Üzerinde gidilen ana güzergah (sade, net beyaz çizgi)
   if (matched){
+    const activeWays = projWays.filter(item => isActiveWay(item.way));
+
+    // Sert viraj kıvrımı varsa (35° üzeri kırılma, 100m önde) hafif kırmızı-amber vurgu
+    const rad = renderHeading * Math.PI / 180;
+    const cosH = Math.cos(rad), sinH = Math.sin(rad);
+    for (const { mpts } of activeWays){
+      for (let i = 1; i < mpts.length - 1; i++){
+        const ax = mpts[i][0] - mpts[i-1][0], ay = mpts[i][1] - mpts[i-1][1];
+        const bx = mpts[i+1][0] - mpts[i][0], by = mpts[i+1][1] - mpts[i][1];
+        const lenA = Math.hypot(ax, ay), lenB = Math.hypot(bx, by);
+        if (lenA < 4 || lenB < 4) continue;
+        const dot = (ax*bx + ay*by) / (lenA * lenB);
+        const turnDeg = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
+        if (turnDeg >= 35){
+          // Araç koordinatında önde mi kontrol et
+          const fwd = mpts[i][0] * sinH + mpts[i][1] * cosH;
+          const dist = Math.hypot(mpts[i][0], mpts[i][1]);
+          if (fwd > -10 && dist <= 115){
+            rctx.save();
+            rctx.strokeStyle = 'rgba(229,72,77,0.75)';
+            rctx.shadowColor = 'rgba(229,72,77,0.9)';
+            rctx.shadowBlur = 12 * dp;
+            rctx.lineWidth = 5.2 * dp;
+            rctx.beginPath();
+            rctx.moveTo(mpts[i-1][0] * pxPerMeter, -mpts[i-1][1] * pxPerMeter);
+            rctx.lineTo(mpts[i][0] * pxPerMeter, -mpts[i][1] * pxPerMeter);
+            rctx.lineTo(mpts[i+1][0] * pxPerMeter, -mpts[i+1][1] * pxPerMeter);
+            rctx.stroke();
+            rctx.restore();
+          }
+        }
+      }
+    }
+
     rctx.save();
     rctx.strokeStyle = '#ffffff';
-    rctx.lineWidth = 3.8 * dp;
-    rctx.shadowColor = 'rgba(255,255,255,0.55)';
-    rctx.shadowBlur = 9 * dp;
+    rctx.lineWidth = 3.6 * dp;
+    rctx.shadowColor = 'rgba(255,255,255,0.45)';
+    rctx.shadowBlur = 8 * dp;
     rctx.beginPath();
-    for (const { way, mpts } of projWays){
-      if (!isActiveWay(way)) continue;
+    for (const { mpts } of activeWays){
       for (let i = 0; i < mpts.length; i++){
         const x = mpts[i][0] * pxPerMeter, y = -mpts[i][1] * pxPerMeter;
         if (i === 0) rctx.moveTo(x, y); else rctx.lineTo(x, y);
@@ -648,22 +715,22 @@ function drawRoadMap(){
 
   rctx.restore();
 
-  // Araç konum oku (her zaman yukarı bakar)
+  // Araç konum oku (sade, her zaman yukarı bakar)
   rctx.save();
   rctx.translate(tx, ty);
   rctx.fillStyle = 'rgba(229,72,77,0.22)';
   rctx.beginPath();
-  rctx.arc(0, 0, 12 * dp, 0, Math.PI * 2);
+  rctx.arc(0, 0, 11 * dp, 0, Math.PI * 2);
   rctx.fill();
 
   rctx.fillStyle = '#e5484d';
   rctx.strokeStyle = '#ffffff';
-  rctx.lineWidth = 1.6 * dp;
+  rctx.lineWidth = 1.5 * dp;
   rctx.beginPath();
-  rctx.moveTo(0, -7 * dp);
-  rctx.lineTo(5.5 * dp, 5.5 * dp);
-  rctx.lineTo(0, 2.8 * dp);
-  rctx.lineTo(-5.5 * dp, 5.5 * dp);
+  rctx.moveTo(0, -6.5 * dp);
+  rctx.lineTo(5 * dp, 5 * dp);
+  rctx.lineTo(0, 2.5 * dp);
+  rctx.lineTo(-5 * dp, 5 * dp);
   rctx.closePath();
   rctx.fill();
   rctx.stroke();
@@ -691,8 +758,8 @@ function setHeading(target){
   $('mk').style.top = pct+'%'; $('mkL').style.top = pct+'%';
   $('mkL').textContent = Math.round(heading)%360;
   if (Date.now() - gpsHeadTime >= 5000){
-    mapHeading = heading;
-    drawRoadMap();
+    targetHeading = heading;
+    kickRoadAnim();
   }
 }
 function onOrient(e){
@@ -727,14 +794,13 @@ function updateGeo(c){
   if (c.speed > 1.5 && c.heading != null && isFinite(c.heading)){
     gpsHeadTime = Date.now();
     setHeading(c.heading);
-    let d = ((c.heading - mapHeading + 540) % 360) - 180;
-    mapHeading = (mapHeading + d * 0.35 + 360) % 360;
+    targetHeading = c.heading;
   }
   if (!manual){
-    curLat = c.latitude;
-    curLon = c.longitude;
-    fetchRoadNetwork(curLat, curLon, false);
-    drawRoadMap();
+    targetLat = c.latitude;
+    targetLon = c.longitude;
+    fetchRoadNetwork(targetLat, targetLon, false);
+    kickRoadAnim();
   }
 }
 
@@ -764,7 +830,7 @@ async function onCoords(lat,lon,force){
 function startGps(){
   if (!('geolocation' in navigator)) return ipFallback();
   navigator.geolocation.watchPosition(p => { updateGeo(p.coords); if (!manual) onCoords(p.coords.latitude,p.coords.longitude,false); },
-    () => { if (lastLat===null) ipFallback(); }, {enableHighAccuracy:true,maximumAge:5000,timeout:10000});
+    () => { if (lastLat===null) ipFallback(); }, {enableHighAccuracy:true,maximumAge:4000,timeout:10000});
   setInterval(() => { if (!manual) navigator.geolocation.getCurrentPosition(p => { updateGeo(p.coords); onCoords(p.coords.latitude,p.coords.longitude,false); }, ()=>{}, {enableHighAccuracy:true,timeout:8000}); }, T_TH);
 }
 function forceGps(){
@@ -775,14 +841,14 @@ function forceGps(){
 async function ipFallback(){
   try{ const d = await (await fetch('https://ipwho.is/')).json();
     if (d && d.latitude){
-      curLat = d.latitude; curLon = d.longitude;
-      fetchRoadNetwork(curLat, curLon, true);
+      targetLat = renderLat = d.latitude; targetLon = renderLon = d.longitude;
+      fetchRoadNetwork(targetLat, targetLon, true);
       drawRoadMap();
       return fetchWeather(d.latitude,d.longitude,`${d.city}, ${d.country}`);
     }
   }catch{}
-  curLat = 41.0082; curLon = 28.9784;
-  fetchRoadNetwork(curLat, curLon, true);
+  targetLat = renderLat = 41.0082; targetLon = renderLon = 28.9784;
+  fetchRoadNetwork(targetLat, targetLon, true);
   drawRoadMap();
   fetchWeather(41.0082,28.9784,"İstanbul, Türkiye");
 }
@@ -806,7 +872,7 @@ async function fetchWeather(lat,lon,place){
   }catch{}
 }
 
-/* Saatlik şerit: boydan boya sınırlara dayalı, çizgi hep düz */
+/* Saatlik şerit: tarih başlangıcı ve saat bitişi hizasında, çizgi hep düz */
 let hAll=null,lastStart=-1;
 function setHourly(d){
   const ct=d.current.time||'';
@@ -987,7 +1053,7 @@ $('mp3Input').addEventListener('change',e=>{
   select(0,true);
 });
 
-/* ---------- EKOLAYZIR (alt tabanlı dalga formu, soldan sağa sınırlara dayalı) ---------- */
+/* ---------- EKOLAYZIR (alt tabanlı dalga formu, tarih ve saat hizasında) ---------- */
 const eq=$('eq'), ectx=eq.getContext('2d'), NB=96, bars=new Float32Array(NB); let eqRaf=null;
 function eqSize(){ const dp=window.devicePixelRatio||1; eq.width=Math.max(1,eq.clientWidth*dp); eq.height=Math.max(1,eq.clientHeight*dp); }
 function eqFrame(ts){
@@ -1033,7 +1099,7 @@ $('cityInput').addEventListener('input',e=>{
         const o=document.createElement('div'); o.className='opt'; o.textContent=`${it.name}${it.admin1?', '+it.admin1:''} (${it.country||''})`;
         o.onclick=()=>{
           manual=true;
-          curLat=it.latitude; curLon=it.longitude; curSpeedKmh=null;
+          targetLat=renderLat=it.latitude; targetLon=renderLon=it.longitude; curSpeedKmh=null;
           fetchWeather(it.latitude,it.longitude,`${it.name}, ${it.country||''}`);
           fetchRoadNetwork(it.latitude,it.longitude,true);
           drawRoadMap();
