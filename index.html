@@ -77,7 +77,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   mask-image:radial-gradient(ellipse 50% 50% at 50% 56%,#000 30%,rgba(0,0,0,.85) 48%,rgba(0,0,0,.5) 66%,rgba(0,0,0,.18) 84%,transparent 100%)}
 .road-hud{position:absolute;left:4px;bottom:4px;display:flex;flex-direction:column;gap:2px;pointer-events:none;z-index:3}
 .road-badge{font-size:clamp(8px,calc(1.3*var(--vh)),10px);font-weight:600;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase}
-.road-status{font-size:clamp(7px,calc(1.1*var(--vh)),8.5px);font-weight:600;letter-spacing:.14em;color:rgba(245,245,247,.28);text-transform:uppercase}
+.road-status{max-width:calc(24*var(--vw));line-height:1.5;font-size:clamp(7px,calc(1.1*var(--vh)),8.5px);font-weight:600;letter-spacing:.14em;color:rgba(245,245,247,.28);text-transform:uppercase}
 
 .spd-box{position:absolute;right:4px;bottom:2px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;z-index:4}
 .spd-sign{width:clamp(36px,calc(8.6*var(--vh)),60px);height:clamp(36px,calc(8.6*var(--vh)),60px);border-radius:50%;
@@ -370,8 +370,11 @@ const ZOOM_STEPS = [
 ];
 const OVERPASS = [
   'https://overpass-api.de/api/interpreter',
+  'https://z.overpass-api.de/api/interpreter',
+  'https://lz4.overpass-api.de/api/interpreter',
   'https://overpass.private.coffee/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter'
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.openstreetmap.fr/api/interpreter'
 ];
 let zoomIdx = 0;
 let roadWays = [], roadFetchLat = null, roadFetchLon = null, roadFetchAt = 0, roadLastTryAt = 0, roadLoading = false, roadLoadStart = 0, roadRetryTimer = null;
@@ -498,7 +501,7 @@ async function overpassGet(q){
   const killer = setTimeout(() => ctrls.forEach(c => c.abort()), 18000);
   try{
     return await firstOk(OVERPASS.map((ep, i) => {
-      const host = ep.split('/')[2].replace(/^(www|z)\./, '').split('.')[0];
+      const hp = ep.split('/')[2].split('.'); const host = hp[0] === 'overpass' ? hp[1] : hp[0];
       return fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctrls[i].signal })
         .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
         .then(d => {
@@ -539,7 +542,7 @@ async function fetchRoadNetwork(lat, lon, force=false){
 
   if (!data){
     roadLastErr = errs[errs.length - 1] || 'bilinmeyen';
-    $('roadStatus').textContent = ('AĞ: ' + roadLastErr).slice(0, 48);
+    $('roadStatus').textContent = ('AĞ ' + roadLastErr.replace(/ \| /g, ' · ')).slice(0, 110);
     roadRetryTimer = setTimeout(() => {
       if (targetLat !== null && targetLon !== null) fetchRoadNetwork(targetLat, targetLon, true);
     }, 8000);
