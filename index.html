@@ -894,18 +894,17 @@ function drawRoadMap(){
   rctx.restore();
 
   // Kenarlara doğru yumuşakça yok olma (CSS maskesi yerine tuval içinde, daha hızlı)
-  const ry = h * 0.66, rx = w * 0.64;
+  const ry = h * 0.5, rx = w * 0.5;   // elips tuval kenarlarına tam oturur: kenarda alfa 0, kesik çizgi kalmaz
   rctx.save();
   rctx.globalCompositeOperation = 'destination-in';
-  rctx.translate(w * 0.5, h * 0.52);
+  rctx.translate(w * 0.5, h * 0.5);
   rctx.scale(rx / ry, 1);
   const fade = rctx.createRadialGradient(0, 0, 0, 0, 0, ry);
-  fade.addColorStop(0, 'rgba(0,0,0,1)');
-  fade.addColorStop(0.50, 'rgba(0,0,0,1)');
-  fade.addColorStop(0.68, 'rgba(0,0,0,0.9)');
-  fade.addColorStop(0.82, 'rgba(0,0,0,0.6)');
-  fade.addColorStop(0.93, 'rgba(0,0,0,0.25)');
-  fade.addColorStop(1, 'rgba(0,0,0,0)');
+  for (let i = 0; i <= 16; i++){
+    const tt = i / 16;
+    const al = tt < 0.40 ? 1 : 0.5 * (1 + Math.cos(Math.PI * (tt - 0.40) / 0.60));   // yumuşak kosinüs sönmesi
+    fade.addColorStop(tt, `rgba(0,0,0,${al.toFixed(3)})`);
+  }
   rctx.fillStyle = fade;
   rctx.fillRect(-4 * ry, -4 * ry, 8 * ry, 8 * ry);
   rctx.restore();
