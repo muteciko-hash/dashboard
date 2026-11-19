@@ -414,7 +414,7 @@ function stepRoadAnim(){
 function handleRoadTap(){
   if (!roadWays.length && targetLat !== null && targetLon !== null){
     fetchRoadNetwork(targetLat, targetLon, true);
-    toast('Yol yenileniyor…');
+    toast(roadLastErr ? 'Son hata: ' + roadLastErr : 'Yol yenileniyor…');
     return;
   }
   zoomIdx = (zoomIdx + 1) % ZOOM_STEPS.length;
@@ -476,8 +476,8 @@ function parseMaxSpeed(tags){
 /* İlk başarılı cevabı döndürür (Promise.any yerine, eski Safari'de de çalışır) */
 function firstOk(list){
   return new Promise((resolve, reject) => {
-    let left = list.length;
-    list.forEach(p => p.then(resolve, () => { if (--left === 0) reject(new Error('hepsi başarısız')); }));
+    let left = list.length; const errs = [];
+    list.forEach(p => p.then(resolve, e => { errs.push(e && e.message ? e.message : String(e)); if (--left === 0) reject(new Error(errs.join(' | '))); }));
   });
 }
 
@@ -492,19 +492,22 @@ function overpassQuery(lat, lon, kinds, d){
   const box = `${(lat-d).toFixed(5)},${(lon-dLon).toFixed(5)},${(lat+d).toFixed(5)},${(lon+dLon).toFixed(5)}`;
   return `[out:json][timeout:20];way["highway"~"^(${kinds})$"](${box});out body geom;`;
 }
+let roadLastErr = '';
 async function overpassGet(q){
   const ctrls = OVERPASS.map(() => new AbortController());
   const killer = setTimeout(() => ctrls.forEach(c => c.abort()), 18000);
   try{
-    return await firstOk(OVERPASS.map((ep, i) =>
-      fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctrls[i].signal })
+    return await firstOk(OVERPASS.map((ep, i) => {
+      const host = ep.split('/')[2].replace(/^(www|z)\./, '').split('.')[0];
+      return fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctrls[i].signal })
         .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
         .then(d => {
           if (!d || !Array.isArray(d.elements)) throw new Error('bozuk cevap');
           if (!d.elements.length && d.remark) throw new Error('sunucu zaman aşımı');
           return d;
         })
-    ));
+        .catch(e => { throw new Error(host + ': ' + (e && e.name === 'AbortError' ? 'süre doldu' : (e && e.message) || 'hata')); });
+    }));
   } finally {
     clearTimeout(killer);
     ctrls.forEach(c => c.abort());
@@ -516,7 +519,7 @@ async function fetchRoadNetwork(lat, lon, force=false){
   const now = Date.now();
   const moved = roadFetchLat !== null ? distKm(roadFetchLat, roadFetchLon, lat, lon) : 99;
   if (!force && roadWays.length && moved < roadFetchRadiusKm * 0.45 && now - roadFetchAt < 300000) return;
-  if (roadLoading && now - roadLoadStart < 40000) return;
+  if (roadLoading && now - roadLoadStart < 60000) return;
   if (!force && now - roadLastTryAt < 8000) return;
 
   clearTimeout(roadRetryTimer);
@@ -525,17 +528,32 @@ async function fetchRoadNetwork(lat, lon, force=false){
   roadLastTryAt = now;
   if (!roadWays.length) $('roadStatus').textContent = 'YÜKLENİYOR';
 
-  try{
-    // Önce tüm sokaklar (~1 km), olmazsa sadece ana yollar (~2 km)
-    let data = null, radius = 1;
-    try{ data = await overpassGet(overpassQuery(lat, lon, HW_ALL, 0.009)); }catch{ data = null; }
-    if (!data){ radius = 2; data = await overpassGet(overpassQuery(lat, lon, HW_MAIN, 0.018)); }
+  let data = null, radius = 1;
+  // 3 kademe: tüm sokaklar (~1 km) → ana yollar (~2 km) → ana yollar (~900 m, küçük sorgu)
+  const tiers = [[HW_ALL, 0.009, 1], [HW_MAIN, 0.018, 2], [HW_MAIN, 0.008, 1]];
+  const errs = [];
+  for (const [kinds, d, r] of tiers){
+    try{ data = await overpassGet(overpassQuery(lat, lon, kinds, d)); radius = r; break; }
+    catch(e){ errs.push(e.message); }
+  }
 
+  if (!data){
+    roadLastErr = errs[errs.length - 1] || 'bilinmeyen';
+    $('roadStatus').textContent = ('AĞ: ' + roadLastErr).slice(0, 48);
+    roadRetryTimer = setTimeout(() => {
+      if (targetLat !== null && targetLon !== null) fetchRoadNetwork(targetLat, targetLon, true);
+    }, 8000);
+    roadLoading = false;
+    return;
+  }
+
+  try{
     const mLon = 111320 * Math.cos(lat * Math.PI / 180);
     const ways = [];
     for (const el of data.elements){
       if (el.type !== 'way' || !Array.isArray(el.geometry) || el.geometry.length < 2) continue;
-      const m = el.geometry.map(g => [(g.lon - lon) * mLon, (g.lat - lat) * M_LAT]);
+      const m = el.geometry.filter(g => g && g.lat != null).map(g => [(g.lon - lon) * mLon, (g.lat - lat) * M_LAT]);
+      if (m.length < 2) continue;
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
       for (const p of m){
         if (p[0] < x0) x0 = p[0]; if (p[0] > x1) x1 = p[0];
@@ -548,13 +566,12 @@ async function fetchRoadNetwork(lat, lon, force=false){
     ancLat = lat; ancLon = lon; ancMLon = mLon;
     roadWays = ways;
     roadFetchLat = lat; roadFetchLon = lon; roadFetchAt = Date.now(); roadFetchRadiusKm = radius;
+    roadLastErr = '';
     $('roadStatus').textContent = ways.length ? '' : 'YOL BULUNAMADI';
     drawRoadMap();
-  }catch{
-    if (!roadWays.length) $('roadStatus').textContent = 'YOL VERİSİ ALINAMADI';
-    roadRetryTimer = setTimeout(() => {
-      if (targetLat !== null && targetLon !== null) fetchRoadNetwork(targetLat, targetLon, true);
-    }, 8000);
+  }catch(e){
+    roadLastErr = 'işleme: ' + (e && e.message);
+    $('roadStatus').textContent = ('HATA ' + roadLastErr).slice(0, 48);
   }finally{
     roadLoading = false;
   }
