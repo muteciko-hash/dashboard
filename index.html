@@ -34,37 +34,35 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
   background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,.25) 0%,rgba(0,0,0,.9) 70%,#000 100%)}
 
 .screen{position:relative;z-index:2;width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-between;
-  padding:max(env(safe-area-inset-top),clamp(8px,calc(1.6*var(--vh)),16px)) 0 max(env(safe-area-inset-bottom),clamp(8px,calc(1.6*var(--vh)),16px)) 0}
+  padding:max(env(safe-area-inset-top),clamp(4px,calc(.8*var(--vh)),8px)) 0 max(env(safe-area-inset-bottom),clamp(8px,calc(1.6*var(--vh)),16px)) 0}
 
-/* ÜST BAR */
-.top-bar{display:flex;align-items:center;justify-content:center;position:relative;height:clamp(40px,calc(9*var(--vh)),62px);padding:0 var(--px);flex-shrink:0}
-.loc{display:inline-flex;align-items:center;gap:clamp(7px,calc(1.2*var(--vh)),10px);padding:4px 8px;cursor:pointer}
+/* ÜST BAR — tarih ve saat aynı boyda, aynı hizada, yukarıya dayalı */
+.top-bar{display:flex;align-items:flex-start;justify-content:center;position:relative;height:clamp(34px,calc(8*var(--vh)),58px);padding:0 var(--px);flex-shrink:0}
+.loc{height:100%;display:inline-flex;align-items:center;gap:clamp(7px,calc(1.2*var(--vh)),10px);padding:0 8px;cursor:pointer}
 .pin{width:clamp(18px,calc(3.2*var(--vh)),24px);height:clamp(18px,calc(3.2*var(--vh)),24px);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .loc-text{font-size:clamp(13px,calc(2.5*var(--vh)),19px);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tx);
   max-width:calc(26*var(--vw));overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.date-wrap{position:absolute;left:var(--px);top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:clamp(8px,calc(1.6*var(--vh)),14px)}
-.date-wrap b{font-size:clamp(34px,calc(8.4*var(--vh)),62px);font-weight:800;letter-spacing:-.05em;line-height:.8}
+.date-wrap{position:absolute;left:var(--px);top:0;height:100%;display:flex;align-items:center;gap:clamp(8px,calc(1.6*var(--vh)),14px)}
+.date-wrap b{font-size:clamp(32px,calc(7.8*var(--vh)),58px);font-weight:800;letter-spacing:-.05em;line-height:1}
 .date-r{display:flex;flex-direction:column;gap:clamp(3px,calc(.7*var(--vh)),6px)}
 .date-r span{font-size:clamp(7.5px,calc(1.4*var(--vh)),10.5px);font-weight:600;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
 .date-r u{display:block;height:1px;background:rgba(245,245,247,.75)}
-.clock{position:absolute;right:var(--px);top:50%;transform:translateY(-50%);font-size:clamp(30px,calc(7.6*var(--vh)),56px);font-weight:800;letter-spacing:-.04em;line-height:.8;font-variant-numeric:tabular-nums}
+.clock{position:absolute;right:var(--px);top:0;height:100%;display:flex;align-items:center;font-size:clamp(32px,calc(7.8*var(--vh)),58px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
 @keyframes pulse{50%{opacity:.35;transform:scale(.8)}}
 @keyframes speedWarn{0%,100%{transform:scale(1);box-shadow:0 0 12px rgba(229,72,77,.6)}50%{transform:scale(1.08);box-shadow:0 0 26px rgba(229,72,77,1)}}
 
-/* ORTA — Sol: Hava durumu + ikon | Orta: Kuşbakışı yol | Sağ: Pusula */
-.middle{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr) minmax(0,.92fr);align-items:center;gap:clamp(10px,calc(1.8*var(--vw)),26px);flex:1;min-height:0;padding:clamp(4px,calc(1*var(--vh)),10px) var(--px)}
-.left{display:flex;flex-direction:column;justify-content:center;gap:clamp(4px,calc(1*var(--vh)),10px);min-width:0}
+/* ORTA — Sol: Hava | Orta: Harita (tam ortada) | Sağ: Pusula */
+.middle{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:center;gap:clamp(10px,calc(1.8*var(--vw)),26px);flex:1;min-height:0;padding:clamp(4px,calc(1*var(--vh)),10px) var(--px)}
+.left{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:clamp(4px,calc(1*var(--vh)),10px);min-width:0}
 
-.temp-row{display:inline-flex;align-items:center;gap:clamp(8px,calc(1.6*var(--vh)),14px);cursor:pointer;width:fit-content}
+.temp-row{display:inline-flex;align-items:center;gap:clamp(8px,calc(1.6*var(--vh)),14px);width:fit-content}
 .temp{display:flex;line-height:.9}
 .temp b{font-size:clamp(46px,calc(10.6*var(--vh)),84px);font-weight:700;letter-spacing:-.05em}
 .temp sup{font-size:clamp(14px,calc(2.6*var(--vh)),22px);font-weight:500;color:var(--tx2);margin:clamp(6px,calc(1.2*var(--vh)),12px) 0 0 3px}
 
-/* Derecenin yanındaki hava durumu ikonu — dereceyle aynı yükseklikte */
 .wx-mini{height:clamp(44px,calc(10.2*var(--vh)),78px);width:clamp(50px,calc(11.6*var(--vh)),90px);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;--glow:rgba(243,178,59,.10)}
 .wx-mini::before{content:'';position:absolute;inset:-20%;background:radial-gradient(closest-side,var(--glow),transparent);pointer-events:none}
 .wx-mini svg{position:relative;height:100%;width:auto;max-width:100%;display:block;overflow:visible;transition:transform .18s}
-.temp-row:active .wx-mini svg{transform:scale(.92)}
 
 .cond{font-size:clamp(10px,calc(1.8*var(--vh)),14px);font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,245,247,.9)}
 .metrics{display:grid;grid-template-columns:auto auto;gap:clamp(4px,calc(1*var(--vh)),9px) clamp(14px,calc(2*var(--vw)),26px);margin-top:clamp(2px,calc(.8*var(--vh)),8px);justify-content:start}
@@ -72,12 +70,12 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .metric span{display:inline-flex;align-items:center;gap:4px;font-size:clamp(7px,calc(1.15*var(--vh)),9px);color:var(--tx3);font-weight:600;letter-spacing:.16em;text-transform:uppercase}
 .metric b{font-size:clamp(12px,calc(1.9*var(--vh)),15px);font-weight:600;letter-spacing:.02em}
 
-/* KUŞBAKIŞI BEYAZ ÇİZGİ HARİTA + HIZ LİMİTİ */
-.road-wrap{position:relative;width:100%;height:100%;min-height:0;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
-.road-cv{width:100%;height:100%;display:block;
+/* HARİTA — canvas mutlak konumlu: grid yüksekliğini bozmaz */
+.road-wrap{position:relative;width:100%;align-self:stretch;min-height:0;overflow:hidden;cursor:pointer}
+.road-cv{position:absolute;inset:0;width:100%;height:100%;display:block;
   -webkit-mask-image:radial-gradient(ellipse 52% 50% at 50% 54%,#000 60%,rgba(0,0,0,.5) 84%,transparent 100%);
   mask-image:radial-gradient(ellipse 52% 50% at 50% 54%,#000 60%,rgba(0,0,0,.5) 84%,transparent 100%)}
-.road-hud{position:absolute;left:4px;bottom:4px;display:flex;flex-direction:column;gap:2px;pointer-events:none}
+.road-hud{position:absolute;left:4px;bottom:4px;display:flex;flex-direction:column;gap:2px;pointer-events:none;z-index:3}
 .road-badge{font-size:clamp(8px,calc(1.3*var(--vh)),10px);font-weight:600;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase}
 .road-status{font-size:clamp(7px,calc(1.1*var(--vh)),8.5px);font-weight:600;letter-spacing:.14em;color:rgba(245,245,247,.28);text-transform:uppercase}
 
@@ -92,8 +90,8 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .spd-cur{font-size:clamp(8px,calc(1.35*var(--vh)),10.5px);font-weight:600;letter-spacing:.08em;color:var(--tx2);font-variant-numeric:tabular-nums}
 .spd-cur.warn{color:var(--red);font-weight:700}
 
-/* PUSULA — sağ üst, OLED siyah */
-.right{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start;align-self:start;gap:clamp(6px,calc(1.2*var(--vh)),10px)}
+/* PUSULA — sol blokla aynı dikey ortada */
+.right{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;align-self:center;gap:clamp(6px,calc(1.2*var(--vh)),10px);min-width:0}
 .compass{height:clamp(110px,calc(33*var(--vh)),200px);aspect-ratio:1.2;border-radius:2px;background:#000;display:grid;grid-template-columns:1fr auto;
   padding:clamp(10px,calc(2.2*var(--vh)),18px) clamp(10px,calc(2*var(--vh)),16px) clamp(10px,calc(2.2*var(--vh)),18px) clamp(8px,calc(1.6*var(--vh)),14px);cursor:pointer;flex-shrink:0}
 .c-left{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;gap:2px}
@@ -110,7 +108,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .live-coords{display:flex;align-items:center;gap:clamp(7px,calc(1.2*var(--vh)),11px);font-size:clamp(8px,calc(1.5*var(--vh)),11px);font-weight:600;letter-spacing:.1em;white-space:nowrap;color:var(--tx)}
 .live-coords i{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse 2s infinite}
 
-/* SAATLİK — solda tarih başlangıcı, sağda saat bitişi hizasında */
+/* SAATLİK */
 .hourly{width:100%;display:flex;align-items:center;min-height:clamp(74px,calc(14.5*var(--vh)),102px);margin-bottom:clamp(10px,calc(1.8*var(--vh)),16px);padding:0 var(--px);flex-shrink:0}
 .wave{width:100%;display:flex;flex-direction:column;justify-content:space-between;gap:2px}
 .w-row{width:100%;display:grid;grid-template-columns:repeat(8,1fr);text-align:center}
@@ -124,9 +122,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .h-p{font-size:clamp(9px,calc(1.4*var(--vh)),11px);color:#7fb7ff;font-weight:600;display:flex;align-items:center;gap:3px}
 .h-p.lo{opacity:.4}.h-p.hi{color:var(--red);text-shadow:0 0 8px var(--red-glow)}
 
-/* RADYO — OLED siyah, ekolayzır tarih başlangıcı ve saat bitişi hizasında */
+/* RADYO — şarkı yazısı aşağıda, ekolayzır alçak */
 .dock{width:100%;display:flex;align-items:center;justify-content:center;flex-shrink:0;height:clamp(74px,calc(15.5*var(--vh)),96px)}
-.player{width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(6px,calc(1.1*var(--vh)),10px) var(--px) 0 var(--px)}
+.player{width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(12px,calc(2.6*var(--vh)),22px) var(--px) 0 var(--px)}
 .p-top{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
 .p-meta{flex:1;min-width:0;font-size:clamp(12px,calc(2*var(--vh)),14.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .p-song{color:#f2f2f4;font-weight:600;letter-spacing:.01em}
@@ -139,7 +137,7 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 .nxt{width:clamp(20px,calc(3.4*var(--vh)),26px);height:clamp(20px,calc(3.4*var(--vh)),26px);color:rgba(242,242,244,.65);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .12s,color .15s}
 .nxt:active{transform:scale(.9);color:#fff}
 .nxt svg{width:100%;height:100%}
-.eq{display:block;width:100%;height:clamp(24px,calc(5.2*var(--vh)),38px)}
+.eq{display:block;width:100%;height:clamp(14px,calc(3*var(--vh)),22px)}
 
 /* MODAL */
 .modal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px}
@@ -183,7 +181,7 @@ input[type=file]{display:none}
 
   <main class="middle">
     <section class="left">
-      <div class="temp-row" onclick="nextSong()">
+      <div class="temp-row">
         <div class="temp"><b id="mainTemp">--</b><sup>°c</sup></div>
         <div class="wx-mini" id="art"></div>
       </div>
@@ -204,7 +202,7 @@ input[type=file]{display:none}
       </div>
       <div class="spd-box" id="spdBox" onclick="event.stopPropagation();toggleSpeedAudio()">
         <div class="spd-sign unset" id="spdSign"><span id="spdLimit">--</span></div>
-        <div class="spd-cur" id="spdCur">-- km/s</div>
+        <div class="spd-cur" id="spdCur">-- km/sa</div>
       </div>
     </section>
 
@@ -363,23 +361,28 @@ function wx(code){
   return {label:"Bulutlu", type:"cloud"};
 }
 
-/* ---------- KUŞBAKIŞI BEYAZ ÇİZGİ HARİTA (100M ANA YOL + 50M İNCE BAĞLANTI) ---------- */
+/* ---------- KUŞBAKIŞI BEYAZ ÇİZGİ HARİTA ---------- */
 const roadCv = $('roadCanvas'), rctx = roadCv.getContext('2d');
 const ZOOM_STEPS = [
   { meters: 100, label: '100 M' },
   { meters: 250, label: '250 M' },
   { meters: 500, label: '500 M' }
 ];
+const OVERPASS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.private.coffee/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter'
+];
 let zoomIdx = 0;
-let roadWays = [], roadFetchLat = null, roadFetchLon = null, roadFetchAt = 0, roadLastTryAt = 0, roadLoading = false, roadRetryTimer = null;
+let roadWays = [], roadFetchLat = null, roadFetchLon = null, roadFetchAt = 0, roadLastTryAt = 0, roadLoading = false, roadLoadStart = 0, roadRetryTimer = null;
 let targetLat = null, targetLon = null, renderLat = null, renderLon = null;
 let curSpeedKmh = null, targetHeading = 0, renderHeading = 0, roadAnimRaf = null;
 let activeLimit = null, speedAudioOn = true, lastBeepAt = 0, wasOver = false, audioCtx = null;
 
 function roadSize(){
   const dp = window.devicePixelRatio || 1;
-  roadCv.width = Math.max(1, roadCv.clientWidth * dp);
-  roadCv.height = Math.max(1, roadCv.clientHeight * dp);
+  roadCv.width = Math.max(1, Math.round(roadCv.clientWidth * dp));
+  roadCv.height = Math.max(1, Math.round(roadCv.clientHeight * dp));
   drawRoadMap();
 }
 function kickRoadAnim(){
@@ -409,7 +412,7 @@ function stepRoadAnim(){
 }
 
 function handleRoadTap(){
-  if (!roadWays.length && targetLat !== null && targetLon !== null && !roadLoading){
+  if (!roadWays.length && targetLat !== null && targetLon !== null){
     fetchRoadNetwork(targetLat, targetLon, true);
     toast('Yol yenileniyor…');
     return;
@@ -470,66 +473,75 @@ function parseMaxSpeed(tags){
   return (val >= 10 && val <= 160) ? val : null;
 }
 
+/* İlk başarılı cevabı döndürür (Promise.any yerine, eski Safari'de de çalışır) */
+function firstOk(list){
+  return new Promise((resolve, reject) => {
+    let left = list.length;
+    list.forEach(p => p.then(resolve, () => { if (--left === 0) reject(new Error('hepsi başarısız')); }));
+  });
+}
+
 async function fetchRoadNetwork(lat, lon, force=false){
   if (lat == null || lon == null) return;
   const now = Date.now();
   const moved = roadFetchLat !== null ? distKm(roadFetchLat, roadFetchLon, lat, lon) : 99;
-  if (!force && roadWays.length && moved < 1.1 && now - roadFetchAt < 120000) return;
-  if (roadLoading || (!force && now - roadLastTryAt < 10000)) return;
+  if (!force && roadWays.length && moved < 1.0 && now - roadFetchAt < 180000) return;
+  if (roadLoading && now - roadLoadStart < 20000) return;       // takılı kalmaya karşı kilit 20 sn'de açılır
+  if (!force && now - roadLastTryAt < 8000) return;
 
   clearTimeout(roadRetryTimer);
   roadLoading = true;
+  roadLoadStart = now;
   roadLastTryAt = now;
   if (!roadWays.length) $('roadStatus').textContent = 'YÜKLENİYOR';
 
-  // Sadece ana yollar ve ana yol bağlantıları (~2.2 km yarıçap) — sokak araları hariç
+  // Ana yollar (~2 km yarıçap)
   const cosLat = Math.max(0.2, Math.cos(lat * Math.PI / 180));
-  const dLat = 0.020, dLon = 0.020 / cosLat;
+  const dLat = 0.018, dLon = dLat / cosLat;
   const box = `${(lat-dLat).toFixed(5)},${(lon-dLon).toFixed(5)},${(lat+dLat).toFixed(5)},${(lon+dLon).toFixed(5)}`;
-  const q = `[out:json][timeout:10];way["highway"~"^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link)$"](${box});out body geom;`;
+  const q = `[out:json][timeout:20];way["highway"~"^(motorway|motorway_link|trunk|trunk_link|primary|primary_link|secondary|secondary_link)$"](${box});out body geom;`;
 
-  const endpoints = [
-    'https://overpass-api.de/api/interpreter',
-    'https://overpass.private.coffee/api/interpreter',
-    'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
-  ];
+  const ctrls = OVERPASS.map(() => new AbortController());
+  const killer = setTimeout(() => ctrls.forEach(c => c.abort()), 16000);
 
-  for (const ep of endpoints){
-    try{
-      const ctrl = new AbortController();
-      const tm = setTimeout(() => ctrl.abort(), 12000);
-      const res = await fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctrl.signal });
-      clearTimeout(tm);
-      if (!res.ok) continue;
-      const data = await res.json();
-      if (!data || !Array.isArray(data.elements)) continue;
+  try{
+    // Üç sunucuya aynı anda sor, ilk geçerli cevabı kullan
+    const data = await firstOk(OVERPASS.map((ep, i) =>
+      fetch(`${ep}?data=${encodeURIComponent(q)}`, { signal: ctrls[i].signal })
+        .then(r => { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
+        .then(d => {
+          if (!d || !Array.isArray(d.elements)) throw new Error('bozuk cevap');
+          if (!d.elements.length && d.remark) throw new Error('sunucu zaman aşımı');
+          return d;
+        })
+    ));
+    ctrls.forEach(c => c.abort());
 
-      roadWays = data.elements
-        .filter(el => el.type === 'way' && Array.isArray(el.geometry) && el.geometry.length >= 2)
-        .map(el => ({
-          id: el.id,
-          hw: (el.tags && el.tags.highway) || '',
-          ref: (el.tags && el.tags.ref) || '',
-          name: (el.tags && el.tags.name) || '',
-          limit: parseMaxSpeed(el.tags),
-          pts: el.geometry.map(g => [g.lat, g.lon])
-        }));
+    roadWays = data.elements
+      .filter(el => el.type === 'way' && Array.isArray(el.geometry) && el.geometry.length >= 2)
+      .map(el => ({
+        id: el.id,
+        hw: (el.tags && el.tags.highway) || '',
+        ref: (el.tags && el.tags.ref) || '',
+        name: (el.tags && el.tags.name) || '',
+        limit: parseMaxSpeed(el.tags),
+        pts: el.geometry.map(g => [g.lat, g.lon])
+      }));
 
-      roadFetchLat = lat;
-      roadFetchLon = lon;
-      roadFetchAt = Date.now();
-      $('roadStatus').textContent = roadWays.length ? '' : 'ANA YOL YOK';
-      drawRoadMap();
-      roadLoading = false;
-      return;
-    }catch{}
+    roadFetchLat = lat;
+    roadFetchLon = lon;
+    roadFetchAt = Date.now();
+    $('roadStatus').textContent = roadWays.length ? '' : 'ANA YOL YOK';
+    drawRoadMap();
+  }catch{
+    if (!roadWays.length) $('roadStatus').textContent = 'YENİDEN DENENİYOR';
+    roadRetryTimer = setTimeout(() => {
+      if (targetLat !== null && targetLon !== null) fetchRoadNetwork(targetLat, targetLon, true);
+    }, 8000);
+  }finally{
+    clearTimeout(killer);
+    roadLoading = false;
   }
-
-  roadLoading = false;
-  if (!roadWays.length) $('roadStatus').textContent = 'YENİDEN DENENİYOR';
-  roadRetryTimer = setTimeout(() => {
-    if (targetLat !== null && targetLon !== null) fetchRoadNetwork(targetLat, targetLon, true);
-  }, 12000);
 }
 
 function ptSegDistSq(px, py, ax, ay, bx, by){
@@ -552,9 +564,9 @@ function updateSpeedUI(){
   }
 
   if (curSpeedKmh !== null && isFinite(curSpeedKmh)){
-    curEl.textContent = `${curSpeedKmh} km/s`;
+    curEl.textContent = `${curSpeedKmh} km/sa`;
   } else {
-    curEl.textContent = `-- km/s`;
+    curEl.textContent = `-- km/sa`;
   }
 
   const isOver = (activeLimit !== null && curSpeedKmh !== null && curSpeedKmh > activeLimit + 2);
@@ -577,7 +589,7 @@ function drawRoadMap(){
   const dp = window.devicePixelRatio || 1;
   rctx.clearRect(0, 0, w, h);
 
-  // Ok alt-ortada konumlanır, önümüzdeki 100 metreyi net gösterir
+  // Ok alt-ortada konumlanır
   const tx = w * 0.5, ty = h * 0.78;
 
   if (renderLat === null || renderLon === null){
@@ -594,7 +606,7 @@ function drawRoadMap(){
   const zoomMeters = ZOOM_STEPS[zoomIdx].meters;
   const pxPerMeter = (h * 0.78) / zoomMeters;
 
-  // En yakın ana yolu bul
+  // Yolları metreye çevir, en yakınını bul
   let bestWay = null, bestDistSq = Infinity;
   const projWays = roadWays.map(way => {
     const mpts = way.pts.map(([la, lo]) => [
@@ -613,7 +625,7 @@ function drawRoadMap(){
     return { way, mpts, minD };
   });
 
-  const matchRadius = manual ? 450 : 90;
+  const matchRadius = manual ? 450 : 120;
   const matched = bestWay && bestDistSq <= matchRadius * matchRadius ? bestWay.way : null;
   let foundLimit = matched ? matched.limit : null;
   if (matched && foundLimit === null){
@@ -643,17 +655,19 @@ function drawRoadMap(){
   rctx.lineCap = 'round';
   rctx.lineJoin = 'round';
 
-  // 1. Katman: Ana yol araları / bağlantılar — 50 metre yarıçapta ince beyaz çizgiyle görünür
-  const r50 = 50 * pxPerMeter;
-  const connGrad = rctx.createRadialGradient(0, 0, r50 * 0.2, 0, 0, r50);
-  connGrad.addColorStop(0, 'rgba(255,255,255,0.46)');
+  // 1. Katman: çevredeki diğer ana yollar — görüş alanı boyunca ince, soluk beyaz
+  const rView = zoomMeters * pxPerMeter;
+  const connGrad = rctx.createRadialGradient(0, 0, rView * 0.2, 0, 0, rView * 1.05);
+  connGrad.addColorStop(0, 'rgba(255,255,255,0.50)');
+  connGrad.addColorStop(0.6, 'rgba(255,255,255,0.34)');
   connGrad.addColorStop(1, 'rgba(255,255,255,0)');
 
+  const viewSq = (zoomMeters * 1.3) * (zoomMeters * 1.3);
   rctx.strokeStyle = connGrad;
   rctx.lineWidth = 1.35 * dp;
   rctx.beginPath();
   for (const { way, mpts, minD } of projWays){
-    if (isActiveWay(way) || minD > 75 * 75) continue;
+    if (isActiveWay(way) || minD > viewSq) continue;
     for (let i = 0; i < mpts.length; i++){
       const x = mpts[i][0] * pxPerMeter, y = -mpts[i][1] * pxPerMeter;
       if (i === 0) rctx.moveTo(x, y); else rctx.lineTo(x, y);
@@ -661,11 +675,11 @@ function drawRoadMap(){
   }
   rctx.stroke();
 
-  // 2. Katman: Üzerinde gidilen ana güzergah (sade, net beyaz çizgi)
+  // 2. Katman: üzerinde gidilen ana güzergah
   if (matched){
     const activeWays = projWays.filter(item => isActiveWay(item.way));
 
-    // Sert viraj kıvrımı varsa (35° üzeri kırılma, 100m önde) hafif kırmızı-amber vurgu
+    // Sert viraj (35° üzeri, 115 m içinde) için kırmızı vurgu
     const rad = renderHeading * Math.PI / 180;
     const cosH = Math.cos(rad), sinH = Math.sin(rad);
     for (const { mpts } of activeWays){
@@ -677,7 +691,6 @@ function drawRoadMap(){
         const dot = (ax*bx + ay*by) / (lenA * lenB);
         const turnDeg = Math.acos(Math.max(-1, Math.min(1, dot))) * 180 / Math.PI;
         if (turnDeg >= 35){
-          // Araç koordinatında önde mi kontrol et
           const fwd = mpts[i][0] * sinH + mpts[i][1] * cosH;
           const dist = Math.hypot(mpts[i][0], mpts[i][1]);
           if (fwd > -10 && dist <= 115){
@@ -715,7 +728,7 @@ function drawRoadMap(){
 
   rctx.restore();
 
-  // Araç konum oku (sade, her zaman yukarı bakar)
+  // Araç konum oku (her zaman yukarı bakar)
   rctx.save();
   rctx.translate(tx, ty);
   rctx.fillStyle = 'rgba(229,72,77,0.22)';
@@ -830,7 +843,7 @@ async function onCoords(lat,lon,force){
 function startGps(){
   if (!('geolocation' in navigator)) return ipFallback();
   navigator.geolocation.watchPosition(p => { updateGeo(p.coords); if (!manual) onCoords(p.coords.latitude,p.coords.longitude,false); },
-    () => { if (lastLat===null) ipFallback(); }, {enableHighAccuracy:true,maximumAge:4000,timeout:10000});
+    () => { if (lastLat===null && targetLat===null) ipFallback(); }, {enableHighAccuracy:true,maximumAge:4000,timeout:10000});
   setInterval(() => { if (!manual) navigator.geolocation.getCurrentPosition(p => { updateGeo(p.coords); onCoords(p.coords.latitude,p.coords.longitude,false); }, ()=>{}, {enableHighAccuracy:true,timeout:8000}); }, T_TH);
 }
 function forceGps(){
@@ -872,7 +885,7 @@ async function fetchWeather(lat,lon,place){
   }catch{}
 }
 
-/* Saatlik şerit: tarih başlangıcı ve saat bitişi hizasında, çizgi hep düz */
+/* Saatlik şerit */
 let hAll=null,lastStart=-1;
 function setHourly(d){
   const ct=d.current.time||'';
@@ -1053,8 +1066,9 @@ $('mp3Input').addEventListener('change',e=>{
   select(0,true);
 });
 
-/* ---------- EKOLAYZIR (alt tabanlı dalga formu, tarih ve saat hizasında) ---------- */
+/* ---------- EKOLAYZIR (alçak) ---------- */
 const eq=$('eq'), ectx=eq.getContext('2d'), NB=96, bars=new Float32Array(NB); let eqRaf=null;
+const EQ_MAX = 0.62; // yükseklik sınırı
 function eqSize(){ const dp=window.devicePixelRatio||1; eq.width=Math.max(1,eq.clientWidth*dp); eq.height=Math.max(1,eq.clientHeight*dp); }
 function eqFrame(ts){
   const w=eq.width, h=eq.height, t=ts/1000, dp=window.devicePixelRatio||1;
@@ -1069,12 +1083,12 @@ function eqFrame(ts){
     const w1=Math.abs(Math.sin(t*2.1 + i*0.52));
     const w2=Math.abs(Math.sin(t*1.35 - i*0.21 + 1.1));
     const w3=0.5 + 0.5*Math.sin(t*3.7 + i*1.17);
-    const tg=playing ? Math.min(1, (0.08 + 0.92*(w1*w2*0.75 + w3*0.25))*leftBias) : 0;
+    const tg=playing ? Math.min(1, (0.08 + 0.92*(w1*w2*0.75 + w3*0.25))*leftBias) * EQ_MAX : 0;
     bars[i]+=(tg-bars[i])*(tg>bars[i]?0.42:0.14);
     mx=Math.max(mx,bars[i]);
     const bh=Math.max(2*dp, bars[i]*(h - 2*dp));
     const x=bw/2 + i*step;
-    ectx.strokeStyle=bars[i]<0.12 ? 'rgba(242,242,244,.38)' : 'rgba(242,242,244,.88)';
+    ectx.strokeStyle=bars[i]<0.08 ? 'rgba(242,242,244,.38)' : 'rgba(242,242,244,.88)';
     ectx.beginPath();
     ectx.moveTo(x, h);
     ectx.lineTo(x, h - bh);
@@ -1083,7 +1097,6 @@ function eqFrame(ts){
   eqRaf=(playing||mx>.01)?requestAnimationFrame(eqFrame):null;
 }
 function eqKick(){ if(!eqRaf) eqRaf=requestAnimationFrame(eqFrame); }
-addEventListener('resize',()=>{eqSize();eqKick();roadSize();});
 
 /* ---------- ŞEHİR ARAMA ---------- */
 let st=null;
@@ -1129,7 +1142,7 @@ function applyLayout(){
   const W=innerWidth,H=innerHeight,mode=getMode(); let w=W,h=H;
   if (H>W && mode!=='off'){
     w=H; h=W;
-    scr.style.cssText=`position:fixed;left:0;top:0;width:${w}px;height:${h}px;transform-origin:0 0;padding:${h*.016}px 0;`+
+    scr.style.cssText=`position:fixed;left:0;top:0;width:${w}px;height:${h}px;transform-origin:0 0;padding:${h*.008}px 0 ${h*.016}px 0;`+
       `transform:${mode==='cw'?`translateX(${W}px) rotate(90deg)`:`translateY(${H}px) rotate(-90deg)`}`;
     document.documentElement.style.setProperty('--px',w*.03+'px');
   } else {
